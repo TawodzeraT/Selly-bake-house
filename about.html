@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Selly Bake House</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">Selly <span>Bake</span> House<small>Home of everything toothsome</small></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li>
+      <li><a href="custom-cake.html">Custom Cake</a></li><li><a href="gallery.html">Gallery</a></li>
+      <li><a href="about.html" class="active">About</a></li><li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-actions" id="nav-actions">
+      <span class="user-greeting" id="user-greeting" style="display:none"></span>
+      <button class="btn btn-ghost btn-sm" id="logout-btn" style="display:none">Logout</button>
+      <button class="btn btn-rose btn-sm" id="login-btn" onclick="openOverlay('login-modal')">Login</button>
+      <a href="cart.html" class="btn-icon">🛒<span class="cart-badge" id="cart-badge" style="display:none">0</span></a>
+    </div>
+    <button class="nav-toggle" id="nav-toggle"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- ABOUT HERO -->
+<div class="about-hero">
+  <div class="container">
+    <h1>Our Story</h1>
+    <p>From Selina's home kitchen in Rockville to Maryland's sweetest treat destination — made with love, one batch at a time.</p>
+  </div>
+</div>
+
+<!-- STORY SECTION -->
+<section class="section">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-img">👩‍🍳</div>
+      <div>
+        <span style="font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--rose-deep);display:block;margin-bottom:.5rem">Meet Selina</span>
+        <h2 class="serif" style="font-size:2.8rem;color:var(--brown-dark);margin-bottom:1.2rem">Baking with Heart, Every Single Day</h2>
+        <p style="color:var(--text-muted);line-height:1.9;margin-bottom:1rem">
+          Selina Chimukangara has been perfecting her baking craft for over a decade, turning family recipes and personal passion into Maryland's most beloved home bakery. What started as weekend treats for friends and family quickly grew into something much bigger.
+        </p>
+        <p style="color:var(--text-muted);line-height:1.9;margin-bottom:1rem">
+          Every item at Selly Bake House is crafted from scratch using the finest ingredients — real butter, farm-fresh eggs, and premium chocolate. No shortcuts. No artificial flavors. Just pure, toothsome goodness the way Grandma used to make it.
+        </p>
+        <p style="color:var(--text-muted);line-height:1.9;margin-bottom:1.8rem">
+          Based in Rockville, MD, Selina bakes to order and delivers across Maryland, bringing joy one box at a time.
+        </p>
+        <a href="shop.html" class="btn btn-primary">Shop Our Treats</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="section" style="background:var(--cream-dark);padding:4rem 0">
+  <div class="container">
+    <div class="section-heading text-center">
+      <h2>What We Stand For</h2>
+    </div>
+    <div class="value-cards">
+      <div class="value-card">
+        <div class="icon">🌿</div>
+        <h4>All Natural</h4>
+        <p>Real butter, fresh eggs, premium chocolate. No artificial flavors or preservatives. Ever.</p>
+      </div>
+      <div class="value-card">
+        <div class="icon">🤍</div>
+        <h4>Made With Love</h4>
+        <p>Every batch is mixed, rolled, and baked by hand. You can taste the care in every bite.</p>
+      </div>
+      <div class="value-card">
+        <div class="icon">🏠</div>
+        <h4>Baked to Order</h4>
+        <p>Nothing sits on a shelf. Your order is baked fresh and ready for pickup or delivery.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT CARD -->
+<section class="section">
+  <div class="container">
+    <div class="section-heading text-center"><h2>Come Find Us</h2></div>
+    <div class="contact-card">
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div>
+          <div class="contact-text">721 Fallsgrove Dr</div>
+          <div class="contact-sub">Rockville, MD 20850</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📞</div>
+        <div>
+          <div class="contact-text">(301) 356-1232</div>
+          <div class="contact-sub">Mon–Sat, 9am–6pm</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">✉️</div>
+        <div>
+          <div class="contact-text">sellybakehouse@gmail.com</div>
+          <div class="contact-sub">We reply within 24 hours</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:none;padding-top:0">
+      <span>© 2025 Selly Bake House — Rockville, MD</span>
+    </div>
+  </div>
+</footer>
+
+<!-- AUTH MODALS -->
+<div class="overlay" id="login-modal" style="display:none">
+  <div class="modal auth-modal">
+    <button class="modal-close" onclick="closeOverlay('login-modal')">✕</button>
+    <h2>Welcome Back 🍪</h2><p>Log in to your account</p>
+    <form id="login-form" novalidate>
+      <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="you@email.com" /></div>
+      <div class="form-group"><label>Password</label><input type="password" id="login-password" placeholder="Password" /></div>
+      <span class="form-error" id="login-error" style="display:none"></span>
+      <button type="submit" class="btn btn-primary btn-block" style="margin-top:1rem">Log In</button>
+    </form>
+    <p class="auth-switch">New here? <a id="to-signup">Sign Up</a></p>
+  </div>
+</div>
+<div class="overlay" id="signup-modal" style="display:none">
+  <div class="modal auth-modal">
+    <button class="modal-close" onclick="closeOverlay('signup-modal')">✕</button>
+    <h2>Create Account 🎂</h2><p>Join to track orders</p>
+    <form id="signup-form" novalidate>
+      <div class="form-row">
+        <div class="form-group"><label>Name *</label><input type="text" id="signup-name" placeholder="Full name" /></div>
+        <div class="form-group"><label>Phone</label><input type="tel" id="signup-phone" placeholder="(301) 555-0000" /></div>
+      </div>
+      <div class="form-group"><label>Email *</label><input type="email" id="signup-email" placeholder="you@email.com" /></div>
+      <div class="form-group"><label>Password *</label><input type="password" id="signup-password" placeholder="Create a password" /></div>
+      <span class="form-error" id="signup-error" style="display:none"></span>
+      <button type="submit" class="btn btn-primary btn-block" style="margin-top:1rem">Sign Up</button>
+    </form>
+    <p class="auth-switch">Have an account? <a id="to-login">Log In</a></p>
+  </div>
+</div>
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
