@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Custom Cake Order — Selly Bake House</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">Selly <span>Bake</span> House<small>Home of everything toothsome</small></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li>
+      <li><a href="custom-cake.html" class="active">Custom Cake</a></li>
+      <li><a href="gallery.html">Gallery</a></li><li><a href="about.html">About</a></li><li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-actions" id="nav-actions">
+      <span class="user-greeting" id="user-greeting" style="display:none"></span>
+      <button class="btn btn-ghost btn-sm" id="logout-btn" style="display:none">Logout</button>
+      <button class="btn btn-rose btn-sm" id="login-btn" onclick="openOverlay('login-modal')">Login</button>
+      <a href="cart.html" class="btn-icon">🛒<span class="cart-badge" id="cart-badge" style="display:none">0</span></a>
+    </div>
+    <button class="nav-toggle" id="nav-toggle"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="container">
+    <div class="cake-page-wrapper">
+
+      <!-- HERO -->
+      <div class="cake-hero">
+        <h1>🎂 Custom Cake Order</h1>
+        <p>Tell Selina about your dream cake. She'll review your request and confirm pricing within 48 hours.</p>
+      </div>
+
+      <!-- CAKES DISABLED STATE -->
+      <div id="cakes-disabled" style="display:none;text-align:center;padding:4rem 2rem">
+        <div style="font-size:3.5rem;margin-bottom:1rem">🚫</div>
+        <h2 class="serif" style="font-size:2.5rem;color:var(--brown-dark);margin-bottom:.8rem">Custom Orders Paused</h2>
+        <p style="color:var(--text-muted);max-width:420px;margin:0 auto 1.5rem;line-height:1.8">
+          Selina is not currently accepting custom cake orders. Please check back soon, or <a href="contact.html" style="color:var(--rose-deep);font-weight:700">contact us directly</a>.
+        </p>
+        <a href="shop.html" class="btn btn-primary">Browse Ready-Made Items</a>
+      </div>
+
+      <!-- LOGIN REQUIRED STATE -->
+      <div id="login-required" style="display:none;text-align:center;padding:4rem 2rem">
+        <div style="font-size:3.5rem;margin-bottom:1rem">🔐</div>
+        <h2 class="serif" style="font-size:2.5rem;color:var(--brown-dark);margin-bottom:.8rem">Account Required</h2>
+        <p style="color:var(--text-muted);max-width:420px;margin:0 auto 1.5rem;line-height:1.8">
+          Please log in or create a free account to place a custom cake order. This helps us keep track of your request and send you updates.
+        </p>
+        <div style="display:flex;gap:1rem;justify-content:center">
+          <button class="btn btn-primary" onclick="openOverlay('login-modal')">Log In</button>
+          <button class="btn btn-outline" onclick="openOverlay('signup-modal')">Create Account</button>
+        </div>
+      </div>
+
+      <!-- CAKE FORM -->
+      <div id="cake-form-section">
+        <!-- Step Bar -->
+        <div class="step-bar">
+          <div class="step-item active" data-step-label="1">1. Contact</div>
+          <div class="step-item" data-step-label="2">2. Cake Details</div>
+          <div class="step-item" data-step-label="3">3. Delivery</div>
+          <div class="step-item" data-step-label="4">4. Review</div>
+        </div>
+
+        <div class="cake-form-card">
+
+          <!-- STEP 1: Contact Info -->
+          <div class="step-panel" data-step="1">
+            <h3 class="serif" style="font-size:1.6rem;color:var(--brown-dark);margin-bottom:1.5rem">Your Contact Details</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="cake-name">Full Name *</label>
+                <input type="text" id="cake-name" placeholder="Your full name" />
+              </div>
+              <div class="form-group">
+                <label for="cake-phone">Phone Number *</label>
+                <input type="tel" id="cake-phone" placeholder="(301) 555-0000" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="cake-email">Email Address *</label>
+              <input type="email" id="cake-email" placeholder="you@email.com" />
+              <span class="form-hint">We'll send your order confirmation here.</span>
+            </div>
+            <div class="step-nav">
+              <span></span>
+              <button class="btn btn-primary step-next">Next: Cake Details →</button>
+            </div>
+          </div>
+
+          <!-- STEP 2: Cake Details -->
+          <div class="step-panel" data-step="2" style="display:none">
+            <h3 class="serif" style="font-size:1.6rem;color:var(--brown-dark);margin-bottom:1.5rem">Cake Specifications</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="cake-size">Cake Size *</label>
+                <select id="cake-size"></select>
+              </div>
+              <div class="form-group">
+                <label for="cake-flavor">Cake Flavor *</label>
+                <select id="cake-flavor"></select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="cake-frosting">Frosting Type</label>
+                <select id="cake-frosting"></select>
+              </div>
+              <div class="form-group">
+                <label for="cake-filling">Filling</label>
+                <select id="cake-filling"></select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="cake-design">Design Description *</label>
+              <textarea id="cake-design" rows="4" placeholder="Describe colors, theme, decorations, lettering, inspiration… Be as detailed as possible!"></textarea>
+              <span class="form-hint">The more detail, the better! You can also mention any inspiration photos you'll send via email.</span>
+            </div>
+            <div class="form-group">
+              <label>Add-ons (optional)</label>
+              <div id="cake-addons" style="display:grid;grid-template-columns:1fr 1fr;gap:.2rem .8rem;padding:.5rem 0"></div>
+            </div>
+            <div class="step-nav">
+              <button class="btn btn-outline step-prev">← Back</button>
+              <button class="btn btn-primary step-next">Next: Delivery →</button>
+            </div>
+          </div>
+
+          <!-- STEP 3: Delivery -->
+          <div class="step-panel" data-step="3" style="display:none">
+            <h3 class="serif" style="font-size:1.6rem;color:var(--brown-dark);margin-bottom:1.5rem">Delivery & Date</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="cake-date">Date Needed *</label>
+                <input type="date" id="cake-date" />
+                <span class="form-hint">Minimum 3 days lead time required.</span>
+              </div>
+              <div class="form-group">
+                <label for="cake-method">Fulfillment Method</label>
+                <select id="cake-method">
+                  <option value="pickup">Pickup — 721 Fallsgrove Dr, Rockville MD</option>
+                  <option value="delivery">Delivery (Maryland only, fee applies)</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="cake-notes">Additional Notes</label>
+              <textarea id="cake-notes" rows="3" placeholder="Allergies, dietary restrictions, any other special requests…"></textarea>
+            </div>
+            <div style="background:var(--cream-dark);border-radius:var(--radius-sm);padding:1rem;font-size:.88rem;color:var(--text-muted)">
+              <strong style="color:var(--brown-dark)">📝 Pricing Note:</strong>
+              Custom cake pricing depends on size, complexity, and design. Selina will review your request and send a quote within 48 hours. Payment is due upon approval.
+            </div>
+            <div class="step-nav">
+              <button class="btn btn-outline step-prev">← Back</button>
+              <button class="btn btn-primary step-next">Review Order →</button>
+            </div>
+          </div>
+
+          <!-- STEP 4: Review -->
+          <div class="step-panel" data-step="4" style="display:none">
+            <h3 class="serif" style="font-size:1.6rem;color:var(--brown-dark);margin-bottom:1rem">Review Your Request</h3>
+            <p style="color:var(--text-muted);font-size:.9rem;margin-bottom:1.5rem">Please double-check everything before submitting. Selina will contact you within 48 hours.</p>
+            <div style="background:var(--cream);border-radius:var(--radius-sm);padding:1.2rem;margin-bottom:1.5rem">
+              <table class="review-table">
+                <tbody id="review-body"></tbody>
+              </table>
+            </div>
+            <div class="step-nav">
+              <button class="btn btn-outline step-prev">← Edit</button>
+              <button class="btn btn-primary" id="cake-submit">Submit Request 🎂</button>
+            </div>
+          </div>
+
+        </div><!-- /cake-form-card -->
+      </div><!-- /cake-form-section -->
+
+      <!-- SUCCESS STATE -->
+      <div id="cake-success" style="display:none;text-align:center;padding:3rem 2rem">
+        <div style="font-size:4rem;margin-bottom:1rem">🎉</div>
+        <h2 class="serif" style="font-size:2.5rem;color:var(--brown-dark);margin-bottom:.8rem">Request Received!</h2>
+        <p style="color:var(--text-muted);max-width:480px;margin:0 auto 1.5rem;line-height:1.8">
+          Your custom cake request <strong id="success-order-id" style="color:var(--brown-dark)"></strong> has been submitted. Selina will review it and send you a quote and confirmation within <strong style="color:var(--brown)">48 hours</strong>.
+        </p>
+        <div style="background:var(--cream-dark);border-radius:var(--radius-sm);padding:1rem 1.5rem;display:inline-block;margin-bottom:2rem">
+          <p style="font-size:.88rem;color:var(--text-muted)">📧 <strong style="color:var(--brown-dark)">Check your email</strong> for a confirmation. Questions? Call us at (301) 356-1232</p>
+        </div>
+        <div style="display:flex;gap:1rem;justify-content:center">
+          <a href="index.html" class="btn btn-primary">Back to Home</a>
+          <a href="shop.html" class="btn btn-outline">Browse Shop</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- AUTH MODALS -->
+<div class="overlay" id="login-modal" style="display:none">
+  <div class="modal auth-modal">
+    <button class="modal-close" onclick="closeOverlay('login-modal')">✕</button>
+    <h2>Welcome Back 🍪</h2><p>Log in to place your custom cake order</p>
+    <form id="login-form" novalidate>
+      <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="you@email.com" /></div>
+      <div class="form-group"><label>Password</label><input type="password" id="login-password" placeholder="Password" /></div>
+      <span class="form-error" id="login-error" style="display:none"></span>
+      <button type="submit" class="btn btn-primary btn-block" style="margin-top:1rem">Log In</button>
+    </form>
+    <p class="auth-switch">New here? <a id="to-signup">Sign Up</a></p>
+  </div>
+</div>
+<div class="overlay" id="signup-modal" style="display:none">
+  <div class="modal auth-modal">
+    <button class="modal-close" onclick="closeOverlay('signup-modal')">✕</button>
+    <h2>Create Account 🎂</h2><p>Join to place custom cake orders</p>
+    <form id="signup-form" novalidate>
+      <div class="form-row">
+        <div class="form-group"><label>Name *</label><input type="text" id="signup-name" placeholder="Full name" /></div>
+        <div class="form-group"><label>Phone</label><input type="tel" id="signup-phone" placeholder="(301) 555-0000" /></div>
+      </div>
+      <div class="form-group"><label>Email *</label><input type="email" id="signup-email" placeholder="you@email.com" /></div>
+      <div class="form-group"><label>Password *</label><input type="password" id="signup-password" placeholder="Create a password" /></div>
+      <span class="form-error" id="signup-error" style="display:none"></span>
+      <button type="submit" class="btn btn-primary btn-block" style="margin-top:1rem">Sign Up</button>
+    </form>
+    <p class="auth-switch">Have an account? <a id="to-login">Log In</a></p>
+  </div>
+</div>
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script src="js/cake.js"></script>
+</body>
+</html>
