@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Cart — Selly Bake House</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">Selly <span>Bake</span> House<small>Home of everything toothsome</small></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li>
+      <li><a href="custom-cake.html">Custom Cake</a></li><li><a href="gallery.html">Gallery</a></li>
+      <li><a href="about.html">About</a></li><li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-actions" id="nav-actions">
+      <span class="user-greeting" id="user-greeting" style="display:none"></span>
+      <button class="btn btn-ghost btn-sm" id="logout-btn" style="display:none">Logout</button>
+      <button class="btn btn-rose btn-sm" id="login-btn" onclick="openOverlay('login-modal')">Login</button>
+      <a href="cart.html" class="btn-icon">🛒<span class="cart-badge" id="cart-badge" style="display:none">0</span></a>
+    </div>
+    <button class="nav-toggle" id="nav-toggle"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="index.html">Home</a><a href="shop.html">Shop</a>
+  <a href="custom-cake.html">Custom Cake</a><a href="cart.html">Cart</a>
+</div>
+
+<!-- PAGE HEADER -->
+<div style="background:var(--cream-dark);padding:2.5rem 0 2rem">
+  <div class="container">
+    <h1 class="serif" style="font-size:3rem;color:var(--brown-dark)">Your Cart 🛒</h1>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+
+    <!-- EMPTY STATE -->
+    <div class="cart-empty" id="cart-empty" style="display:none">
+      <span class="big-emoji">🛒</span>
+      <h2>Your cart is empty</h2>
+      <p>Looks like you haven't added anything yet — let's fix that!</p>
+      <a href="shop.html" class="btn btn-primary btn-lg">Browse Our Treats</a>
+    </div>
+
+    <!-- CART LAYOUT -->
+    <div class="cart-layout" id="cart-main" style="display:none">
+
+      <!-- LEFT: Cart Items -->
+      <div>
+        <h2 class="serif" style="font-size:1.8rem;color:var(--brown-dark);margin-bottom:1.5rem">
+          Order Items
+        </h2>
+
+        <div id="cart-items">
+          <!-- Rendered by cart.js -->
+        </div>
+
+        <!-- DELIVERY OPTIONS -->
+        <div style="margin-top:2rem">
+          <h3 class="serif" style="font-size:1.4rem;color:var(--brown-dark);margin-bottom:.8rem">
+            Fulfillment Method
+          </h3>
+          <div class="delivery-options">
+            <label class="delivery-option selected" data-method="pickup">
+              <input type="radio" name="delivery" value="pickup" checked />
+              <div>
+                <div class="delivery-label">🏠 Pickup</div>
+                <div class="delivery-sub">721 Fallsgrove Dr, Rockville MD 20850 — Free</div>
+              </div>
+            </label>
+            <label class="delivery-option" data-method="delivery">
+              <input type="radio" name="delivery" value="delivery" />
+              <div>
+                <div class="delivery-label">🚗 Delivery</div>
+                <div class="delivery-sub">Maryland addresses only — delivery fee applies</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <a href="shop.html" class="btn btn-ghost">← Continue Shopping</a>
+      </div>
+
+      <!-- RIGHT: Summary -->
+      <div>
+        <div class="cart-summary" id="cart-summary" style="display:none">
+          <h3>Order Summary</h3>
+
+          <div class="summary-row"><span>Subtotal</span><span id="summary-subtotal">$0.00</span></div>
+          <div class="summary-row" id="delivery-row" style="display:none"><span>Delivery Fee</span><span id="summary-delivery">$0.00</span></div>
+          <div class="summary-row"><span>MD Tax (6%)</span><span id="summary-tax">$0.00</span></div>
+          <div class="summary-row total"><span>Total</span><span id="summary-total">$0.00</span></div>
+
+          <!-- GEO CHECK -->
+          <div id="geo-banner-container"></div>
+
+          <button class="btn btn-rose btn-block" id="geo-check-btn" style="margin-top:1rem">
+            📍 Verify Maryland Location
+          </button>
+
+          <button class="btn btn-primary btn-block" id="checkout-btn" disabled style="margin-top:.8rem">
+            Proceed to Checkout
+          </button>
+
+          <p style="text-align:center;font-size:.75rem;color:var(--text-muted);margin-top:.8rem">
+            🔒 Secure payment powered by Square
+          </p>
+
+          <div class="divider"></div>
+          <div style="font-size:.82rem;color:var(--text-muted)">
+            <p><strong style="color:var(--brown-dark)">📍 Service Area:</strong> We currently only serve customers in Maryland.</p>
+            <p style="margin-top:.4rem"><strong style="color:var(--brown-dark)">🕐 Pickup Hours:</strong> Mon–Sat 9am–6pm</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Square SDK Placeholder -->
+<div id="card-container" style="display:none"></div>
+<!-- 
+  TO INTEGRATE SQUARE PAYMENTS:
+  1. Add this script before </body>:
+     <script src="https://web.squarecdn.com/v1/square.js"></script>
+  2. Replace initiateSquareCheckout() in cart.js with the real Square flow.
+  See: https://developer.squareup.com/docs/web-payments/overview
+-->
+
+<!-- AUTH MODALS -->
+<div class="overlay" id="login-modal" style="display:none">
+  <div class="modal auth-modal">
+    <button class="modal-close" onclick="closeOverlay('login-modal')">✕</button>
+    <h2>Welcome Back 🍪</h2><p>Log in to your account</p>
+    <form id="login-form" novalidate>
+      <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="you@email.com" /></div>
+      <div class="form-group"><label>Password</label><input type="password" id="login-password" placeholder="Password" /></div>
+      <span class="form-error" id="login-error" style="display:none"></span>
+      <button type="submit" class="btn btn-primary btn-block" style="margin-top:1rem">Log In</button>
+    </form>
+    <p class="auth-switch">New here? <a id="to-signup">Sign Up</a></p>
+  </div>
+</div>
+<div class="overlay" id="signup-modal" style="display:none">
+  <div class="modal auth-modal">
+    <button class="modal-close" onclick="closeOverlay('signup-modal')">✕</button>
+    <h2>Create Account 🎂</h2><p>Join to track orders & custom cakes</p>
+    <form id="signup-form" novalidate>
+      <div class="form-row">
+        <div class="form-group"><label>Name *</label><input type="text" id="signup-name" placeholder="Full name" /></div>
+        <div class="form-group"><label>Phone</label><input type="tel" id="signup-phone" placeholder="(301) 555-0000" /></div>
+      </div>
+      <div class="form-group"><label>Email *</label><input type="email" id="signup-email" placeholder="you@email.com" /></div>
+      <div class="form-group"><label>Password *</label><input type="password" id="signup-password" placeholder="Create a password" /></div>
+      <span class="form-error" id="signup-error" style="display:none"></span>
+      <button type="submit" class="btn btn-primary btn-block" style="margin-top:1rem">Sign Up</button>
+    </form>
+    <p class="auth-switch">Have an account? <a id="to-login">Log In</a></p>
+  </div>
+</div>
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script src="js/cart.js"></script>
+</body>
+</html>
