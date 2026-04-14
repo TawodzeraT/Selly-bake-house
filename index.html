@@ -1,13 +1,13 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Selly Bake House — Home of Everything Toothsome</title>
+  <title>Selly Bake House</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-
 <nav class="navbar">
   <div class="container nav-inner">
     <a href="index.html" class="nav-logo">Selly <span>Bake</span> House<small>Home of everything toothsome</small></a>
@@ -24,7 +24,11 @@
       <button id="logout-btn" class="btn btn-ghost btn-sm" style="display:none">Logout</button>
       <button id="login-btn" class="btn btn-rose btn-sm" onclick="openOverlay('login-modal')">Login</button>
       <a href="cart.html" class="btn-icon">🛒<span id="cart-badge" class="cart-badge" style="display:none">0</span></a>
-      <button onclick="openAdminLogin()" style="background:linear-gradient(145deg,#3E1C07,#5C2A10);color:#F0C060;border:none;padding:9px 18px;border-radius:50px;font-weight:800;cursor:pointer;font-size:0.88rem;font-family:'Nunito',sans-serif;box-shadow:0 4px 12px rgba(62,28,7,0.3);transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">🔐 Admin</button>
+      <button
+        onclick="openAdminLogin()"
+        style="background:#3E1C07;color:#F0C060;border:none;padding:9px 20px;border-radius:50px;font-weight:800;cursor:pointer;font-size:0.9rem;font-family:Nunito,sans-serif;box-shadow:0 4px 12px rgba(62,28,7,0.3);">
+        🔐 Admin
+      </button>
     </div>
     <button class="nav-toggle" id="nav-toggle"><span></span><span></span><span></span></button>
   </div>
@@ -37,8 +41,8 @@
   <a href="gallery.html">Gallery</a>
   <a href="about.html">About</a>
   <a href="contact.html">Contact</a>
-  <a href="cart.html">🛒 Cart</a>
-  <a href="#" onclick="openAdminLogin();return false;">🔐 Admin Login</a>
+  <a href="cart.html">Cart</a>
+  <a href="#" onclick="openAdminLogin();return false;">Admin Login</a>
 </div>
 
 <section class="hero">
@@ -83,7 +87,7 @@
   </div>
 </section>
 
-<section class="section" style="background:linear-gradient(135deg,var(--cream-dark) 0%,var(--cream-mid) 100%);">
+<section class="section" style="background:var(--cream-dark);">
   <div class="container">
     <div class="section-heading">
       <span class="tag">Customer Favorites</span>
@@ -97,7 +101,7 @@
 <section class="section">
   <div class="container">
     <div class="cta-banner">
-      <h2>Dream Cake? Let us Make It Real.</h2>
+      <h2>Dream Cake? Let Us Make It Real.</h2>
       <p>Have a vision for your perfect birthday, wedding, or celebration cake? Tell Selina and she will bring it to life crafted just for you.</p>
       <a href="custom-cake.html" class="btn btn-rose btn-lg">Design Your Cake</a>
     </div>
@@ -156,8 +160,7 @@
         <ul>
           <li><a href="tel:+13013561232">(301) 356-1232</a></li>
           <li><a href="mailto:sellybakehouse@gmail.com">sellybakehouse@gmail.com</a></li>
-          <li><a href="#">721 Fallsgrove Dr</a></li>
-          <li><a href="#">Rockville, MD 20850</a></li>
+          <li><a href="#">721 Fallsgrove Dr, Rockville MD 20850</a></li>
         </ul>
       </div>
     </div>
@@ -168,7 +171,6 @@
   </div>
 </footer>
 
-<!-- CUSTOMER LOGIN MODAL -->
 <div class="overlay" id="login-modal" style="display:none;">
   <div class="modal auth-modal">
     <button class="modal-close" onclick="closeOverlay('login-modal')">✕</button>
@@ -184,7 +186,6 @@
   </div>
 </div>
 
-<!-- CUSTOMER SIGNUP MODAL -->
 <div class="overlay" id="signup-modal" style="display:none;">
   <div class="modal auth-modal">
     <button class="modal-close" onclick="closeOverlay('signup-modal')">✕</button>
@@ -204,10 +205,9 @@
   </div>
 </div>
 
-<!-- ADMIN LOGIN MODAL -->
 <div id="admin-login-modal" style="display:none;position:fixed;inset:0;background:rgba(39,18,4,0.75);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(6px);">
   <div style="background:linear-gradient(160deg,#FFFDF8 0%,#FFF4E8 100%);border-radius:24px;padding:2.5rem;max-width:380px;width:90%;box-shadow:0 30px 80px rgba(39,18,4,0.45);border:1.5px solid rgba(240,192,96,0.30);position:relative;">
-    <button onclick="closeAdminLogin()" style="position:absolute;top:1rem;right:1rem;width:32px;height:32px;border-radius:50%;border:none;background:#F7E8D4;cursor:pointer;font-size:1rem;color:#9B6340;" onmouseover="this.style.background='#FCE8EE'" onmouseout="this.style.background='#F7E8D4'">✕</button>
+    <button onclick="closeAdminLogin()" style="position:absolute;top:1rem;right:1rem;width:32px;height:32px;border-radius:50%;border:none;background:#F7E8D4;cursor:pointer;font-size:1rem;color:#9B6340;">✕</button>
     <div style="text-align:center;margin-bottom:1.8rem;">
       <div style="font-size:2.8rem;margin-bottom:0.4rem;">🔐</div>
       <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:#3E1C07;margin-bottom:0.2rem;">Admin Login</h2>
@@ -215,11 +215,11 @@
     </div>
     <label style="display:block;font-weight:800;font-size:0.85rem;color:#6B3A1F;margin-bottom:0.4rem;font-family:'Nunito',sans-serif;">Password</label>
     <div style="position:relative;margin-bottom:1rem;">
-      <input type="password" id="admin-password-input" placeholder="Enter your password" onkeydown="if(event.key==='Enter') checkAdminPassword()" style="width:100%;padding:0.85rem 3rem 0.85rem 1rem;border:1.5px solid #EDD9BC;border-radius:12px;font-family:'Nunito',sans-serif;font-size:0.95rem;color:#3E1C07;background:white;outline:none;" onfocus="this.style.borderColor='#D4637A';this.style.boxShadow='0 0 0 4px rgba(212,99,122,0.15)'" onblur="this.style.borderColor='#EDD9BC';this.style.boxShadow='none'" />
+      <input type="password" id="admin-password-input" placeholder="Enter your password" onkeydown="if(event.key==='Enter') checkAdminPassword()" style="width:100%;padding:0.85rem 3rem 0.85rem 1rem;border:1.5px solid #EDD9BC;border-radius:12px;font-family:'Nunito',sans-serif;font-size:0.95rem;color:#3E1C07;background:white;outline:none;" onfocus="this.style.borderColor='#D4637A'" onblur="this.style.borderColor='#EDD9BC'" />
       <button onclick="toggleAdminPw()" id="toggle-admin-pw" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;">👁️</button>
     </div>
     <div id="admin-login-error" style="display:none;background:#FFE0E5;color:#9B1C2E;border:1px solid #FFAAB5;border-radius:8px;padding:0.55rem 0.9rem;font-size:0.82rem;font-weight:700;margin-bottom:1rem;font-family:'Nunito',sans-serif;"></div>
-    <button id="admin-login-btn" onclick="checkAdminPassword()" style="width:100%;padding:0.95rem;background:linear-gradient(145deg,#3E1C07 0%,#5C2A10 50%,#3E1C07 100%);color:#F0C060;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;box-shadow:0 4px 16px rgba(62,28,7,0.30);transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">Enter Admin Panel →</button>
+    <button id="admin-login-btn" onclick="checkAdminPassword()" style="width:100%;padding:0.95rem;background:linear-gradient(145deg,#3E1C07 0%,#5C2A10 50%,#3E1C07 100%);color:#F0C060;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;">Enter Admin Panel</button>
     <p style="text-align:center;font-size:0.75rem;color:#9B6340;margin-top:0.9rem;font-family:'Nunito',sans-serif;">🔒 Authorized staff only</p>
   </div>
 </div>
@@ -231,7 +231,7 @@
   document.addEventListener("DOMContentLoaded", function() {
     var grid = document.getElementById("best-sellers-grid");
     if (grid && window.SBH) {
-      grid.innerHTML = SBH.getBestSellers(null, 4).map(function(p){ return buildProductCard(p); }).join("");
+      grid.innerHTML = SBH.getBestSellers(null,4).map(function(p){ return buildProductCard(p); }).join("");
     }
   });
   document.getElementById("admin-login-modal").addEventListener("click", function(e){ if(e.target===this) closeAdminLogin(); });
