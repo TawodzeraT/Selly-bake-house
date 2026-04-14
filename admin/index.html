@@ -7,7 +7,17 @@
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/admin.css" />
 </head>
-<body>
+<body<script>
+  (function() {
+    var PASSWORD = "SellyBakes2025!";
+
+    var stored = localStorage.getItem("sbh_admin_auth");
+    if (stored !== PASSWORD) {
+      alert("You are not logged in. Please log in from the main website.");
+      window.location.href = "../index.html";
+    }
+  })();
+</script>
 
 <nav class="navbar">
   <div class="container nav-inner">
