@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Placed — Selly Bake House</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">Selly <span>Bake</span> House<small>Home of everything toothsome</small></a>
+    <div class="nav-actions" id="nav-actions">
+      <a href="cart.html" class="btn-icon">🛒<span class="cart-badge" id="cart-badge" style="display:none">0</span></a>
+    </div>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="container" style="max-width:600px;text-align:center;padding:5rem 2rem">
+    <div style="font-size:5rem;margin-bottom:1.5rem">🎉</div>
+    <h1 class="serif" style="font-size:3rem;color:var(--brown-dark);margin-bottom:.8rem">Order Placed!</h1>
+    <p style="color:var(--text-muted);font-size:1.05rem;line-height:1.8;margin-bottom:.5rem">
+      Thank you! Your order <strong id="order-id" style="color:var(--brown)"></strong> has been received.
+    </p>
+    <p style="color:var(--text-muted);margin-bottom:2rem;line-height:1.8">
+      Selina will prepare your items and contact you to confirm pickup/delivery timing. Check your email for a confirmation.
+    </p>
+    <div style="background:var(--cream-dark);border-radius:var(--radius-sm);padding:1.2rem 1.5rem;margin-bottom:2rem;text-align:left">
+      <p style="font-size:.9rem;font-weight:700;color:var(--brown-dark);margin-bottom:.5rem">What happens next:</p>
+      <ol style="padding-left:1.2rem;font-size:.88rem;color:var(--text-muted);line-height:2">
+        <li>You'll receive an email confirmation shortly</li>
+        <li>Selina begins baking your order</li>
+        <li>You'll be contacted to confirm pickup/delivery time</li>
+        <li>Enjoy your treats! 🍪</li>
+      </ol>
+    </div>
+    <div style="display:flex;gap:1rem;justify-content:center">
+      <a href="shop.html" class="btn btn-primary">Shop More</a>
+      <a href="index.html" class="btn btn-outline">Back to Home</a>
+    </div>
+  </div>
+</section>
+
+<script src="js/data.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    const orderId = params.get("order");
+    const el = document.getElementById("order-id");
+    if (el && orderId) el.textContent = "#" + orderId;
+    SBH.updateCartBadge();
+  });
+</script>
+</body>
+</html>
