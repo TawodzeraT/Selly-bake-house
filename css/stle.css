@@ -1,8 +1,17 @@
+/*
+ * ============================================================
+ *   SELLY BAKE HOUSE — style.css
+ *   Designer's note: We started with beige and cried.
+ *   Then we added color and cried tears of joy instead. 🍪
+ * ============================================================
+ */
+
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@400;500;600;700;800&display=swap');
 
-/* ===========================
-   RESET & ROOT VARIABLES
-   =========================== */
+/* ============================================================
+   ROOT VARIABLES
+   (aka "the paint buckets" — don't knock them over)
+   ============================================================ */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -10,33 +19,62 @@
 }
 
 :root {
-  --cream:       #FFF8EF;
-  --cream-dark:  #F5EDDF;
-  --cream-mid:   #EEE0CC;
-  --rose:        #E8B4B8;
-  --rose-deep:   #C8878C;
-  --rose-light:  #F5D5D7;
-  --brown:       #5C3317;
-  --brown-light: #8B5E3C;
-  --brown-dark:  #3D1F0A;
-  --gold:        #C9913D;
-  --gold-light:  #E8C07A;
-  --white:       #FFFEF9;
-  --text:        #3D1F0A;
-  --text-muted:  #8B6B50;
-  --green:       #2D6A4F;
-  --green-bg:    #D1FAE5;
-  --red:         #9B2335;
-  --red-bg:      #FDE8E8;
-  --yellow-bg:   #FFF3CD;
-  --yellow:      #856404;
-  --radius:      18px;
-  --radius-sm:   10px;
-  --radius-xs:   6px;
-  --shadow:      0 6px 30px rgba(93, 51, 23, 0.12);
-  --shadow-sm:   0 2px 10px rgba(93, 51, 23, 0.08);
-  --shadow-hover:0 12px 40px rgba(93, 51, 23, 0.18);
-  --transition:  all 0.25s ease;
+  /* The main cast of colors — each one personally auditioned */
+  --cream:        #FFF6EC;
+  --cream-dark:   #F7E8D4;
+  --cream-mid:    #EDD9BC;
+
+  /* Rose — the one everyone falls in love with */
+  --rose:         #F0AABF;
+  --rose-deep:    #D4637A;
+  --rose-light:   #FCE8EE;
+  --rose-glow:    rgba(212, 99, 122, 0.25);
+
+  /* Brown — rich like dark chocolate, not like mud */
+  --brown:        #6B3A1F;
+  --brown-light:  #9B6340;
+  --brown-dark:   #3E1C07;
+  --brown-xdark:  #210E02;
+
+  /* Gold — the highlight that makes everything fancy */
+  --gold:         #D4922A;
+  --gold-light:   #F0C060;
+  --gold-pale:    #FBE9C0;
+  --gold-glow:    rgba(212, 146, 42, 0.30);
+
+  /* Utility colors — the supporting cast */
+  --white:        #FFFDF8;
+  --text:         #3E1C07;
+  --text-muted:   #9B6340;
+  --green:        #1E6B45;
+  --green-bg:     #CEFFE5;
+  --red:          #9B1C2E;
+  --red-bg:       #FFE0E5;
+  --yellow-bg:    #FFF3CD;
+  --yellow:       #7A5A04;
+
+  /* Border radii — curves are our love language */
+  --radius:    20px;
+  --radius-sm: 12px;
+  --radius-xs:  6px;
+  --radius-pill: 999px;
+
+  /* Shadows — because flat is for pancakes, not websites */
+  --shadow:       0 8px 32px rgba(62, 28, 7, 0.14);
+  --shadow-sm:    0 3px 12px rgba(62, 28, 7, 0.09);
+  --shadow-hover: 0 16px 48px rgba(62, 28, 7, 0.22);
+  --shadow-glow:  0 0 30px rgba(212, 99, 122, 0.35);
+  --shadow-gold:  0 0 25px rgba(212, 146, 42, 0.35);
+
+  /* Gradients — like sunsets but tastier */
+  --grad-hero:    linear-gradient(145deg, #FFF0DC 0%, #FFE1C8 30%, #F9CDB8 60%, #F5BDC0 100%);
+  --grad-warm:    linear-gradient(135deg, #FBE9C0 0%, #F7D5B0 100%);
+  --grad-rose:    linear-gradient(135deg, #FCE8EE 0%, #F8D0DA 100%);
+  --grad-dark:    linear-gradient(145deg, #3E1C07 0%, #5C2A10 50%, #3E1C07 100%);
+  --grad-gold:    linear-gradient(135deg, #D4922A 0%, #F0C060 50%, #D4922A 100%);
+  --grad-card:    linear-gradient(160deg, #FFFDF8 0%, #FFF4E8 100%);
+
+  --transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 html { scroll-behavior: smooth; }
@@ -48,65 +86,78 @@ body {
   font-size: 16px;
   line-height: 1.6;
   min-height: 100vh;
+  /* A subtle warm texture that says "yes, this is a bakery" */
+  background-image:
+    radial-gradient(ellipse at 0% 0%, rgba(240,192,96,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 100% 100%, rgba(212,99,122,0.08) 0%, transparent 50%);
 }
 
 h1, h2, h3, h4, .serif {
   font-family: 'Cormorant Garamond', serif;
+  /* Fun fact: this font was born to describe baked goods */
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-img {
-  max-width: 100%;
-  display: block;
-}
-
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; display: block; }
 ul { list-style: none; }
 
-/* ===========================
-   UTILITY CLASSES
-   =========================== */
+/* ============================================================
+   UTILITY — the "miscellaneous drawer" of CSS
+   ============================================================ */
 .container {
   max-width: 1180px;
   margin: 0 auto;
   padding: 0 1.5rem;
 }
 
-.section { padding: 5rem 0; }
+.section    { padding: 5.5rem 0; }
 .section-sm { padding: 3rem 0; }
-
 .text-center { text-align: center; }
-.text-muted   { color: var(--text-muted); }
-.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
-
+.text-muted  { color: var(--text-muted); }
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+}
 .divider {
   height: 1px;
-  background: var(--cream-dark);
+  background: linear-gradient(90deg, transparent, var(--cream-mid), transparent);
   margin: 2rem 0;
 }
 
-/* ===========================
-   BUTTONS
-   =========================== */
+/* ============================================================
+   BUTTONS — the clickable works of art
+   ============================================================ */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
+  gap: 0.45rem;
   border: none;
-  border-radius: 50px;
-  padding: 0.75rem 1.75rem;
+  border-radius: var(--radius-pill);
+  padding: 0.8rem 2rem;
   font-family: 'Nunito', sans-serif;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 0.95rem;
   cursor: pointer;
   transition: var(--transition);
   text-decoration: none;
   white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.3px;
 }
+
+/* The little shimmer that runs across buttons on hover — fancy! */
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+  transition: left 0.5s ease;
+}
+.btn:hover::after { left: 150%; }
 
 .btn:disabled {
   opacity: 0.5;
@@ -114,26 +165,41 @@ ul { list-style: none; }
   transform: none !important;
 }
 
+/* Primary: the "main character" button */
 .btn-primary {
-  background: var(--brown);
-  color: var(--white);
+  background: var(--grad-dark);
+  color: var(--gold-light);
+  box-shadow: 0 4px 16px rgba(62,28,7,0.30);
 }
 .btn-primary:hover:not(:disabled) {
-  background: var(--brown-dark);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(62,28,7,0.40);
+  color: #fff;
 }
 
+/* Rose: the "pretty best friend" button */
 .btn-rose {
-  background: var(--rose);
-  color: var(--brown-dark);
+  background: linear-gradient(135deg, var(--rose) 0%, var(--rose-deep) 100%);
+  color: var(--white);
+  box-shadow: 0 4px 16px var(--rose-glow);
 }
 .btn-rose:hover:not(:disabled) {
-  background: var(--rose-deep);
-  color: var(--white);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px var(--rose-glow);
 }
 
+/* Gold: for when you feel extra */
+.btn-gold {
+  background: var(--grad-gold);
+  color: var(--brown-dark);
+  box-shadow: 0 4px 16px var(--gold-glow);
+}
+.btn-gold:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px var(--gold-glow);
+}
+
+/* Outline: the minimalist option */
 .btn-outline {
   background: transparent;
   border: 2px solid var(--brown);
@@ -143,6 +209,7 @@ ul { list-style: none; }
   background: var(--brown);
   color: var(--white);
   transform: translateY(-2px);
+  box-shadow: var(--shadow);
 }
 
 .btn-outline-rose {
@@ -162,26 +229,18 @@ ul { list-style: none; }
 }
 .btn-ghost:hover { color: var(--brown); }
 
-.btn-sm {
-  padding: 0.45rem 1.1rem;
-  font-size: 0.85rem;
-}
-
-.btn-lg {
-  padding: 1rem 2.5rem;
-  font-size: 1.05rem;
-}
-
+.btn-sm  { padding: 0.45rem 1.2rem; font-size: 0.85rem; }
+.btn-lg  { padding: 1.05rem 2.6rem; font-size: 1.05rem; }
 .btn-block { width: 100%; }
 
+/* Cart icon button — the little hero */
 .btn-icon {
-  width: 44px;
-  height: 44px;
+  width: 46px; height: 46px;
   padding: 0;
   border-radius: 50%;
   background: var(--cream-dark);
   color: var(--brown);
-  border: none;
+  border: 2px solid var(--cream-mid);
   cursor: pointer;
   font-size: 1.2rem;
   transition: var(--transition);
@@ -190,53 +249,62 @@ ul { list-style: none; }
   justify-content: center;
   position: relative;
 }
-.btn-icon:hover { background: var(--rose-light); transform: scale(1.05); }
+.btn-icon:hover {
+  background: var(--rose-light);
+  border-color: var(--rose);
+  transform: scale(1.08);
+  box-shadow: 0 4px 14px var(--rose-glow);
+}
 
-/* ===========================
-   BADGES
-   =========================== */
+/* ============================================================
+   BADGES — tiny labels with big personalities
+   ============================================================ */
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.2rem 0.65rem;
-  border-radius: 50px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.3px;
+  padding: 0.22rem 0.7rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.71rem;
+  font-weight: 800;
+  letter-spacing: 0.4px;
 }
-.badge-bestseller { background: #FFF3CD; color: #856404; }
-.badge-soldout    { background: #FDE8E8; color: #9B2335; }
-.badge-new        { background: #D1FAE5; color: #065F46; }
+.badge-bestseller { background: #FFF3CD; color: #7A5A04; border: 1px solid #F0C060; }
+.badge-soldout    { background: var(--red-bg);   color: var(--red);   border: 1px solid #FFAAB5; }
+.badge-new        { background: var(--green-bg); color: var(--green); border: 1px solid #6EE7B7; }
 .badge-outoforder { background: #F3F4F6; color: #6B7280; }
 
 .status-pill {
   display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 50px;
+  padding: 0.28rem 0.8rem;
+  border-radius: var(--radius-pill);
   font-size: 0.78rem;
-  font-weight: 700;
+  font-weight: 800;
 }
-.s-instock    { background: #D1FAE5; color: #065F46; }
-.s-soldout    { background: #FDE8E8; color: #9B2335; }
+.s-instock    { background: var(--green-bg); color: var(--green); }
+.s-soldout    { background: var(--red-bg);   color: var(--red);   }
 .s-outoforder { background: #F3F4F6; color: #6B7280; }
-.s-pending    { background: #FFF3CD; color: #856404; }
-.s-completed  { background: #D1FAE5; color: #065F46; }
-.s-cancelled  { background: #FDE8E8; color: #9B2335; }
-.s-approved   { background: #D1FAE5; color: #065F46; }
-.s-rejected   { background: #FDE8E8; color: #9B2335; }
+.s-pending    { background: var(--yellow-bg); color: var(--yellow); }
+.s-completed  { background: var(--green-bg); color: var(--green); }
+.s-cancelled  { background: var(--red-bg);   color: var(--red);   }
+.s-approved   { background: var(--green-bg); color: var(--green); }
+.s-rejected   { background: var(--red-bg);   color: var(--red);   }
 
-/* ===========================
-   NAVIGATION
-   =========================== */
+/* ============================================================
+   NAVIGATION — the thing at the top that nobody thinks about
+   until it breaks
+   ============================================================ */
 .navbar {
-  background: var(--white);
-  border-bottom: 1px solid var(--cream-dark);
+  background: rgba(255, 253, 248, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(240, 192, 96, 0.25);
   position: sticky;
   top: 0;
   z-index: 100;
-  height: 72px;
+  height: 74px;
   display: flex;
   align-items: center;
+  box-shadow: 0 2px 20px rgba(62, 28, 7, 0.07);
 }
 
 .nav-inner {
@@ -248,23 +316,23 @@ ul { list-style: none; }
 
 .nav-logo {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.65rem;
+  font-size: 1.7rem;
   font-weight: 700;
-  color: var(--brown);
+  color: var(--brown-dark);
   text-decoration: none;
   letter-spacing: -0.5px;
+  line-height: 1;
 }
 .nav-logo span { color: var(--rose-deep); }
 .nav-logo small {
   display: block;
   font-family: 'Nunito', sans-serif;
-  font-size: 0.62rem;
-  font-weight: 600;
+  font-size: 0.6rem;
+  font-weight: 700;
   color: var(--text-muted);
-  letter-spacing: 2px;
+  letter-spacing: 2.5px;
   text-transform: uppercase;
-  line-height: 1;
-  margin-top: -2px;
+  margin-top: 1px;
 }
 
 .nav-links {
@@ -273,25 +341,25 @@ ul { list-style: none; }
   align-items: center;
 }
 .nav-links a {
-  font-size: 0.92rem;
-  font-weight: 600;
+  font-size: 0.9rem;
+  font-weight: 700;
   color: var(--text-muted);
-  transition: color 0.2s;
+  transition: var(--transition);
   position: relative;
+  padding-bottom: 2px;
 }
+/* The underline that slides in — smooth operator */
 .nav-links a::after {
   content: '';
   position: absolute;
-  bottom: -3px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--rose-deep);
-  transition: width 0.25s;
+  bottom: -2px; left: 0;
+  width: 0; height: 2.5px;
+  background: var(--grad-gold);
   border-radius: 2px;
+  transition: width 0.3s ease;
 }
 .nav-links a:hover,
-.nav-links a.active { color: var(--brown); }
+.nav-links a.active { color: var(--brown-dark); }
 .nav-links a:hover::after,
 .nav-links a.active::after { width: 100%; }
 
@@ -303,28 +371,27 @@ ul { list-style: none; }
 
 .cart-badge {
   position: absolute;
-  top: -5px;
-  right: -5px;
+  top: -6px; right: -6px;
   background: var(--rose-deep);
   color: white;
   border-radius: 50%;
-  width: 19px;
-  height: 19px;
+  width: 20px; height: 20px;
   font-size: 0.65rem;
   font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 2px solid var(--white);
+  /* Tiny badge with enormous confidence */
+  animation: badgePop 0.3s cubic-bezier(0.68,-0.55,0.27,1.55);
+}
+@keyframes badgePop {
+  from { transform: scale(0); }
+  to   { transform: scale(1); }
 }
 
-.user-greeting {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text-muted);
-}
+.user-greeting { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); }
 
-/* Hamburger */
 .nav-toggle {
   display: none;
   flex-direction: column;
@@ -336,10 +403,9 @@ ul { list-style: none; }
 }
 .nav-toggle span {
   display: block;
-  width: 24px;
-  height: 2px;
+  width: 24px; height: 2.5px;
   background: var(--brown);
-  border-radius: 2px;
+  border-radius: 3px;
   transition: var(--transition);
 }
 
@@ -349,125 +415,154 @@ ul { list-style: none; }
   border-bottom: 1px solid var(--cream-dark);
   padding: 1rem 1.5rem;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 .mobile-menu.open { display: flex; }
 .mobile-menu a {
-  padding: 0.6rem 0;
-  font-weight: 600;
+  padding: 0.65rem 0;
+  font-weight: 700;
   color: var(--text-muted);
   border-bottom: 1px solid var(--cream-dark);
+  font-size: 0.95rem;
 }
 .mobile-menu a:last-child { border-bottom: none; }
 
-/* ===========================
-   HERO
-   =========================== */
+/* ============================================================
+   HERO — the "first impression" that has to do ALL the work
+   ============================================================ */
 .hero {
-  background: linear-gradient(150deg, #FFF5E6 0%, #FAE8D8 40%, #F5DECE 100%);
+  background: var(--grad-hero);
   padding: 7rem 0 6rem;
   position: relative;
   overflow: hidden;
 }
 
+/* Decorative blobs — they just showed up and we let them stay */
 .hero::before {
   content: '';
   position: absolute;
-  width: 600px;
-  height: 600px;
+  width: 700px; height: 700px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(232,180,184,0.25) 0%, transparent 70%);
-  top: -200px;
-  right: -100px;
+  background: radial-gradient(circle, rgba(240,192,96,0.22) 0%, transparent 65%);
+  top: -250px; right: -150px;
   pointer-events: none;
+  animation: floatBlob 8s ease-in-out infinite;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212,99,122,0.15) 0%, transparent 65%);
+  bottom: -180px; left: -100px;
+  pointer-events: none;
+  animation: floatBlob 10s ease-in-out infinite reverse;
+}
+@keyframes floatBlob {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%       { transform: translateY(-30px) scale(1.05); }
 }
 
-.hero-content { max-width: 640px; }
+.hero-content { max-width: 660px; position: relative; z-index: 1; }
 
 .hero-tag {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  background: var(--rose-light);
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.7);
   color: var(--rose-deep);
-  padding: 0.35rem 1rem;
-  border-radius: 50px;
-  font-size: 0.8rem;
+  padding: 0.4rem 1.1rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.78rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 1.4rem;
+  letter-spacing: 2.5px;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(212, 99, 122, 0.25);
+  box-shadow: 0 2px 12px rgba(212, 99, 122, 0.12);
+  backdrop-filter: blur(8px);
 }
 
 .hero h1 {
-  font-size: 4.8rem;
+  font-size: 5rem;
   line-height: 1.0;
   color: var(--brown-dark);
-  margin-bottom: 1.2rem;
-  letter-spacing: -1px;
+  margin-bottom: 1.4rem;
+  letter-spacing: -2px;
 }
 .hero h1 em {
   color: var(--rose-deep);
   font-style: italic;
+  /* This italic is doing heavy emotional lifting */
+  background: linear-gradient(135deg, var(--rose-deep), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .hero p {
   font-size: 1.1rem;
   color: var(--text-muted);
-  line-height: 1.8;
-  margin-bottom: 2.2rem;
+  line-height: 1.85;
+  margin-bottom: 2.4rem;
   max-width: 520px;
 }
 
 .hero-btns {
   display: flex;
-  gap: 1rem;
+  gap: 1.1rem;
   flex-wrap: wrap;
 }
 
+/* The giant emoji that floats in the hero corner */
 .hero-visual {
   position: absolute;
   right: 5%;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 12rem;
-  opacity: 0.18;
+  font-size: 13rem;
+  opacity: 0.12;
   pointer-events: none;
   line-height: 1;
+  filter: drop-shadow(0 20px 40px rgba(212,99,122,0.3));
+  animation: gentleBob 6s ease-in-out infinite;
+}
+@keyframes gentleBob {
+  0%, 100% { transform: translateY(-50%) rotate(-3deg); }
+  50%       { transform: translateY(calc(-50% - 20px)) rotate(3deg); }
 }
 
-/* ===========================
-   SECTION HEADINGS
-   =========================== */
-.section-heading {
-  margin-bottom: 3rem;
-}
+/* ============================================================
+   SECTION HEADINGS — the titles that set the mood
+   ============================================================ */
+.section-heading { margin-bottom: 3.5rem; }
 .section-heading h2 {
-  font-size: 2.8rem;
+  font-size: 3rem;
   color: var(--brown-dark);
   line-height: 1.1;
 }
 .section-heading p {
   color: var(--text-muted);
-  margin-top: 0.5rem;
+  margin-top: 0.6rem;
   font-size: 1rem;
 }
 .section-heading .tag {
   display: inline-block;
-  background: var(--rose-light);
+  background: var(--grad-rose);
   color: var(--rose-deep);
-  padding: 0.2rem 0.8rem;
-  border-radius: 50px;
-  font-size: 0.75rem;
+  padding: 0.25rem 0.9rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.72rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 0.6rem;
+  letter-spacing: 2.5px;
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(212, 99, 122, 0.2);
 }
 
-/* ===========================
-   CATEGORY CARDS
-   =========================== */
+/* ============================================================
+   CATEGORY CARDS — choose your adventure
+   ============================================================ */
 .category-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -475,77 +570,98 @@ ul { list-style: none; }
 }
 
 .cat-card {
-  background: var(--white);
+  background: var(--grad-card);
   border-radius: var(--radius);
-  padding: 2.5rem 2rem;
+  padding: 2.8rem 2rem;
   text-align: center;
   cursor: pointer;
   transition: var(--transition);
   box-shadow: var(--shadow-sm);
-  border: 2px solid transparent;
+  border: 1.5px solid rgba(240, 192, 96, 0.2);
   text-decoration: none;
   display: block;
+  position: relative;
+  overflow: hidden;
 }
+/* Subtle shimmer in the corner */
+.cat-card::before {
+  content: '';
+  position: absolute;
+  top: -50%; right: -50%;
+  width: 100%; height: 100%;
+  background: radial-gradient(circle, rgba(240,192,96,0.1) 0%, transparent 60%);
+  transition: var(--transition);
+  opacity: 0;
+}
+.cat-card:hover::before { opacity: 1; }
 .cat-card:hover {
-  border-color: var(--rose);
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-hover);
-}
-.cat-icon {
-  font-size: 3.5rem;
-  margin-bottom: 1rem;
-  display: block;
-}
-.cat-card h3 {
-  font-size: 1.6rem;
-  color: var(--brown);
-  margin-bottom: 0.4rem;
-}
-.cat-card p {
-  font-size: 0.88rem;
-  color: var(--text-muted);
-  line-height: 1.5;
+  border-color: rgba(212, 99, 122, 0.4);
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-hover), 0 0 0 1px rgba(212,99,122,0.1);
 }
 
-/* ===========================
-   PRODUCT CARDS
-   =========================== */
+.cat-icon {
+  font-size: 3.8rem;
+  margin-bottom: 1.1rem;
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  /* This icon will not be still on hover. It has energy. */
+}
+.cat-card:hover .cat-icon { transform: scale(1.2) rotate(-5deg); }
+
+.cat-card h3 { font-size: 1.7rem; color: var(--brown); margin-bottom: 0.5rem; }
+.cat-card p  { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+
+/* ============================================================
+   PRODUCT CARDS — the stars of the show
+   ============================================================ */
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(275px, 1fr));
-  gap: 1.5rem;
+  gap: 1.6rem;
 }
 
 .product-card {
-  background: var(--white);
+  background: var(--grad-card);
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
+  border: 1.5px solid rgba(240, 192, 96, 0.15);
   transition: var(--transition);
   cursor: pointer;
   display: flex;
   flex-direction: column;
 }
 .product-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-7px);
   box-shadow: var(--shadow-hover);
+  border-color: rgba(212, 99, 122, 0.3);
 }
 
 .product-img {
   width: 100%;
-  height: 210px;
-  background: var(--cream-dark);
+  height: 215px;
+  /* A gradient background that looks intentional */
+  background: linear-gradient(145deg, var(--cream-dark) 0%, var(--cream-mid) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 5.5rem;
   flex-shrink: 0;
-  transition: transform 0.35s ease;
+  transition: transform 0.4s ease;
+  position: relative;
+  overflow: hidden;
 }
-.product-card:hover .product-img { transform: scale(1.03); }
+.product-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 60%, rgba(62,28,7,0.06) 100%);
+}
+.product-card:hover .product-img { transform: scale(1.06); }
 
 .product-body {
-  padding: 1.3rem;
+  padding: 1.4rem;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -555,22 +671,22 @@ ul { list-style: none; }
   display: flex;
   gap: 0.4rem;
   flex-wrap: wrap;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.65rem;
   min-height: 22px;
 }
 
 .product-name {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.35rem;
+  font-size: 1.4rem;
   color: var(--brown-dark);
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.35rem;
   line-height: 1.2;
 }
 
 .product-desc {
   font-size: 0.85rem;
   color: var(--text-muted);
-  line-height: 1.55;
+  line-height: 1.6;
   margin-bottom: auto;
   padding-bottom: 0.8rem;
 }
@@ -579,42 +695,40 @@ ul { list-style: none; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 0.8rem;
-  padding-top: 0.8rem;
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
   border-top: 1px solid var(--cream-dark);
 }
 
 .product-price {
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 800;
   color: var(--brown);
+  /* Money looks good in this color */
 }
 
-/* ===========================
-   FILTERS (Shop Page)
-   =========================== */
+/* ============================================================
+   FILTERS (Shop Page) — the sorting hat of the bakery
+   ============================================================ */
 .shop-controls {
   display: flex;
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
   margin-bottom: 2.5rem;
-  background: var(--white);
-  padding: 1.2rem 1.5rem;
+  background: var(--grad-card);
+  padding: 1.3rem 1.6rem;
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-sm);
+  border: 1.5px solid rgba(240, 192, 96, 0.2);
 }
 
-.filter-group {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
+.filter-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 
 .filter-btn {
-  padding: 0.45rem 1.1rem;
-  border-radius: 50px;
-  border: 1.5px solid var(--cream-dark);
+  padding: 0.48rem 1.2rem;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--cream-mid);
   background: var(--white);
   color: var(--text-muted);
   font-family: 'Nunito', sans-serif;
@@ -623,11 +737,16 @@ ul { list-style: none; }
   cursor: pointer;
   transition: var(--transition);
 }
-.filter-btn:hover { border-color: var(--rose); color: var(--brown); }
+.filter-btn:hover {
+  border-color: var(--rose);
+  color: var(--brown);
+  box-shadow: 0 2px 10px var(--rose-glow);
+}
 .filter-btn.active {
-  background: var(--brown);
-  color: var(--white);
-  border-color: var(--brown);
+  background: var(--grad-dark);
+  color: var(--gold-light);
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgba(62,28,7,0.25);
 }
 
 .search-box {
@@ -635,10 +754,15 @@ ul { list-style: none; }
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--cream);
-  border: 1.5px solid var(--cream-dark);
-  border-radius: 50px;
-  padding: 0.4rem 1rem;
+  background: var(--white);
+  border: 1.5px solid var(--cream-mid);
+  border-radius: var(--radius-pill);
+  padding: 0.45rem 1rem;
+  transition: var(--transition);
+}
+.search-box:focus-within {
+  border-color: var(--rose-deep);
+  box-shadow: 0 0 0 3px var(--rose-glow);
 }
 .search-box input {
   border: none;
@@ -651,19 +775,19 @@ ul { list-style: none; }
 }
 .search-box span { color: var(--text-muted); font-size: 1rem; }
 
-/* ===========================
-   PRODUCT MODAL
-   =========================== */
+/* ============================================================
+   PRODUCT MODAL — a popup that deserves to be seen
+   ============================================================ */
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(61, 31, 10, 0.55);
+  background: rgba(39, 18, 4, 0.60);
   z-index: 500;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  backdrop-filter: blur(3px);
+  backdrop-filter: blur(5px);
   animation: fadeIn 0.2s ease;
 }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -671,24 +795,27 @@ ul { list-style: none; }
 .modal {
   background: var(--white);
   border-radius: var(--radius);
-  padding: 2rem;
-  max-width: 560px;
+  padding: 2.2rem;
+  max-width: 580px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
-  animation: slideUp 0.25s ease;
+  animation: slideUp 0.3s cubic-bezier(0.34,1.3,0.64,1);
   position: relative;
+  box-shadow: 0 30px 80px rgba(39,18,4,0.35);
+  border: 1px solid rgba(240, 192, 96, 0.2);
 }
-@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
 
 .modal-close {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: 1.1rem; right: 1.1rem;
   background: var(--cream-dark);
   border: none;
-  width: 34px;
-  height: 34px;
+  width: 36px; height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -698,51 +825,63 @@ ul { list-style: none; }
   color: var(--text-muted);
   transition: var(--transition);
 }
-.modal-close:hover { background: var(--rose-light); color: var(--brown); }
+.modal-close:hover {
+  background: var(--rose-light);
+  color: var(--rose-deep);
+  transform: rotate(90deg);
+  /* Spinning X — dramatic but we're here for it */
+}
 
 .modal-product-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  gap: 1.6rem;
   align-items: start;
 }
-
 .modal-img {
   aspect-ratio: 1;
   border-radius: var(--radius-sm);
-  background: var(--cream-dark);
+  background: linear-gradient(145deg, var(--cream-dark), var(--cream-mid));
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 5rem;
 }
 
-/* ===========================
-   QTY CONTROL
-   =========================== */
+/* ============================================================
+   QTY CONTROL — plus and minus, the eternal battle
+   ============================================================ */
 .qty-control {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin: 1.2rem 0;
+  margin: 1.3rem 0;
+  background: var(--cream);
+  border-radius: var(--radius-pill);
+  padding: 0.4rem;
+  border: 1.5px solid var(--cream-dark);
+  width: fit-content;
 }
 .qty-btn {
-  width: 38px;
-  height: 38px;
+  width: 36px; height: 36px;
   border-radius: 50%;
-  border: 2px solid var(--cream-dark);
+  border: none;
   background: var(--white);
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-size: 1.2rem;
+  font-weight: 800;
   cursor: pointer;
   color: var(--brown);
   transition: var(--transition);
   display: flex;
   align-items: center;
   justify-content: center;
-  line-height: 1;
+  box-shadow: var(--shadow-sm);
 }
-.qty-btn:hover { border-color: var(--rose-deep); background: var(--rose-light); }
+.qty-btn:hover {
+  background: var(--rose-deep);
+  color: var(--white);
+  transform: scale(1.1);
+}
 .qty-num {
   font-size: 1.2rem;
   font-weight: 800;
@@ -751,9 +890,9 @@ ul { list-style: none; }
   text-align: center;
 }
 
-/* ===========================
-   DETAIL PAGE
-   =========================== */
+/* ============================================================
+   DETAIL PAGE — the full product bio
+   ============================================================ */
 .back-btn {
   display: inline-flex;
   align-items: center;
@@ -776,54 +915,49 @@ ul { list-style: none; }
   gap: 4rem;
   align-items: start;
 }
-
 .detail-img {
   aspect-ratio: 1;
   border-radius: var(--radius);
-  background: var(--cream-dark);
+  background: linear-gradient(145deg, var(--cream-dark), var(--cream-mid));
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 9rem;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-hover);
+  border: 2px solid rgba(240,192,96,0.25);
 }
-
 .detail-category {
   color: var(--rose-deep);
   font-weight: 800;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   text-transform: uppercase;
-  letter-spacing: 2.5px;
+  letter-spacing: 3px;
   margin-bottom: 0.5rem;
 }
-
 .detail-title {
-  font-size: 3.2rem;
+  font-size: 3.5rem;
   color: var(--brown-dark);
   line-height: 1.05;
   margin-bottom: 0.8rem;
 }
-
 .detail-price {
-  font-size: 2.2rem;
+  font-size: 2.4rem;
   font-weight: 800;
   color: var(--brown);
-  margin-bottom: 1.2rem;
+  margin-bottom: 1.3rem;
 }
-
 .detail-desc {
   color: var(--text-muted);
-  line-height: 1.85;
+  line-height: 1.9;
   margin-bottom: 2rem;
-  font-size: 1rem;
 }
 
-/* ===========================
-   CART PAGE
-   =========================== */
+/* ============================================================
+   CART PAGE — where wallets go to think
+   ============================================================ */
 .cart-layout {
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: 1fr 390px;
   gap: 2.5rem;
   align-items: start;
 }
@@ -833,190 +967,176 @@ ul { list-style: none; }
   align-items: center;
   gap: 1.2rem;
   padding: 1.2rem;
-  background: var(--white);
+  background: var(--grad-card);
   border-radius: var(--radius-sm);
   margin-bottom: 1rem;
   box-shadow: var(--shadow-sm);
+  border: 1.5px solid rgba(240,192,96,0.15);
   transition: var(--transition);
 }
-.cart-item:hover { box-shadow: var(--shadow); }
-
+.cart-item:hover {
+  box-shadow: var(--shadow);
+  border-color: rgba(212,99,122,0.2);
+}
 .cart-item-emoji {
-  width: 65px;
-  height: 65px;
-  background: var(--cream-dark);
+  width: 68px; height: 68px;
+  background: linear-gradient(145deg, var(--cream-dark), var(--cream-mid));
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.5rem;
+  font-size: 2.6rem;
   flex-shrink: 0;
+  border: 1.5px solid rgba(240,192,96,0.2);
 }
-
-.cart-item-info { flex: 1; min-width: 0; }
-
-.cart-item-name {
+.cart-item-info  { flex: 1; min-width: 0; }
+.cart-item-name  {
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.2rem;
   font-weight: 600;
   color: var(--brown-dark);
   margin-bottom: 0.2rem;
 }
-
-.cart-item-price {
-  font-size: 0.88rem;
-  color: var(--text-muted);
-}
-
-.cart-item-qty {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.cart-item-total {
-  font-size: 1.1rem;
+.cart-item-price  { font-size: 0.88rem; color: var(--text-muted); }
+.cart-item-qty    { display: flex; align-items: center; gap: 0.6rem; }
+.cart-item-total  {
+  font-size: 1.15rem;
   font-weight: 800;
   color: var(--brown);
-  min-width: 60px;
+  min-width: 65px;
   text-align: right;
 }
-
 .cart-remove-btn {
-  width: 30px;
-  height: 30px;
+  width: 32px; height: 32px;
   border-radius: 50%;
   border: none;
   background: var(--cream-dark);
   color: var(--text-muted);
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   transition: var(--transition);
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.cart-remove-btn:hover { background: var(--red-bg); color: var(--red); }
+.cart-remove-btn:hover {
+  background: var(--red-bg);
+  color: var(--red);
+  transform: scale(1.1);
+}
 
 .cart-empty {
   text-align: center;
   padding: 6rem 2rem;
 }
 .cart-empty .big-emoji {
-  font-size: 4.5rem;
-  margin-bottom: 1rem;
+  font-size: 5rem;
+  margin-bottom: 1.2rem;
   display: block;
+  animation: gentleBob 3s ease-in-out infinite;
 }
 .cart-empty h2 {
-  font-size: 2.2rem;
+  font-size: 2.3rem;
   color: var(--brown-dark);
   margin-bottom: 0.5rem;
 }
-.cart-empty p {
-  color: var(--text-muted);
-  margin-bottom: 2rem;
-}
+.cart-empty p { color: var(--text-muted); margin-bottom: 2rem; }
 
-/* Cart Summary */
+/* Cart Summary — the part where we show you the damage */
 .cart-summary {
-  background: var(--white);
+  background: var(--grad-card);
   border-radius: var(--radius);
-  padding: 1.8rem;
-  box-shadow: var(--shadow-sm);
+  padding: 2rem;
+  box-shadow: var(--shadow);
   position: sticky;
   top: 90px;
+  border: 1.5px solid rgba(240,192,96,0.2);
 }
-
 .cart-summary h3 {
   font-size: 1.6rem;
   color: var(--brown-dark);
-  margin-bottom: 1.2rem;
+  margin-bottom: 1.3rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--cream-dark);
 }
-
 .summary-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.45rem 0;
+  padding: 0.5rem 0;
   font-size: 0.95rem;
   color: var(--text-muted);
 }
-
 .summary-row.total {
   border-top: 2px solid var(--cream-dark);
-  margin-top: 0.8rem;
-  padding-top: 1rem;
-  font-size: 1.15rem;
+  margin-top: 0.9rem;
+  padding-top: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 800;
   color: var(--brown-dark);
 }
 
-/* Delivery choice */
+/* Delivery options */
 .delivery-options {
   margin: 1.5rem 0;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.7rem;
 }
-
 .delivery-option {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-  padding: 0.8rem 1rem;
+  gap: 0.9rem;
+  padding: 0.9rem 1rem;
   border: 1.5px solid var(--cream-dark);
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: var(--transition);
+  background: var(--white);
 }
 .delivery-option:hover { border-color: var(--rose); }
 .delivery-option.selected {
   border-color: var(--rose-deep);
   background: var(--rose-light);
+  box-shadow: 0 2px 12px var(--rose-glow);
 }
 .delivery-option input[type="radio"] { accent-color: var(--rose-deep); }
-.delivery-option .delivery-label { font-weight: 700; font-size: 0.9rem; color: var(--brown-dark); }
-.delivery-option .delivery-sub { font-size: 0.8rem; color: var(--text-muted); }
+.delivery-option .delivery-label { font-weight: 800; font-size: 0.9rem; color: var(--brown-dark); }
+.delivery-option .delivery-sub    { font-size: 0.8rem; color: var(--text-muted); }
 
-/* Geo banners */
+/* Geo banners — the Maryland bouncer */
 .geo-banner {
   display: flex;
-  gap: 0.8rem;
+  gap: 0.9rem;
   align-items: flex-start;
-  padding: 1rem;
+  padding: 1rem 1.1rem;
   border-radius: var(--radius-sm);
   margin: 1rem 0;
   font-size: 0.88rem;
 }
 .geo-banner .geo-icon { font-size: 1.3rem; flex-shrink: 0; }
-.geo-banner strong { display: block; font-size: 0.9rem; margin-bottom: 0.15rem; }
-.geo-checking { background: var(--yellow-bg); color: var(--yellow); border: 1px solid #F5C842; }
-.geo-ok       { background: var(--green-bg); color: var(--green); border: 1px solid #6EE7B7; }
-.geo-fail     { background: var(--red-bg);   color: var(--red);   border: 1px solid #FCA5A5; }
+.geo-banner strong    { display: block; font-size: 0.9rem; margin-bottom: 0.15rem; }
+.geo-checking { background: var(--yellow-bg);  color: var(--yellow); border: 1px solid #F5C842; }
+.geo-ok       { background: var(--green-bg);   color: var(--green);  border: 1px solid #6EE7B7; }
+.geo-fail     { background: var(--red-bg);     color: var(--red);    border: 1px solid #FFAAB5; }
 
-/* ===========================
-   FORMS
-   =========================== */
-.form-group {
-  margin-bottom: 1.2rem;
-}
-
+/* ============================================================
+   FORMS — where humans share their hopes and data
+   ============================================================ */
+.form-group { margin-bottom: 1.2rem; }
 .form-group label {
   display: block;
-  font-weight: 700;
-  font-size: 0.87rem;
+  font-weight: 800;
+  font-size: 0.85rem;
   color: var(--brown);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.42rem;
   letter-spacing: 0.2px;
 }
-
 .form-group input,
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.78rem 1rem;
   border: 1.5px solid var(--cream-mid);
   border-radius: var(--radius-sm);
   font-family: 'Nunito', sans-serif;
@@ -1024,148 +1144,134 @@ ul { list-style: none; }
   color: var(--text);
   background: var(--white);
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: var(--transition);
 }
-
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
   border-color: var(--rose-deep);
-  box-shadow: 0 0 0 3px rgba(200, 135, 140, 0.15);
+  box-shadow: 0 0 0 4px var(--rose-glow);
+  background: var(--white);
 }
+.form-group textarea { resize: vertical; min-height: 92px; line-height: 1.6; }
+.form-row   { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-hint  { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.3rem; }
+.form-error { font-size: 0.78rem; color: var(--red); margin-top: 0.3rem; }
 
-.form-group textarea {
-  resize: vertical;
-  min-height: 90px;
-  line-height: 1.6;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-.form-hint {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  margin-top: 0.3rem;
-}
-
-.form-error {
-  font-size: 0.78rem;
-  color: var(--red);
-  margin-top: 0.3rem;
-}
-
-/* ===========================
-   LOGIN / SIGNUP MODAL
-   =========================== */
-.auth-modal { max-width: 420px; }
-
+/* ============================================================
+   AUTH MODALS — come in, we've been expecting you
+   ============================================================ */
+.auth-modal { max-width: 430px; }
 .auth-modal h2 {
-  font-size: 2rem;
+  font-size: 2.1rem;
   color: var(--brown-dark);
   margin-bottom: 0.3rem;
 }
 .auth-modal p {
   color: var(--text-muted);
-  margin-bottom: 1.8rem;
+  margin-bottom: 1.9rem;
   font-size: 0.93rem;
 }
-
 .auth-switch {
   text-align: center;
   font-size: 0.88rem;
   color: var(--text-muted);
-  margin-top: 1.2rem;
+  margin-top: 1.3rem;
 }
 .auth-switch a {
   color: var(--rose-deep);
   font-weight: 800;
   cursor: pointer;
 }
+.auth-switch a:hover { text-decoration: underline; }
 
-/* ===========================
-   CUSTOM CAKE PAGE
-   =========================== */
+/* ============================================================
+   CUSTOM CAKE PAGE — where dreams become batter
+   ============================================================ */
 .cake-page-wrapper { max-width: 700px; margin: 0 auto; }
-
-.cake-hero {
-  text-align: center;
-  padding: 3.5rem 0 2rem;
-}
-.cake-hero h1 { font-size: 3.5rem; color: var(--brown-dark); }
-.cake-hero p  { color: var(--text-muted); max-width: 500px; margin: 0.6rem auto 0; line-height: 1.8; }
+.cake-hero { text-align: center; padding: 3.5rem 0 2rem; }
+.cake-hero h1 { font-size: 3.8rem; color: var(--brown-dark); }
+.cake-hero p  { color: var(--text-muted); max-width: 500px; margin: 0.7rem auto 0; line-height: 1.85; }
 
 .step-bar {
   display: flex;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2.8rem;
   border-radius: var(--radius-sm);
   overflow: hidden;
-  border: 1.5px solid var(--cream-dark);
+  border: 1.5px solid var(--cream-mid);
+  box-shadow: var(--shadow-sm);
 }
-
 .step-item {
   flex: 1;
-  padding: 0.65rem 0.5rem;
+  padding: 0.7rem 0.5rem;
   text-align: center;
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 800;
   background: var(--cream-dark);
   color: var(--text-muted);
   border-right: 1px solid var(--cream-mid);
   transition: var(--transition);
 }
 .step-item:last-child { border-right: none; }
-.step-item.done    { background: var(--rose-light); color: var(--brown); }
-.step-item.active  { background: var(--rose-deep);  color: var(--white); }
-
-.cake-form-card {
-  background: var(--white);
-  border-radius: var(--radius);
-  padding: 2.5rem;
-  box-shadow: var(--shadow);
+.step-item.done   { background: var(--rose-light); color: var(--rose-deep); }
+.step-item.active {
+  background: var(--grad-dark);
+  color: var(--gold-light);
 }
 
+.cake-form-card {
+  background: var(--grad-card);
+  border-radius: var(--radius);
+  padding: 2.8rem;
+  box-shadow: var(--shadow);
+  border: 1.5px solid rgba(240,192,96,0.2);
+}
 .step-nav {
   display: flex;
   justify-content: space-between;
-  margin-top: 1.8rem;
-  padding-top: 1.5rem;
+  margin-top: 2rem;
+  padding-top: 1.6rem;
   border-top: 1px solid var(--cream-dark);
 }
-
-.review-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.93rem;
-}
+.review-table { width: 100%; border-collapse: collapse; font-size: 0.93rem; }
 .review-table tr td {
-  padding: 0.6rem 0;
+  padding: 0.65rem 0;
   border-bottom: 1px solid var(--cream-dark);
 }
 .review-table tr:last-child td { border-bottom: none; }
 .review-table td:first-child {
   color: var(--text-muted);
-  font-weight: 700;
-  width: 140px;
+  font-weight: 800;
+  width: 145px;
 }
-.review-table td:last-child {
-  color: var(--brown-dark);
-  font-weight: 600;
-}
+.review-table td:last-child { color: var(--brown-dark); font-weight: 600; }
 
-/* ===========================
-   ABOUT PAGE
-   =========================== */
+/* ============================================================
+   ABOUT PAGE — Selina's origin story
+   ============================================================ */
 .about-hero {
-  background: linear-gradient(135deg, var(--cream-dark) 0%, var(--cream-mid) 100%);
-  padding: 5rem 0;
+  background: linear-gradient(135deg, var(--cream-dark) 0%, var(--cream-mid) 60%, #F7D5B0 100%);
+  padding: 5.5rem 0;
   text-align: center;
+  position: relative;
+  overflow: hidden;
 }
-.about-hero h1 { font-size: 4rem; color: var(--brown-dark); margin-bottom: 0.8rem; }
-.about-hero p  { color: var(--text-muted); font-size: 1.05rem; max-width: 560px; margin: 0 auto; line-height: 1.85; }
+.about-hero::before {
+  content: '🌸';
+  position: absolute;
+  font-size: 12rem;
+  opacity: 0.08;
+  top: 50%; right: 5%;
+  transform: translateY(-50%);
+}
+.about-hero h1 { font-size: 4.2rem; color: var(--brown-dark); margin-bottom: 0.9rem; }
+.about-hero p  {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  max-width: 560px;
+  margin: 0 auto;
+  line-height: 1.9;
+}
 
 .about-grid {
   display: grid;
@@ -1173,16 +1279,16 @@ ul { list-style: none; }
   gap: 4rem;
   align-items: center;
 }
-
 .about-img {
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 4/3;
   border-radius: var(--radius);
-  background: var(--cream-dark);
+  background: linear-gradient(145deg, var(--cream-dark), var(--cream-mid));
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 7rem;
-  box-shadow: var(--shadow);
+  font-size: 7.5rem;
+  box-shadow: var(--shadow-hover);
+  border: 2px solid rgba(240,192,96,0.25);
 }
 
 .value-cards {
@@ -1192,54 +1298,61 @@ ul { list-style: none; }
   margin-top: 1.5rem;
 }
 .value-card {
-  background: var(--white);
+  background: var(--grad-card);
   border-radius: var(--radius-sm);
-  padding: 1.5rem;
+  padding: 1.8rem 1.4rem;
   text-align: center;
   box-shadow: var(--shadow-sm);
+  border: 1.5px solid rgba(240,192,96,0.15);
+  transition: var(--transition);
 }
-.value-card .icon { font-size: 2.5rem; margin-bottom: 0.6rem; }
-.value-card h4 { font-size: 1.1rem; color: var(--brown-dark); margin-bottom: 0.3rem; }
-.value-card p  { font-size: 0.82rem; color: var(--text-muted); }
+.value-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+  border-color: rgba(212,99,122,0.25);
+}
+.value-card .icon { font-size: 2.5rem; margin-bottom: 0.7rem; }
+.value-card h4    { font-size: 1.15rem; color: var(--brown-dark); margin-bottom: 0.35rem; }
+.value-card p     { font-size: 0.82rem; color: var(--text-muted); line-height: 1.65; }
 
 .contact-card {
-  background: var(--white);
+  background: var(--grad-card);
   border-radius: var(--radius);
   padding: 2.5rem;
   box-shadow: var(--shadow);
   display: flex;
   gap: 2rem;
   flex-wrap: wrap;
+  border: 1.5px solid rgba(240,192,96,0.2);
 }
 .contact-item {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 0.9rem;
   font-size: 0.95rem;
 }
 .contact-item .contact-icon {
-  width: 42px;
-  height: 42px;
-  background: var(--rose-light);
+  width: 44px; height: 44px;
+  background: var(--grad-rose);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.1rem;
   flex-shrink: 0;
+  border: 1.5px solid rgba(212,99,122,0.2);
 }
-.contact-item .contact-text { font-weight: 700; color: var(--brown-dark); font-size: 0.9rem; }
+.contact-item .contact-text { font-weight: 800; color: var(--brown-dark); font-size: 0.9rem; }
 .contact-item .contact-sub  { font-size: 0.78rem; color: var(--text-muted); }
 
-/* ===========================
-   GALLERY PAGE
-   =========================== */
+/* ============================================================
+   GALLERY — the museum of deliciousness
+   ============================================================ */
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1rem;
 }
-
 .gallery-item {
   aspect-ratio: 1;
   border-radius: var(--radius-sm);
@@ -1251,128 +1364,161 @@ ul { list-style: none; }
   transition: var(--transition);
   overflow: hidden;
   position: relative;
+  border: 1.5px solid rgba(240,192,96,0.1);
 }
-.gallery-item:hover { transform: scale(1.03); box-shadow: var(--shadow); }
+.gallery-item:hover {
+  transform: scale(1.04);
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(212,99,122,0.3);
+}
 .gallery-item::after {
   content: attr(data-label);
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(transparent, rgba(61,31,10,0.6));
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(39,18,4,0.7));
   color: white;
-  font-size: 0.8rem;
-  font-weight: 700;
-  padding: 1rem 0.8rem 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 1.2rem 0.8rem 0.7rem;
   transform: translateY(100%);
-  transition: transform 0.3s;
+  transition: transform 0.3s ease;
+  font-family: 'Nunito', sans-serif;
 }
 .gallery-item:hover::after { transform: translateY(0); }
 
-/* ===========================
-   CONTACT PAGE
-   =========================== */
+/* ============================================================
+   CONTACT PAGE — drop us a line (not dough)
+   ============================================================ */
 .contact-layout {
   display: grid;
-  grid-template-columns: 1fr 1.2fr;
+  grid-template-columns: 1fr 1.3fr;
   gap: 4rem;
   align-items: start;
 }
 .contact-info-card {
-  background: var(--brown-dark);
+  background: var(--grad-dark);
   border-radius: var(--radius);
-  padding: 2.5rem;
+  padding: 2.8rem;
   color: var(--white);
+  position: relative;
+  overflow: hidden;
+}
+/* Decorative blob inside the dark card */
+.contact-info-card::before {
+  content: '';
+  position: absolute;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212,146,42,0.15) 0%, transparent 70%);
+  top: -100px; right: -80px;
+  pointer-events: none;
 }
 .contact-info-card h2 {
-  font-size: 2.2rem;
+  font-size: 2.3rem;
   color: var(--gold-light);
   margin-bottom: 0.5rem;
 }
 .contact-info-card p {
-  color: rgba(255,255,255,0.65);
-  margin-bottom: 2rem;
-  line-height: 1.8;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 2.2rem;
+  line-height: 1.85;
   font-size: 0.95rem;
 }
 .contact-info-item {
   display: flex;
   align-items: center;
-  gap: 0.9rem;
-  margin-bottom: 1.2rem;
+  gap: 1rem;
+  margin-bottom: 1.3rem;
   font-size: 0.9rem;
 }
 .contact-info-item .ci-icon {
-  width: 38px;
-  height: 38px;
-  background: rgba(255,255,255,0.12);
+  width: 40px; height: 40px;
+  background: rgba(255,255,255,0.1);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   font-size: 1rem;
+  border: 1px solid rgba(255,255,255,0.15);
 }
-.contact-info-item .ci-label { color: rgba(255,255,255,0.5); font-size: 0.75rem; }
-.contact-info-item .ci-value { color: var(--white); font-weight: 700; }
+.contact-info-item .ci-label { color: rgba(255,255,255,0.45); font-size: 0.73rem; text-transform: uppercase; letter-spacing: 1.5px; }
+.contact-info-item .ci-value { color: var(--white); font-weight: 800; }
 
 .contact-form-card {
-  background: var(--white);
+  background: var(--grad-card);
   border-radius: var(--radius);
-  padding: 2.5rem;
+  padding: 2.8rem;
   box-shadow: var(--shadow);
+  border: 1.5px solid rgba(240,192,96,0.2);
 }
-.contact-form-card h2 {
-  font-size: 2rem;
-  color: var(--brown-dark);
-  margin-bottom: 0.4rem;
-}
-.contact-form-card p {
-  color: var(--text-muted);
-  margin-bottom: 1.8rem;
-}
+.contact-form-card h2 { font-size: 2.1rem; color: var(--brown-dark); margin-bottom: 0.4rem; }
+.contact-form-card p  { color: var(--text-muted); margin-bottom: 1.9rem; }
 
-/* ===========================
-   CTA BANNER
-   =========================== */
+/* ============================================================
+   CTA BANNER — the grand finale of every page
+   ============================================================ */
 .cta-banner {
-  background: var(--brown-dark);
+  background: var(--grad-dark);
   border-radius: var(--radius);
-  padding: 4rem 3rem;
+  padding: 4.5rem 3rem;
   text-align: center;
   position: relative;
   overflow: hidden;
 }
+/* The giant cake emoji chilling in the background */
 .cta-banner::before {
   content: '🎂';
-  font-size: 12rem;
+  font-size: 14rem;
   position: absolute;
-  right: -2rem;
-  top: 50%;
+  right: -2rem; top: 50%;
   transform: translateY(-50%);
-  opacity: 0.08;
+  opacity: 0.07;
+  animation: gentleBob 5s ease-in-out infinite;
+}
+.cta-banner::after {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212,146,42,0.12) 0%, transparent 65%);
+  top: 50%; left: -100px;
+  transform: translateY(-50%);
 }
 .cta-banner h2 {
-  font-size: 2.8rem;
+  font-size: 3rem;
   color: var(--gold-light);
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.9rem;
+  position: relative;
+  z-index: 1;
 }
 .cta-banner p {
-  color: rgba(255,255,255,0.65);
+  color: rgba(255,255,255,0.6);
   font-size: 1rem;
   max-width: 480px;
-  margin: 0 auto 2rem;
-  line-height: 1.8;
+  margin: 0 auto 2.2rem;
+  line-height: 1.85;
+  position: relative;
+  z-index: 1;
 }
 
-/* ===========================
-   FOOTER
-   =========================== */
+/* ============================================================
+   FOOTER — the bottom of the iceberg (cake?)
+   ============================================================ */
 .footer {
-  background: var(--brown-dark);
-  color: rgba(255,255,255,0.6);
-  padding: 4rem 0 2rem;
+  background: var(--grad-dark);
+  color: rgba(255,255,255,0.55);
+  padding: 4.5rem 0 2rem;
   margin-top: 5rem;
+  position: relative;
+  overflow: hidden;
+}
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--grad-gold);
 }
 
 .footer-grid {
@@ -1381,46 +1527,40 @@ ul { list-style: none; }
   gap: 2.5rem;
   margin-bottom: 3rem;
 }
-
 .footer-brand .logo {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.7rem;
+  font-size: 1.8rem;
   font-weight: 700;
   color: var(--white);
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.7rem;
 }
 .footer-brand .logo span { color: var(--rose); }
 .footer-brand p {
   font-size: 0.88rem;
-  line-height: 1.8;
+  line-height: 1.85;
   max-width: 240px;
 }
 
 .footer h4 {
   font-family: 'Nunito', sans-serif;
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  color: rgba(255,255,255,0.35);
+  letter-spacing: 2.5px;
+  color: rgba(255,255,255,0.3);
   margin-bottom: 1rem;
-  font-weight: 700;
+  font-weight: 800;
 }
-
-.footer ul {
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-}
+.footer ul { display: flex; flex-direction: column; gap: 0.6rem; }
 .footer ul a {
   font-size: 0.9rem;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255,255,255,0.55);
   transition: color 0.2s;
 }
 .footer ul a:hover { color: var(--rose); }
 
 .footer-bottom {
-  border-top: 1px solid rgba(255,255,255,0.08);
-  padding-top: 1.8rem;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding-top: 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1429,74 +1569,76 @@ ul { list-style: none; }
   gap: 0.5rem;
 }
 
-/* ===========================
-   TOAST NOTIFICATION
-   =========================== */
+/* ============================================================
+   TOAST NOTIFICATION — the popup you actually like
+   ============================================================ */
 .toast-container {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: 2rem; right: 2rem;
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.7rem;
   pointer-events: none;
 }
-
 .toast {
   background: var(--brown-dark);
   color: var(--white);
-  padding: 0.85rem 1.5rem;
-  border-radius: 50px;
+  padding: 0.9rem 1.6rem;
+  border-radius: var(--radius-pill);
   font-size: 0.9rem;
   font-weight: 700;
-  box-shadow: var(--shadow);
-  animation: toastIn 0.3s ease forwards;
+  box-shadow: 0 8px 30px rgba(39,18,4,0.4);
+  animation: toastIn 0.35s cubic-bezier(0.34,1.3,0.64,1) forwards;
   pointer-events: auto;
-  max-width: 360px;
+  max-width: 380px;
+  border-left: 3px solid var(--gold);
 }
 .toast.removing { animation: toastOut 0.3s ease forwards; }
+@keyframes toastIn  {
+  from { transform: translateX(30px) scale(0.9); opacity: 0; }
+  to   { transform: translateX(0) scale(1); opacity: 1; }
+}
+@keyframes toastOut {
+  to { opacity: 0; transform: translateX(20px) scale(0.95); }
+}
 
-@keyframes toastIn  { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-@keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateY(10px); } }
-
-/* ===========================
-   LOADING SPINNER
-   =========================== */
+/* ============================================================
+   LOADING SPINNER — the "please wait, magic is happening" guy
+   ============================================================ */
 .spinner {
-  width: 22px;
-  height: 22px;
-  border: 3px solid rgba(255,255,255,0.3);
+  width: 20px; height: 20px;
+  border: 3px solid rgba(255,255,255,0.25);
   border-top-color: var(--white);
   border-radius: 50%;
-  animation: spin 0.7s linear infinite;
+  animation: spin 0.65s linear infinite;
   display: inline-block;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ===========================
-   BEST SELLER STRIP
-   =========================== */
-.bg-cream-dark { background: var(--cream-dark); }
-.py-10 { padding-top: 5rem; padding-bottom: 5rem; }
+/* ============================================================
+   BACKGROUNDS — the mood setters
+   ============================================================ */
+.bg-cream-dark { background: linear-gradient(135deg, var(--cream-dark) 0%, var(--cream-mid) 100%); }
 
-/* ===========================
-   RESPONSIVE
-   =========================== */
+/* ============================================================
+   RESPONSIVE — because phones exist and we respect them
+   ============================================================ */
 @media (max-width: 1024px) {
-  .hero h1 { font-size: 3.8rem; }
+  .hero h1 { font-size: 4rem; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 768px) {
+  /* Hide desktop nav, show the burger */
   .nav-links, .nav-actions .user-greeting, .nav-actions .btn-ghost { display: none; }
   .nav-toggle { display: flex; }
 
   .hero { padding: 4rem 0; }
-  .hero h1 { font-size: 2.6rem; }
-  .hero-visual { display: none; }
+  .hero h1 { font-size: 2.8rem; letter-spacing: -1px; }
+  .hero-visual { display: none; /* The big emoji goes home on mobile */ }
 
-  .category-grid { grid-template-columns: 1fr; }
+  .category-grid  { grid-template-columns: 1fr; }
   .detail-layout  { grid-template-columns: 1fr; }
   .cart-layout    { grid-template-columns: 1fr; }
   .about-grid     { grid-template-columns: 1fr; }
@@ -1506,9 +1648,20 @@ ul { list-style: none; }
   .form-row       { grid-template-columns: 1fr; }
   .modal-product-grid { grid-template-columns: 1fr; }
   .search-box input { min-width: 140px; }
+  .section { padding: 3.5rem 0; }
 }
 
 @media (max-width: 480px) {
-  .hero h1 { font-size: 2.1rem; }
-  .section { padding: 3rem 0; }
-} 
+  .hero h1 { font-size: 2.2rem; }
+  .section { padding: 2.5rem 0; }
+  .cake-form-card { padding: 1.5rem; }
+}
+
+/*
+ * ============================================================
+ *   THE END.
+ *   If you read all these comments, you deserve a cookie.
+ *   Selina makes great ones. Go order some.
+ *   sellybakehouse.com 🍪
+ * ============================================================
+ */
