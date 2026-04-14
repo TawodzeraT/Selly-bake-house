@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — Selly Bake House</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">Selly <span>Bake</span> House<small>Home of everything toothsome</small></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li>
+      <li><a href="custom-cake.html">Custom Cake</a></li><li><a href="gallery.html">Gallery</a></li>
+      <li><a href="about.html">About</a></li><li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+    <div class="nav-actions" id="nav-actions">
+      <span class="user-greeting" id="user-greeting" style="display:none"></span>
+      <button class="btn btn-ghost btn-sm" id="logout-btn" style="display:none">Logout</button>
+      <button class="btn btn-rose btn-sm" id="login-btn" onclick="openOverlay('login-modal')">Login</button>
+      <a href="cart.html" class="btn-icon">🛒<span class="cart-badge" id="cart-badge" style="display:none">0</span></a>
+    </div>
+    <button class="nav-toggle" id="nav-toggle"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div style="background:var(--cream-dark);padding:3rem 0 2rem">
+  <div class="container">
+    <h1 class="serif" style="font-size:3rem;color:var(--brown-dark)">Get in Touch</h1>
+    <p style="color:var(--text-muted)">We'd love to hear from you</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="contact-layout">
+
+      <!-- Info Card -->
+      <div class="contact-info-card">
+        <h2>Say Hello 👋</h2>
+        <p>Have a question about an order, want to discuss a custom cake, or just want to say hi? Selina personally reads every message.</p>
+
+        <div class="contact-info-item">
+          <div class="ci-icon">📍</div>
+          <div>
+            <div class="ci-label">Address</div>
+            <div class="ci-value">721 Fallsgrove Dr</div>
+            <div style="color:rgba(255,255,255,.5);font-size:.82rem">Rockville, MD 20850</div>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="ci-icon">📞</div>
+          <div>
+            <div class="ci-label">Phone</div>
+            <div class="ci-value">(301) 356-1232</div>
+            <div style="color:rgba(255,255,255,.5);font-size:.82rem">Mon–Sat, 9am–6pm EST</div>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="ci-icon">✉️</div>
+          <div>
+            <div class="ci-label">Email</div>
+            <div class="ci-value">sellybakehouse@gmail.com</div>
+            <div style="color:rgba(255,255,255,.5);font-size:.82rem">Reply within 24 hours</div>
+          </div>
+        </div>
+
+        <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.1)">
+          <p style="color:rgba(255,255,255,.4);font-size:.8rem;margin-bottom:.8rem">📍 SERVICE AREA</p>
+          <p style="color:rgba(255,255,255,.65);font-size:.88rem;line-height:1.7">We currently deliver and serve customers in Maryland only. Pickup is available at our Rockville address.</p>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="contact-form-card">
+        <h2>Send a Message</h2>
+        <p>We'll get back to you within 24 hours.</p>
+        <form id="contact-form" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="contact-name">Your Name *</label>
+              <input type="text" id="contact-name" placeholder="Full name" />
+            </div>
+            <div class="form-group">
+              <label for="contact-phone">Phone Number</label>
+              <input type="tel" id="contact-phone" placeholder="(301) 555-0000" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="contact-email">Email Address *</label>
+            <input type="email" id="contact-email" placeholder="you@email.com" />
+          </div>
+          <div class="form-group">
+            <label for="contact-subject">Subject</label>
+            <select id="contact-subject">
+              <option value="">Select a topic…</option>
+              <option>Order Question</option>
+              <option>Custom Cake Inquiry</option>
+              <option>Delivery Question</option>
+              <option>Feedback</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="contact-message">Message *</label>
+            <textarea id="contact-message" rows="5" placeholder="How can we help you?"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Send Message 💌</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:none;padding-top:0">
+      <span>© 2025 Selly Bake House — Rockville, MD</span>
+    </div>
+  </div>
+</footer>
+
+<!-- AUTH MODALS -->
+<div class="overlay" id="login-modal" style="display:none">
+  <div class="modal auth-modal">
+    <button class="modal-close" onclick="closeOverlay('login-modal')">✕</button>
+    <h2>Welcome Back 🍪</h2><p>Log in to your account</p>
+    <form id="login-form" novalidate>
+      <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="you@email.com" /></div>
+      <div class="form-group"><label>Password</label><input type="password" id="login-password" placeholder="Password" /></div>
+      <span class="form-error" id="login-error" style="display:none"></span>
+      <button type="submit" class="btn btn-primary btn-block" style="margin-top:1rem">Log In</button>
+    </form>
+    <p class="auth-switch">New here? <a id="to-signup">Sign Up</a></p>
+  </div>
+</div>
+<div class="overlay" id="signup-modal" style="display:none">
+  <div class="modal auth-modal">
+    <button class="modal-close" onclick="closeOverlay('signup-modal')">✕</button>
+    <h2>Create Account 🎂</h2><p>Join to track orders</p>
+    <form id="signup-form" novalidate>
+      <div class="form-row">
+        <div class="form-group"><label>Name *</label><input type="text" id="signup-name" placeholder="Full name" /></div>
+        <div class="form-group"><label>Phone</label><input type="tel" id="signup-phone" placeholder="(301) 555-0000" /></div>
+      </div>
+      <div class="form-group"><label>Email *</label><input type="email" id="signup-email" placeholder="you@email.com" /></div>
+      <div class="form-group"><label>Password *</label><input type="password" id="signup-password" placeholder="Create a password" /></div>
+      <span class="form-error" id="signup-error" style="display:none"></span>
+      <button type="submit" class="btn btn-primary btn-block" style="margin-top:1rem">Sign Up</button>
+    </form>
+    <p class="auth-switch">Have an account? <a id="to-login">Log In</a></p>
+  </div>
+</div>
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  document.getElementById("contact-form").addEventListener("submit", e => {
+    e.preventDefault();
+    const name = document.getElementById("contact-name").value.trim();
+    const email = document.getElementById("contact-email").value.trim();
+    const msg = document.getElementById("contact-message").value.trim();
+    if (!name || !email || !msg) { showToast("⚠️ Please fill in all required fields."); return; }
+    // TODO: POST to /api/contact or use Formspree/EmailJS
+    showToast("💌 Message sent! We'll reply within 24 hours.");
+    document.getElementById("contact-form").reset();
+  });
+</script>
+</body>
+</html>
