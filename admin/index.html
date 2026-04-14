@@ -8,7 +8,24 @@
   <link rel="stylesheet" href="../css/admin.css" />
 </head>
 <body>
+<!-- PASSWORD PROTECTION — Don't share this address with anyone! -->
+<script>
+  (function() {
+    var correctPassword = "SellyBakes2025!";
+    var enteredPassword = localStorage.getItem("sbh_admin_auth");
 
+    if (enteredPassword !== correctPassword) {
+      var attempt = prompt("🔐 Selly Bake House Admin\n\nEnter your password to continue:");
+
+      if (attempt !== correctPassword) {
+        alert("❌ Wrong password. Access denied.");
+        window.location.href = "https://www.sellybakehouse.com";
+      } else {
+        localStorage.setItem("sbh_admin_auth", correctPassword);
+      }
+    }
+  })();
+</script>
 <!-- Admin Navbar -->
 <nav class="navbar">
   <div class="container nav-inner">
@@ -16,6 +33,14 @@
     <div class="nav-actions">
       <span style="font-size:.85rem;color:var(--text-muted);font-weight:700">👩‍💼 Selina (Admin)</span>
       <a href="../index.html" class="btn btn-ghost btn-sm">← View Site</a>
+<button class="btn btn-ghost btn-sm" onclick="adminLogout()">🔓 Logout</button>
+
+<script>
+  function adminLogout() {
+    localStorage.removeItem("sbh_admin_auth");
+    window.location.href = "https://www.sellybakehouse.com";
+  }
+</script>
     </div>
   </div>
 </nav>
