@@ -8,6 +8,18 @@
   <link rel="stylesheet" href="../css/admin.css" />
 </head>
 <body>
+  <script>
+var taps = 0, tapTimer = null;
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelector(".nav-logo").addEventListener("click", function(e) {
+    e.preventDefault();
+    taps++;
+    clearTimeout(tapTimer);
+    if (taps >= 5) { taps = 0; openAdminLogin(); }
+    else { tapTimer = setTimeout(function(){ taps = 0; }, 2000); }
+  });
+});
+</script>
   <!-- 
   SECRET ADMIN BUTTON 
   Hidden in the footer — only Selina knows it's there 😉
