@@ -11,286 +11,513 @@
 
 <!-- =============================================
      ADMIN LOGIN SCREEN
-     Shows when not logged in
+     Covers the whole page until logged in
      ============================================= -->
 <div id="admin-login-screen" style="
-  display:none;
-  position:fixed;inset:0;
+  display:flex;
+  position:fixed;
+  inset:0;
   background:linear-gradient(145deg,#3E1C07 0%,#5C2A10 100%);
   z-index:9999;
-  align-items:center;justify-content:center;">
+  align-items:center;
+  justify-content:center;">
 
   <div style="
     background:linear-gradient(160deg,#FFFDF8 0%,#FFF4E8 100%);
-    border-radius:24px;padding:3rem;
-    max-width:420px;width:90%;
+    border-radius:24px;
+    padding:3rem;
+    max-width:440px;
+    width:90%;
     box-shadow:0 40px 100px rgba(0,0,0,0.5);
-    border:1.5px solid rgba(240,192,96,0.3);">
+    border:1.5px solid rgba(240,192,96,0.3);
+    position:relative;">
 
+    <!-- Logo -->
     <div style="text-align:center;margin-bottom:2rem;">
-      <div style="font-size:3rem;margin-bottom:.5rem;">🔐</div>
-      <h2 style="font-family:'Cormorant Garamond',serif;font-size:2.2rem;color:#3E1C07;margin-bottom:.2rem;">Admin Login</h2>
-      <p style="color:#9B6340;font-size:.85rem;font-family:'Nunito',sans-serif;">Selly Bake House — Staff Only</p>
+      <div style="font-size:3rem;margin-bottom:.4rem;">🔐</div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:2.3rem;color:#3E1C07;margin-bottom:.2rem;">
+        Admin Login
+      </h2>
+      <p style="color:#9B6340;font-size:.85rem;font-family:'Nunito',sans-serif;">
+        Selly Bake House — Staff Only
+      </p>
     </div>
 
+    <!-- Email -->
     <div class="form-group">
-      <label>Email Address</label>
-      <input type="email" id="al-email" placeholder="your@email.com"
-        onkeydown="if(event.key==='Enter') document.getElementById('al-password').focus()" />
+      <label style="display:block;font-weight:800;font-size:.85rem;color:#6B3A1F;margin-bottom:.4rem;font-family:'Nunito',sans-serif;">
+        Email Address
+      </label>
+      <input
+        type="email"
+        id="al-email"
+        placeholder="your@email.com"
+        onkeydown="if(event.key==='Enter') document.getElementById('al-password').focus()"
+        style="width:100%;padding:.85rem 1rem;border:1.5px solid #EDD9BC;border-radius:12px;font-family:'Nunito',sans-serif;font-size:.95rem;color:#3E1C07;background:white;outline:none;"
+        onfocus="this.style.borderColor='#D4637A';this.style.boxShadow='0 0 0 4px rgba(212,99,122,0.15)'"
+        onblur="this.style.borderColor='#EDD9BC';this.style.boxShadow='none'" />
     </div>
 
+    <!-- Password -->
     <div class="form-group">
-      <label>Password</label>
+      <label style="display:block;font-weight:800;font-size:.85rem;color:#6B3A1F;margin-bottom:.4rem;font-family:'Nunito',sans-serif;">
+        Password
+      </label>
       <div style="position:relative;">
-        <input type="password" id="al-password" placeholder="Your password"
+        <input
+          type="password"
+          id="al-password"
+          placeholder="Your password"
           onkeydown="if(event.key==='Enter') doAdminLogin()"
-          style="padding-right:3rem;" />
-        <button onclick="togglePw('al-password','al-pw-eye')" id="al-pw-eye"
-          style="position:absolute;right:.8rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;">👁️</button>
+          style="width:100%;padding:.85rem 3rem .85rem 1rem;border:1.5px solid #EDD9BC;border-radius:12px;font-family:'Nunito',sans-serif;font-size:.95rem;color:#3E1C07;background:white;outline:none;"
+          onfocus="this.style.borderColor='#D4637A';this.style.boxShadow='0 0 0 4px rgba(212,99,122,0.15)'"
+          onblur="this.style.borderColor='#EDD9BC';this.style.boxShadow='none'" />
+        <button
+          onclick="toggleLoginPw()"
+          id="al-pw-eye"
+          style="position:absolute;right:.8rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;">
+          👁️
+        </button>
       </div>
     </div>
 
+    <!-- Error message -->
     <div id="al-error" style="
-      display:none;background:#FFE0E5;color:#9B1C2E;
-      border:1px solid #FFAAB5;border-radius:8px;
-      padding:.6rem .9rem;font-size:.82rem;font-weight:700;
-      margin-bottom:1rem;font-family:'Nunito',sans-serif;"></div>
+      display:none;
+      background:#FFE0E5;
+      color:#9B1C2E;
+      border:1px solid #FFAAB5;
+      border-radius:8px;
+      padding:.6rem .9rem;
+      font-size:.82rem;
+      font-weight:700;
+      margin-bottom:1rem;
+      font-family:'Nunito',sans-serif;">
+    </div>
 
-    <button id="al-btn" onclick="doAdminLogin()" style="
-      width:100%;padding:.95rem;
-      background:linear-gradient(145deg,#3E1C07 0%,#5C2A10 50%,#3E1C07 100%);
-      color:#F0C060;border:none;border-radius:50px;
-      font-family:'Nunito',sans-serif;font-weight:800;
-      font-size:1rem;cursor:pointer;
-      box-shadow:0 4px 16px rgba(62,28,7,0.3);transition:all .2s;"
+    <!-- Login button -->
+    <button
+      id="al-btn"
+      onclick="doAdminLogin()"
+      style="
+        width:100%;
+        padding:.95rem;
+        background:linear-gradient(145deg,#3E1C07 0%,#5C2A10 50%,#3E1C07 100%);
+        color:#F0C060;
+        border:none;
+        border-radius:50px;
+        font-family:'Nunito',sans-serif;
+        font-weight:800;
+        font-size:1rem;
+        cursor:pointer;
+        box-shadow:0 4px 16px rgba(62,28,7,0.3);
+        transition:all .2s;"
       onmouseover="this.style.transform='translateY(-2px)'"
       onmouseout="this.style.transform='translateY(0)'">
       Sign In to Admin Panel
     </button>
 
     <p style="text-align:center;font-size:.75rem;color:#9B6340;margin-top:1rem;font-family:'Nunito',sans-serif;">
-      🔒 Authorized staff only — <a href="../index.html" style="color:var(--rose-deep);">Back to website</a>
+      🔒 Authorized staff only —
+      <a href="../index.html" style="color:#D4637A;">Back to website</a>
     </p>
   </div>
 </div>
 
 <!-- =============================================
-     ADMIN NAVBAR
-     ============================================= -->
-<nav class="navbar">
-  <div class="container nav-inner">
-    <a href="../index.html" class="nav-logo">Selly <span>Bake</span> House<small>Admin Panel</small></a>
-    <div class="nav-actions" id="admin-panel-content" style="display:none;">
-      <span style="font-size:.85rem;font-weight:700;color:var(--text-muted);" id="admin-user-name"></span>
-      <span style="font-size:.75rem;font-weight:600;background:var(--rose-light);color:var(--rose-deep);padding:.2rem .7rem;border-radius:50px;" id="admin-user-role"></span>
-      <a href="../index.html" class="btn btn-ghost btn-sm">View Site</a>
-      <button class="btn btn-rose btn-sm" onclick="adminLogout()">Logout</button>
-    </div>
-  </div>
-</nav>
-
-<!-- =============================================
-     ADMIN PANEL CONTENT
+     FULL ADMIN PANEL
      Hidden until logged in
      ============================================= -->
-<div class="admin-wrapper" id="admin-panel-content" style="display:none;">
+<div id="admin-full-panel" style="display:none;">
 
-  <aside class="admin-sidebar">
-    <div class="admin-sidebar-header">
-      <h3>CMS Dashboard</h3>
-      <span>Selly Bake House</span>
-    </div>
-    <div class="admin-nav-section">
-      <div class="admin-nav-label">Overview</div>
-      <div class="admin-nav-item active" data-tab="dashboard"><span class="nav-icon">📊</span> Dashboard</div>
-      <div class="admin-nav-item" data-tab="analytics"><span class="nav-icon">📈</span> Analytics</div>
-    </div>
-    <div class="admin-nav-section">
-      <div class="admin-nav-label">Store</div>
-      <div class="admin-nav-item" data-tab="products"><span class="nav-icon">🧁</span> Products</div>
-      <div class="admin-nav-item" data-tab="orders"><span class="nav-icon">📦</span> Orders</div>
-      <div class="admin-nav-item" data-tab="cakes"><span class="nav-icon">🎂</span> Cake Requests</div>
-    </div>
-    <div class="admin-nav-section">
-      <div class="admin-nav-label">System</div>
-      <div class="admin-nav-item" data-tab="users" id="nav-users" style="display:none;"><span class="nav-icon">👥</span> Users</div>
-      <div class="admin-nav-item" data-tab="settings" id="nav-settings" style="display:none;"><span class="nav-icon">⚙️</span> Settings</div>
-    </div>
-    <div class="admin-sidebar-footer">
-      <p>Logged in as</p>
-      <strong id="admin-user-name">—</strong>
-    </div>
-  </aside>
-
-  <main class="admin-main">
-
-    <!-- DASHBOARD -->
-    <div class="admin-tab" id="tab-dashboard">
-      <div class="admin-page-header">
-        <div><h1>Dashboard</h1><p>Welcome back! Here is what is happening today.</p></div>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <a href="../index.html" class="nav-logo">
+        Selly <span>Bake</span> House
+        <small>Admin Panel</small>
+      </a>
+      <div class="nav-actions">
+        <span id="admin-user-name" style="font-size:.85rem;font-weight:700;color:var(--text-muted);"></span>
+        <span id="admin-user-role" style="font-size:.75rem;font-weight:700;background:var(--rose-light);color:var(--rose-deep);padding:.2rem .8rem;border-radius:50px;"></span>
+        <a href="../index.html" class="btn btn-ghost btn-sm">View Site</a>
+        <button class="btn btn-rose btn-sm" onclick="adminLogout()">Logout</button>
       </div>
-      <div class="stat-grid">
-        <div class="stat-card rose"><div class="stat-label">Total Revenue</div><div class="stat-value" id="stat-revenue">$0.00</div><div class="stat-sub">Completed orders</div></div>
-        <div class="stat-card brown"><div class="stat-label">Total Orders</div><div class="stat-value" id="stat-orders">0</div><div class="stat-sub" id="stat-pending-sub">0 pending</div></div>
-        <div class="stat-card gold"><div class="stat-label">Products</div><div class="stat-value" id="stat-products">0</div><div class="stat-sub">Active in store</div></div>
-        <div class="stat-card green"><div class="stat-label">Cake Requests</div><div class="stat-value" id="stat-cakes">0</div><div class="stat-sub">Total received</div></div>
+    </div>
+  </nav>
+
+  <!-- ADMIN LAYOUT -->
+  <div class="admin-wrapper">
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-header">
+        <h3>CMS Dashboard</h3>
+        <span>Selly Bake House</span>
       </div>
-      <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;">
+
+      <div class="admin-nav-section">
+        <div class="admin-nav-label">Overview</div>
+        <div class="admin-nav-item active" data-tab="dashboard">
+          <span class="nav-icon">📊</span> Dashboard
+        </div>
+        <div class="admin-nav-item" data-tab="analytics">
+          <span class="nav-icon">📈</span> Analytics
+        </div>
+      </div>
+
+      <div class="admin-nav-section">
+        <div class="admin-nav-label">Store</div>
+        <div class="admin-nav-item" data-tab="products">
+          <span class="nav-icon">🧁</span> Products
+        </div>
+        <div class="admin-nav-item" data-tab="orders">
+          <span class="nav-icon">📦</span> Orders
+        </div>
+        <div class="admin-nav-item" data-tab="cakes">
+          <span class="nav-icon">🎂</span> Cake Requests
+        </div>
+      </div>
+
+      <div class="admin-nav-section">
+        <div class="admin-nav-label">System</div>
+        <div class="admin-nav-item" data-tab="users" id="nav-users" style="display:none;">
+          <span class="nav-icon">👥</span> Users
+        </div>
+        <div class="admin-nav-item" data-tab="settings" id="nav-settings" style="display:none;">
+          <span class="nav-icon">⚙️</span> Settings
+        </div>
+      </div>
+
+      <div class="admin-sidebar-footer">
+        <p>Logged in as</p>
+        <strong id="admin-sidebar-name">—</strong>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="admin-main">
+
+      <!-- ── DASHBOARD ── -->
+      <div class="admin-tab" id="tab-dashboard">
+        <div class="admin-page-header">
+          <div>
+            <h1>Dashboard</h1>
+            <p>Welcome back! Here is what is happening today.</p>
+          </div>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-card rose">
+            <div class="stat-label">Total Revenue</div>
+            <div class="stat-value" id="stat-revenue">$0.00</div>
+            <div class="stat-sub">From completed orders</div>
+          </div>
+          <div class="stat-card brown">
+            <div class="stat-label">Total Orders</div>
+            <div class="stat-value" id="stat-orders">0</div>
+            <div class="stat-sub" id="stat-pending-sub">0 pending</div>
+          </div>
+          <div class="stat-card gold">
+            <div class="stat-label">Products</div>
+            <div class="stat-value" id="stat-products">0</div>
+            <div class="stat-sub">Active in store</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-label">Cake Requests</div>
+            <div class="stat-value" id="stat-cakes">0</div>
+            <div class="stat-sub">Total received</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;">
+          <div class="table-card">
+            <div class="table-card-header">
+              <h3>Recent Orders</h3>
+              <button class="btn btn-outline btn-sm" onclick="switchTab('orders')">View All</button>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Order</th>
+                  <th>Customer</th>
+                  <th>Items</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="recent-orders-tbody"></tbody>
+            </table>
+          </div>
+
+          <div class="form-card">
+            <h3>Best Sellers</h3>
+            <div id="best-sellers-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ANALYTICS ── -->
+      <div class="admin-tab" id="tab-analytics" style="display:none;">
+        <div class="admin-page-header">
+          <div><h1>Analytics</h1><p>Sales performance and product trends</p></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+          <div class="form-card">
+            <h3>Weekly Revenue</h3>
+            <div id="weekly-chart"></div>
+          </div>
+          <div class="form-card">
+            <h3>Products by Category</h3>
+            <div id="category-breakdown"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PRODUCTS ── -->
+      <div class="admin-tab" id="tab-products" style="display:none;">
+        <div class="admin-page-header">
+          <div><h1>Products</h1><p>Manage your store inventory</p></div>
+          <button class="btn btn-primary" onclick="openAddProductModal()">+ Add Product</button>
+        </div>
         <div class="table-card">
-          <div class="table-card-header"><h3>Recent Orders</h3><button class="btn btn-outline btn-sm" onclick="switchTab('orders')">View All</button></div>
           <table class="data-table">
-            <thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Date</th></tr></thead>
-            <tbody id="recent-orders-tbody"></tbody>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Best Seller</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="products-tbody"></tbody>
           </table>
         </div>
-        <div class="form-card"><h3>Best Sellers</h3><div id="best-sellers-list"></div></div>
       </div>
-    </div>
 
-    <!-- ANALYTICS -->
-    <div class="admin-tab" id="tab-analytics" style="display:none;">
-      <div class="admin-page-header"><div><h1>Analytics</h1><p>Sales performance and trends</p></div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
-        <div class="form-card"><h3>Weekly Revenue</h3><div id="weekly-chart"></div></div>
-        <div class="form-card"><h3>Products by Category</h3><div id="category-breakdown"></div></div>
-      </div>
-    </div>
-
-    <!-- PRODUCTS -->
-    <div class="admin-tab" id="tab-products" style="display:none;">
-      <div class="admin-page-header">
-        <div><h1>Products</h1><p>Manage your store inventory</p></div>
-        <button class="btn btn-primary" onclick="openAddProductModal()">+ Add Product</button>
-      </div>
-      <div class="table-card">
-        <table class="data-table">
-          <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Status</th><th>Best Seller</th><th>Actions</th></tr></thead>
-          <tbody id="products-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ORDERS -->
-    <div class="admin-tab" id="tab-orders" style="display:none;">
-      <div class="admin-page-header"><div><h1>Orders</h1><p>Manage and track customer orders</p></div></div>
-      <div class="table-card">
-        <table class="data-table">
-          <thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Method</th><th>Status</th><th>Date</th><th>Update</th></tr></thead>
-          <tbody id="orders-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- CAKE REQUESTS -->
-    <div class="admin-tab" id="tab-cakes" style="display:none;">
-      <div class="admin-page-header"><div><h1>Custom Cake Requests</h1><p>Review and manage incoming custom cake orders</p></div></div>
-      <div class="table-card">
-        <table class="data-table">
-          <thead><tr><th>ID</th><th>Customer</th><th>Date Needed</th><th>Cake</th><th>Design</th><th>Status</th><th>Actions</th></tr></thead>
-          <tbody id="cakes-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- USERS (MASTER ONLY) -->
-    <div class="admin-tab" id="tab-users" style="display:none;">
-      <div class="admin-page-header">
-        <div><h1>User Management</h1><p>Add and manage admin staff accounts</p></div>
-        <button class="btn btn-primary" onclick="openAddUserModal()">+ Add User</button>
-      </div>
-      <div style="background:var(--yellow-bg);border:1px solid #F5C842;border-radius:var(--radius-sm);padding:1rem 1.2rem;margin-bottom:1.5rem;font-size:.88rem;color:var(--yellow);">
-        <strong>Master Admin only.</strong> Staff accounts can view and update orders, products, and cake requests. Only master admins can add users, change settings, or manage accounts.
-      </div>
-      <div class="table-card">
-        <table class="data-table">
-          <thead><tr><th>Name and Email</th><th>Role</th><th>Date Added</th><th>Action</th></tr></thead>
-          <tbody id="users-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- SETTINGS (MASTER ONLY) -->
-    <div class="admin-tab" id="tab-settings" style="display:none;">
-      <div class="admin-page-header"><div><h1>Settings</h1><p>Configure your store</p></div></div>
-      <div class="settings-grid">
-
-        <div class="settings-card">
-          <h3>Feature Toggles</h3>
-          <p>Enable or disable store features with one click</p>
-          <div class="toggle-row">
-            <div class="toggle-info"><h4>Custom Cake Orders</h4><p>Allow customers to submit custom cake requests</p></div>
-            <button class="toggle-switch" id="toggle-cakes"><div class="toggle-knob"></div></button>
-          </div>
-          <div class="toggle-row">
-            <div class="toggle-info"><h4>Weekly Email Marketing</h4><p>Send weekly digest to registered customers</p></div>
-            <button class="toggle-switch" id="toggle-emails"><div class="toggle-knob"></div></button>
-          </div>
+      <!-- ── ORDERS ── -->
+      <div class="admin-tab" id="tab-orders" style="display:none;">
+        <div class="admin-page-header">
+          <div><h1>Orders</h1><p>Manage and track all customer orders</p></div>
         </div>
-
-        <div class="settings-card">
-          <h3>Delivery Settings</h3>
-          <p>Configure Maryland delivery options</p>
-          <div class="form-group">
-            <label>Delivery Radius</label>
-            <select id="settings-delivery-radius">
-              <option value="20">20 miles</option>
-              <option value="30">30 miles</option>
-              <option value="50">50 miles</option>
-              <option value="0">All Maryland</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Delivery Fee ($)</label>
-            <input type="number" id="settings-delivery-fee" value="8.99" min="0" step="0.50" />
-          </div>
+        <div class="table-card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Method</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Update</th>
+              </tr>
+            </thead>
+            <tbody id="orders-tbody"></tbody>
+          </table>
         </div>
-
-        <div class="settings-card" style="grid-column:1/-1;">
-          <h3>Square Payment Link</h3>
-          <p>Paste your Square payment link here. When customers checkout they will be sent to your Square page to pay.</p>
-          <div class="form-group">
-            <label>Your Square Payment Link</label>
-            <input type="url" id="settings-square-link" placeholder="https://square.link/u/xxxxxxxxx" />
-            <span class="form-hint">Get this from your Square account at squareup.com. Go to Online Store or Payment Links.</span>
-          </div>
-          <button class="btn btn-primary" onclick="saveSettings()">Save All Settings</button>
-        </div>
-
-        <div class="settings-card" style="grid-column:1/-1;">
-          <h3>Weekly Email Preview</h3>
-          <p>Preview the email your customers will receive every Monday morning.</p>
-          <div class="email-preview" id="email-preview-content"></div>
-          <div style="display:flex;gap:.8rem;margin-top:1rem;">
-            <button class="btn btn-rose btn-sm" onclick="sendTestEmail()">Send Test Email</button>
-            <button class="btn btn-outline btn-sm" onclick="renderEmailPreview()">Refresh Preview</button>
-          </div>
-        </div>
-
       </div>
-    </div>
 
-  </main>
+      <!-- ── CAKE REQUESTS ── -->
+      <div class="admin-tab" id="tab-cakes" style="display:none;">
+        <div class="admin-page-header">
+          <div><h1>Custom Cake Requests</h1><p>Review and manage incoming cake orders</p></div>
+        </div>
+        <div class="table-card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Customer</th>
+                <th>Date Needed</th>
+                <th>Cake</th>
+                <th>Design</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="cakes-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── USERS (MASTER ONLY) ── -->
+      <div class="admin-tab" id="tab-users" style="display:none;">
+        <div class="admin-page-header">
+          <div><h1>User Management</h1><p>Add and manage admin staff accounts</p></div>
+          <button class="btn btn-primary" onclick="openAddUserModal()">+ Add User</button>
+        </div>
+        <div style="
+          background:var(--yellow-bg);
+          border:1px solid #F5C842;
+          border-radius:var(--radius-sm);
+          padding:1rem 1.2rem;
+          margin-bottom:1.5rem;
+          font-size:.88rem;
+          color:var(--yellow);">
+          <strong>Master Admin only.</strong>
+          Staff accounts can view and update orders, products and cake requests but cannot add users or change settings.
+        </div>
+        <div class="table-card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Name and Email</th>
+                <th>Role</th>
+                <th>Date Added</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="users-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── SETTINGS (MASTER ONLY) ── -->
+      <div class="admin-tab" id="tab-settings" style="display:none;">
+        <div class="admin-page-header">
+          <div><h1>Settings</h1><p>Configure your store options</p></div>
+        </div>
+        <div class="settings-grid">
+
+          <div class="settings-card">
+            <h3>Feature Toggles</h3>
+            <p>Turn features on or off with one click</p>
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <h4>Custom Cake Orders</h4>
+                <p>Allow customers to submit custom cake requests</p>
+              </div>
+              <button class="toggle-switch" id="toggle-cakes">
+                <div class="toggle-knob"></div>
+              </button>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <h4>Weekly Email Marketing</h4>
+                <p>Send weekly digest emails to registered customers</p>
+              </div>
+              <button class="toggle-switch" id="toggle-emails">
+                <div class="toggle-knob"></div>
+              </button>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <h3>Delivery Settings</h3>
+            <p>Configure Maryland delivery options</p>
+            <div class="form-group">
+              <label>Delivery Radius</label>
+              <select id="settings-delivery-radius">
+                <option value="20">20 miles</option>
+                <option value="30">30 miles</option>
+                <option value="50">50 miles</option>
+                <option value="0">All Maryland</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Delivery Fee ($)</label>
+              <input type="number" id="settings-delivery-fee" value="8.99" min="0" step="0.50" />
+            </div>
+          </div>
+
+          <div class="settings-card" style="grid-column:1/-1;">
+            <h3>Square Payment Link</h3>
+            <p>
+              Paste your Square payment link here. When customers click checkout they will be
+              sent to your Square page to pay. Get your link from
+              <strong>squareup.com</strong> under Online Checkout or Payment Links.
+            </p>
+            <div class="form-group">
+              <label>Your Square Payment Link</label>
+              <input
+                type="url"
+                id="settings-square-link"
+                placeholder="https://square.link/u/xxxxxxxxx" />
+              <span class="form-hint">
+                Example: https://square.link/u/abc12345 — paste yours exactly as copied from Square.
+              </span>
+            </div>
+            <button class="btn btn-primary" onclick="saveSettings()">
+              Save All Settings
+            </button>
+          </div>
+
+          <div class="settings-card" style="grid-column:1/-1;">
+            <h3>Weekly Email Preview</h3>
+            <p>Preview the email your customers will receive every Monday morning.</p>
+            <div class="email-preview" id="email-preview-content"></div>
+            <div style="display:flex;gap:.8rem;margin-top:1rem;">
+              <button class="btn btn-rose btn-sm" onclick="sendTestEmail()">
+                Send Test Email
+              </button>
+              <button class="btn btn-outline btn-sm" onclick="renderEmailPreview()">
+                Refresh Preview
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
 </div>
 
-<!-- EDIT PRODUCT MODAL -->
+<!-- ── EDIT PRODUCT MODAL ── -->
 <div class="overlay" id="edit-product-modal" style="display:none;">
   <div class="modal" style="max-width:540px;">
     <button class="modal-close" onclick="closeOverlay('edit-product-modal')">✕</button>
-    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--brown-dark);margin-bottom:1.4rem;">Edit Product</h2>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--brown-dark);margin-bottom:1.4rem;">
+      Edit Product
+    </h2>
     <input type="hidden" id="edit-product-id" />
     <div class="form-row">
-      <div class="form-group"><label>Product Name</label><input id="edit-product-name" /></div>
-      <div class="form-group"><label>Price ($)</label><input type="number" id="edit-product-price" step="0.01" /></div>
+      <div class="form-group">
+        <label>Product Name</label>
+        <input id="edit-product-name" />
+      </div>
+      <div class="form-group">
+        <label>Price ($)</label>
+        <input type="number" id="edit-product-price" step="0.01" />
+      </div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>Category</label><select id="edit-product-cat"><option>Cookies</option><option>Cakes</option><option>Bakery</option></select></div>
-      <div class="form-group"><label>Status</label><select id="edit-product-status"><option value="instock">In Stock</option><option value="soldout">Sold Out</option><option value="outoforder">Out of Order</option></select></div>
+      <div class="form-group">
+        <label>Category</label>
+        <select id="edit-product-cat">
+          <option>Cookies</option>
+          <option>Cakes</option>
+          <option>Bakery</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="edit-product-status">
+          <option value="instock">In Stock</option>
+          <option value="soldout">Sold Out</option>
+          <option value="outoforder">Out of Order</option>
+        </select>
+      </div>
     </div>
-    <div class="form-group"><label>Description</label><textarea id="edit-product-desc" rows="3"></textarea></div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea id="edit-product-desc" rows="3"></textarea>
+    </div>
     <div style="display:flex;gap:1.5rem;margin-bottom:1.2rem;">
-      <label style="display:flex;align-items:center;gap:.5rem;font-size:.88rem;font-weight:700;cursor:pointer;"><input type="checkbox" id="edit-product-bs" style="accent-color:var(--rose-deep)"> Best Seller</label>
-      <label style="display:flex;align-items:center;gap:.5rem;font-size:.88rem;font-weight:700;cursor:pointer;"><input type="checkbox" id="edit-product-new" style="accent-color:var(--rose-deep)"> New</label>
-      <label style="display:flex;align-items:center;gap:.5rem;font-size:.88rem;font-weight:700;cursor:pointer;"><input type="checkbox" id="edit-product-feat" style="accent-color:var(--rose-deep)"> Featured</label>
+      <label style="display:flex;align-items:center;gap:.5rem;font-size:.88rem;font-weight:700;cursor:pointer;">
+        <input type="checkbox" id="edit-product-bs" style="accent-color:var(--rose-deep)"> Best Seller
+      </label>
+      <label style="display:flex;align-items:center;gap:.5rem;font-size:.88rem;font-weight:700;cursor:pointer;">
+        <input type="checkbox" id="edit-product-new" style="accent-color:var(--rose-deep)"> New
+      </label>
+      <label style="display:flex;align-items:center;gap:.5rem;font-size:.88rem;font-weight:700;cursor:pointer;">
+        <input type="checkbox" id="edit-product-feat" style="accent-color:var(--rose-deep)"> Featured
+      </label>
     </div>
     <div style="display:flex;gap:.8rem;justify-content:flex-end;">
       <button class="btn btn-outline" onclick="closeOverlay('edit-product-modal')">Cancel</button>
@@ -299,20 +526,41 @@
   </div>
 </div>
 
-<!-- ADD PRODUCT MODAL -->
+<!-- ── ADD PRODUCT MODAL ── -->
 <div class="overlay" id="add-product-modal" style="display:none;">
   <div class="modal" style="max-width:540px;">
     <button class="modal-close" onclick="closeOverlay('add-product-modal')">✕</button>
-    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--brown-dark);margin-bottom:1.4rem;">Add New Product</h2>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--brown-dark);margin-bottom:1.4rem;">
+      Add New Product
+    </h2>
     <div class="form-row">
-      <div class="form-group"><label>Product Name *</label><input id="new-product-name" placeholder="e.g. Oatmeal Raisin Cookies" /></div>
-      <div class="form-group"><label>Price ($) *</label><input type="number" id="new-product-price" step="0.01" placeholder="0.00" /></div>
+      <div class="form-group">
+        <label>Product Name *</label>
+        <input id="new-product-name" placeholder="e.g. Oatmeal Raisin Cookies" />
+      </div>
+      <div class="form-group">
+        <label>Price ($) *</label>
+        <input type="number" id="new-product-price" step="0.01" placeholder="0.00" />
+      </div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>Category *</label><select id="new-product-cat"><option>Cookies</option><option>Cakes</option><option>Bakery</option></select></div>
-      <div class="form-group"><label>Emoji Icon</label><input id="new-product-emoji" placeholder="🍪" maxlength="4" /></div>
+      <div class="form-group">
+        <label>Category *</label>
+        <select id="new-product-cat">
+          <option>Cookies</option>
+          <option>Cakes</option>
+          <option>Bakery</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Emoji Icon</label>
+        <input id="new-product-emoji" placeholder="🍪" maxlength="4" />
+      </div>
     </div>
-    <div class="form-group"><label>Description *</label><textarea id="new-product-desc" rows="3" placeholder="Describe this item..."></textarea></div>
+    <div class="form-group">
+      <label>Description *</label>
+      <textarea id="new-product-desc" rows="3" placeholder="Describe this item..."></textarea>
+    </div>
     <div style="display:flex;gap:.8rem;justify-content:flex-end;">
       <button class="btn btn-outline" onclick="closeOverlay('add-product-modal')">Cancel</button>
       <button class="btn btn-primary" onclick="saveNewProduct()">Add Product</button>
@@ -320,21 +568,41 @@
   </div>
 </div>
 
-<!-- ADD USER MODAL -->
+<!-- ── ADD USER MODAL ── -->
 <div class="overlay" id="add-user-modal" style="display:none;">
   <div class="modal" style="max-width:480px;">
     <button class="modal-close" onclick="closeOverlay('add-user-modal')">✕</button>
-    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--brown-dark);margin-bottom:.3rem;">Add Staff Account</h2>
-    <p style="color:var(--text-muted);margin-bottom:1.5rem;font-size:.9rem;">Create a login for a team member. Master admins have full access. Staff can only view and update orders, products, and cake requests.</p>
-    <div class="form-group"><label>Full Name *</label><input id="new-user-name" placeholder="Full name" /></div>
-    <div class="form-group"><label>Email Address *</label><input type="email" id="new-user-email" placeholder="their@email.com" /></div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--brown-dark);margin-bottom:.3rem;">
+      Add Staff Account
+    </h2>
+    <p style="color:var(--text-muted);margin-bottom:1.5rem;font-size:.9rem;">
+      Create a login for a team member. Master admins have full access.
+      Staff can only view and update orders, products and cake requests.
+    </p>
+    <div class="form-group">
+      <label>Full Name *</label>
+      <input id="new-user-name" placeholder="Full name" />
+    </div>
+    <div class="form-group">
+      <label>Email Address *</label>
+      <input type="email" id="new-user-email" placeholder="their@email.com" />
+    </div>
     <div class="form-group">
       <label>Password *</label>
       <div style="position:relative;">
-        <input type="password" id="new-user-password" placeholder="Create a password for them" style="padding-right:3rem;" />
-        <button onclick="togglePw('new-user-password','nu-pw-eye')" id="nu-pw-eye" style="position:absolute;right:.8rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;">👁️</button>
+        <input
+          type="password"
+          id="new-user-password"
+          placeholder="Create a password for them"
+          style="padding-right:3rem;" />
+        <button
+          onclick="togglePw('new-user-password','nu-pw-eye')"
+          id="nu-pw-eye"
+          style="position:absolute;right:.8rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;">
+          👁️
+        </button>
       </div>
-      <span class="form-hint">Share this password with them privately. They can ask you to change it anytime.</span>
+      <span class="form-hint">Share this password with them privately.</span>
     </div>
     <div class="form-group">
       <label>Role *</label>
@@ -350,7 +618,7 @@
   </div>
 </div>
 
-<!-- CAKE DETAIL MODAL -->
+<!-- ── CAKE DETAIL MODAL ── -->
 <div class="overlay" id="cake-detail-modal" style="display:none;">
   <div class="modal" style="max-width:580px;">
     <button class="modal-close" onclick="closeOverlay('cake-detail-modal')">✕</button>
@@ -366,25 +634,28 @@
 <script src="../js/data.js"></script>
 <script src="../js/main.js"></script>
 <script src="../js/admin.js"></script>
+
 <script>
+  // Close modals on backdrop click
   document.querySelectorAll(".overlay").forEach(function(o) {
-    o.addEventListener("click", function(e) { if (e.target === this) closeOverlay(this.id); });
+    o.addEventListener("click", function(e) {
+      if (e.target === this) closeOverlay(this.id);
+    });
   });
 
+  // Show/hide password toggle
   function togglePw(inputId, btnId) {
     var inp = document.getElementById(inputId);
     var btn = document.getElementById(btnId);
     if (!inp) return;
-    if (inp.type === "password") { inp.type = "text"; if (btn) btn.textContent = "🙈"; }
-    else { inp.type = "password"; if (btn) btn.textContent = "👁️"; }
+    if (inp.type === "password") { inp.type = "text";     if (btn) btn.textContent = "🙈"; }
+    else                         { inp.type = "password"; if (btn) btn.textContent = "👁️"; }
   }
 
-  document.addEventListener("keydown", function(e) {
-    if (e.key === "Enter") {
-      var loginScreen = document.getElementById("admin-login-screen");
-      if (loginScreen && loginScreen.style.display === "flex") doAdminLogin();
-    }
-  });
+  function toggleLoginPw() {
+    togglePw("al-password", "al-pw-eye");
+  }
 </script>
+
 </body>
 </html>
