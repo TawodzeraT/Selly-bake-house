@@ -1,30 +1,29 @@
-// ================================
-// SELLY BAKE HOUSE — CUSTOM CAKE
-// Multi-step cake order form
-// ================================
+/* =============================================
+   SELLY BAKE HOUSE — CAKE JS
+   Handles the custom cake order form
+   ============================================= */
 
-let cakeStep = 1;
-const TOTAL_STEPS = 4;
-const cakeForm = {
-  name: "", email: "", phone: "",
-  size: "", flavor: "", frosting: "", filling: "None",
-  design: "", addons: [],
-  date: "", method: "pickup", notes: ""
+var currentStep  = 1;
+var totalSteps   = 4;
+var cakeImageData = null;
+
+var cakeForm = {
+  name:"", email:"", phone:"",
+  size:"", flavor:"", frosting:"", filling:"", design:"", addons:[],
+  date:"", method:"pickup", notes:""
 };
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function() {
   checkCakeAccess();
-  initCakeForm();
-  populateCakeOptions();
-  updateStepDisplay();
 });
 
+/* ---- CHECK ACCESS ---- */
 function checkCakeAccess() {
-  const settings = SBH.getSettings();
-  const user = SBH.getUser();
-  const disabledSection = document.getElementById("cakes-disabled");
-  const loginSection    = document.getElementById("login-required");
-  const formSection     = document.getElementById("cake-form-section");
+  var settings       = SBH.getSettings();
+  var user           = SBH.getUser();
+  var disabledSection = document.getElementById("cakes-disabled");
+  var loginSection    = document.getElementById("login-required");
+  var formSection     = document.getElementById("cake-form-section");
 
   if (!settings.cakesEnabled) {
     if (disabledSection) disabledSection.style.display = "block";
@@ -32,221 +31,242 @@ function checkCakeAccess() {
     if (formSection)     formSection.style.display     = "none";
     return;
   }
+
   if (!user) {
     if (disabledSection) disabledSection.style.display = "none";
     if (loginSection)    loginSection.style.display    = "block";
     if (formSection)     formSection.style.display     = "none";
     return;
   }
+
   if (disabledSection) disabledSection.style.display = "none";
   if (loginSection)    loginSection.style.display    = "none";
   if (formSection)     formSection.style.display     = "block";
 
   // Pre-fill user info
-  const user_ = SBH.getUser();
-  if (user_) {
-    setValue("cake-name",  user_.name  || "");
-    setValue("cake-email", user_.email || "");
-    setValue("cake-phone", user_.phone || "");
-  }
+  var nameEl  = document.getElementById("cake-name");
+  var emailEl = document.getElementById("cake-email");
+  var phoneEl = document.getElementById("cake-phone");
+  if (nameEl  && user.name)  nameEl.value  = user.name;
+  if (emailEl && user.email) emailEl.value = user.email;
+  if (phoneEl && user.phone) phoneEl.value = user.phone;
 }
 
-function populateCakeOptions() {
-  const opts = SBH.cakeOptions;
-
-  populateSelect("cake-size",     opts.sizes.map(s => ({ value: s.value, label: s.label })));
-  populateSelect("cake-flavor",   opts.flavors.map(f  => ({ value: f, label: f })));
-  populateSelect("cake-frosting", opts.frostings.map(f => ({ value: f, label: f })));
-  populateSelect("cake-filling",  opts.fillings.map(f  => ({ value: f, label: f })));
-
-  // Addons checkboxes
-  const addonsContainer = document.getElementById("cake-addons");
-  if (addonsContainer) {
-    addonsContainer.innerHTML = opts.addons.map(a => `
-      <label style="display:flex;align-items:center;gap:.5rem;font-size:.88rem;font-weight:600;color:var(--brown-dark);cursor:pointer;margin-bottom:.4rem">
-        <input type="checkbox" value="${a}" style="accent-color:var(--rose-deep)"> ${a}
-      </label>
-    `).join("");
-  }
+/* ---- STEP NAVIGATION ---- */
+function nextStep(from) {
+  if (!validateStep(from)) return;
+  saveStepData(from);
+  currentStep = from + 1;
+  if (currentStep > totalSteps) currentStep = totalSteps;
+  updateStepDisplay();
+  if (currentStep === 4) buildReviewPage();
+  window.scrollTo({ top: 200, behavior: "smooth" });
 }
 
-function populateSelect(id, options) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.innerHTML = options.map(o => `<option value="${o.value}">${o.label}</option>`).join("");
-}
-
-function setValue(id, value) {
-  const el = document.getElementById(id);
-  if (el) el.value = value;
-}
-
-function getValue(id) {
-  const el = document.getElementById(id);
-  return el ? el.value.trim() : "";
-}
-
-function initCakeForm() {
-  // Step navigation
-  const nextBtns = document.querySelectorAll(".step-next");
-  const prevBtns = document.querySelectorAll(".step-prev");
-
-  nextBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-      if (validateStep(cakeStep)) {
-        saveStepData(cakeStep);
-        cakeStep++;
-        if (cakeStep > TOTAL_STEPS) cakeStep = TOTAL_STEPS;
-        updateStepDisplay();
-        if (cakeStep === TOTAL_STEPS) renderReview();
-        window.scrollTo({ top: 200, behavior: "smooth" });
-      }
-    });
-  });
-
-  prevBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-      cakeStep--;
-      if (cakeStep < 1) cakeStep = 1;
-      updateStepDisplay();
-      window.scrollTo({ top: 200, behavior: "smooth" });
-    });
-  });
-
-  // Submit
-  const submitBtn = document.getElementById("cake-submit");
-  if (submitBtn) {
-    submitBtn.addEventListener("click", submitCakeRequest);
-  }
-}
-
-function validateStep(step) {
-  const errors = {
-    1: () => {
-      if (!getValue("cake-name"))  { showToast("⚠️ Please enter your name."); return false; }
-      if (!getValue("cake-email")) { showToast("⚠️ Please enter your email."); return false; }
-      if (!getValue("cake-phone")) { showToast("⚠️ Please enter your phone number."); return false; }
-      return true;
-    },
-    2: () => {
-      if (!getValue("cake-design")) { showToast("⚠️ Please describe your design."); return false; }
-      return true;
-    },
-    3: () => {
-      if (!getValue("cake-date")) { showToast("⚠️ Please select a date needed."); return false; }
-      const selected = new Date(getValue("cake-date"));
-      const minDate  = new Date();
-      minDate.setDate(minDate.getDate() + 3);
-      if (selected < minDate) { showToast("⚠️ Please allow at least 3 days lead time."); return false; }
-      return true;
-    },
-    4: () => true
-  };
-  return (errors[step] || (() => true))();
-}
-
-function saveStepData(step) {
-  if (step === 1) {
-    cakeForm.name  = getValue("cake-name");
-    cakeForm.email = getValue("cake-email");
-    cakeForm.phone = getValue("cake-phone");
-  }
-  if (step === 2) {
-    cakeForm.size     = getValue("cake-size");
-    cakeForm.flavor   = getValue("cake-flavor");
-    cakeForm.frosting = getValue("cake-frosting");
-    cakeForm.filling  = getValue("cake-filling");
-    cakeForm.design   = getValue("cake-design");
-    const checkboxes = document.querySelectorAll("#cake-addons input:checked");
-    cakeForm.addons = Array.from(checkboxes).map(c => c.value);
-  }
-  if (step === 3) {
-    cakeForm.date   = getValue("cake-date");
-    cakeForm.method = getValue("cake-method");
-    cakeForm.notes  = getValue("cake-notes");
-  }
+function prevStep(from) {
+  currentStep = from - 1;
+  if (currentStep < 1) currentStep = 1;
+  updateStepDisplay();
+  window.scrollTo({ top: 200, behavior: "smooth" });
 }
 
 function updateStepDisplay() {
-  // Step bar
-  document.querySelectorAll(".step-item").forEach((item, idx) => {
-    item.classList.remove("active", "done");
-    const stepNum = idx + 1;
-    if (stepNum < cakeStep)  item.classList.add("done");
-    if (stepNum === cakeStep) item.classList.add("active");
+  // Update step bar
+  document.querySelectorAll(".step-item").forEach(function(item) {
+    var stepNum = parseInt(item.dataset.step);
+    item.classList.remove("active","done");
+    if (stepNum < currentStep)  item.classList.add("done");
+    if (stepNum === currentStep) item.classList.add("active");
   });
 
-  // Show/hide step panels
-  document.querySelectorAll(".step-panel").forEach(panel => {
-    panel.style.display = parseInt(panel.dataset.step) === cakeStep ? "block" : "none";
-  });
+  // Show correct panel
+  for (var i = 1; i <= totalSteps; i++) {
+    var panel = document.getElementById("step-panel-" + i);
+    if (panel) panel.style.display = i === currentStep ? "block" : "none";
+  }
 }
 
-function renderReview() {
-  const reviewBody = document.getElementById("review-body");
-  if (!reviewBody) return;
+/* ---- VALIDATION ---- */
+function validateStep(step) {
+  if (step === 1) {
+    var name  = document.getElementById("cake-name").value.trim();
+    var email = document.getElementById("cake-email").value.trim();
+    var phone = document.getElementById("cake-phone").value.trim();
+    if (!name)  { showToast("Please enter your full name."); return false; }
+    if (!email) { showToast("Please enter your email address."); return false; }
+    if (!phone) { showToast("Please enter your phone number."); return false; }
+    return true;
+  }
+  if (step === 2) {
+    var design = document.getElementById("cake-design").value.trim();
+    if (!design) { showToast("Please describe your cake design."); return false; }
+    return true;
+  }
+  if (step === 3) {
+    var date = document.getElementById("cake-date").value;
+    if (!date) { showToast("Please select the date you need your cake."); return false; }
+    var selectedDate = new Date(date);
+    var minDate      = new Date();
+    minDate.setDate(minDate.getDate() + 3);
+    if (selectedDate < minDate) {
+      showToast("Please allow at least 3 days lead time for custom orders.");
+      return false;
+    }
+    return true;
+  }
+  return true;
+}
 
-  const rows = [
-    ["Your Name",   cakeForm.name],
+/* ---- SAVE STEP DATA ---- */
+function saveStepData(step) {
+  if (step === 1) {
+    cakeForm.name  = document.getElementById("cake-name").value.trim();
+    cakeForm.email = document.getElementById("cake-email").value.trim();
+    cakeForm.phone = document.getElementById("cake-phone").value.trim();
+  }
+  if (step === 2) {
+    cakeForm.size     = document.getElementById("cake-size").value;
+    cakeForm.flavor   = document.getElementById("cake-flavor").value;
+    cakeForm.frosting = document.getElementById("cake-frosting").value;
+    cakeForm.filling  = document.getElementById("cake-filling").value;
+    cakeForm.design   = document.getElementById("cake-design").value.trim();
+    var checked = document.querySelectorAll(".cake-addon:checked");
+    cakeForm.addons   = Array.from(checked).map(function(c) { return c.value; });
+  }
+  if (step === 3) {
+    cakeForm.date   = document.getElementById("cake-date").value;
+    cakeForm.method = document.getElementById("cake-method").value;
+    cakeForm.notes  = document.getElementById("cake-notes").value.trim();
+  }
+}
+
+/* ---- BUILD REVIEW PAGE ---- */
+function buildReviewPage() {
+  var rows = [
+    ["Name",        cakeForm.name],
     ["Email",       cakeForm.email],
     ["Phone",       cakeForm.phone],
     ["Cake Size",   cakeForm.size],
     ["Flavor",      cakeForm.flavor],
     ["Frosting",    cakeForm.frosting],
     ["Filling",     cakeForm.filling],
-    ["Design",      cakeForm.design],
     ["Add-ons",     cakeForm.addons.length ? cakeForm.addons.join(", ") : "None"],
+    ["Design",      cakeForm.design],
     ["Date Needed", cakeForm.date],
     ["Method",      cakeForm.method === "pickup" ? "Pickup — 721 Fallsgrove Dr, Rockville MD" : "Delivery (Maryland only)"],
-    ["Notes",       cakeForm.notes || "—"]
+    ["Notes",       cakeForm.notes || "None"]
   ];
 
-  reviewBody.innerHTML = rows.map(([label, value]) => `
-    <tr>
-      <td>${label}</td>
-      <td>${value}</td>
-    </tr>
-  `).join("");
+  var tbody = document.getElementById("review-body");
+  if (tbody) {
+    tbody.innerHTML = rows.map(function(r) {
+      return "<tr><td>" + r[0] + "</td><td>" + r[1] + "</td></tr>";
+    }).join("");
+  }
+
+  // Show image preview in review if uploaded
+  var reviewImgContainer = document.getElementById("review-image-container");
+  var reviewImg           = document.getElementById("review-preview-img");
+  if (cakeImageData && reviewImgContainer && reviewImg) {
+    reviewImg.src = cakeImageData;
+    reviewImgContainer.style.display = "block";
+  } else if (reviewImgContainer) {
+    reviewImgContainer.style.display = "none";
+  }
 }
 
-function submitCakeRequest() {
-  const btn = document.getElementById("cake-submit");
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Submitting...';
+/* ---- IMAGE UPLOAD ---- */
+function handleImageSelect(input) {
+  if (!input.files || !input.files[0]) return;
+  var file = input.files[0];
+  if (file.size > 5 * 1024 * 1024) {
+    showToast("Image is too large. Please use an image under 5MB.");
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) { setImagePreview(e.target.result); };
+  reader.readAsDataURL(file);
+}
 
-  // Generate request ID
-  const reqId = "CR-" + Date.now().toString().slice(-6);
-  const request = {
-    id: reqId,
-    ...cakeForm,
-    status: "pending",
-    submitted: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+function handleImageDrop(event) {
+  event.preventDefault();
+  var area = document.getElementById("image-upload-area");
+  if (area) { area.style.borderColor = "var(--cream-mid)"; area.style.background = "var(--cream)"; }
+  var file = event.dataTransfer.files[0];
+  if (!file) return;
+  if (!file.type.startsWith("image/")) {
+    showToast("Please drop an image file.");
+    return;
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    showToast("Image is too large. Please use an image under 5MB.");
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) { setImagePreview(e.target.result); };
+  reader.readAsDataURL(file);
+}
+
+function setImagePreview(dataUrl) {
+  cakeImageData = dataUrl;
+  var img         = document.getElementById("preview-img");
+  var placeholder = document.getElementById("image-placeholder");
+  var previewBox  = document.getElementById("image-preview-box");
+  if (img)         img.src = dataUrl;
+  if (placeholder) placeholder.style.display = "none";
+  if (previewBox)  previewBox.style.display  = "block";
+}
+
+function removeImage() {
+  cakeImageData = null;
+  var input       = document.getElementById("cake-image-input");
+  var placeholder = document.getElementById("image-placeholder");
+  var previewBox  = document.getElementById("image-preview-box");
+  if (input)       input.value               = "";
+  if (placeholder) placeholder.style.display = "block";
+  if (previewBox)  previewBox.style.display  = "none";
+}
+
+/* ---- SUBMIT ---- */
+function submitCakeRequest() {
+  var btn = document.getElementById("submit-btn");
+  if (btn) {
+    btn.disabled    = true;
+    btn.innerHTML   = '<span class="spinner"></span> Submitting...';
+  }
+
+  var reqId = "CR" + Date.now().toString().slice(-6);
+
+  var request = {
+    id:        reqId,
+    name:      cakeForm.name,
+    email:     cakeForm.email,
+    phone:     cakeForm.phone,
+    size:      cakeForm.size,
+    flavor:    cakeForm.flavor,
+    frosting:  cakeForm.frosting,
+    filling:   cakeForm.filling,
+    design:    cakeForm.design,
+    addons:    cakeForm.addons,
+    date:      cakeForm.date,
+    method:    cakeForm.method,
+    notes:     cakeForm.notes,
+    imageData: cakeImageData || null,
+    status:    "pending",
+    submitted: new Date().toLocaleDateString("en-US", { month:"short", day:"numeric", year:"numeric" })
   };
 
   SBH.saveCakeRequest(request);
 
-  /* =====================================================
-   * EMAIL NOTIFICATION (Backend)
-   * Send confirmation email to customer and
-   * notification email to Selina.
-   *
-   * POST /api/cake-request
-   * Body: request object
-   *
-   * Server should use SendGrid / Mailgun to email:
-   *   - Customer: confirmation + request summary
-   *   - Admin: new request notification
-   * ===================================================== */
-
-  setTimeout(() => {
-    const successSection  = document.getElementById("cake-success");
-    const formSection     = document.getElementById("cake-form-section");
-    const successOrderId  = document.getElementById("success-order-id");
+  setTimeout(function() {
+    var formSection    = document.getElementById("cake-form-section");
+    var successSection = document.getElementById("cake-success");
+    var successOrderId = document.getElementById("success-order-id");
 
     if (formSection)    formSection.style.display    = "none";
     if (successSection) successSection.style.display = "block";
     if (successOrderId) successOrderId.textContent   = reqId;
 
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, 1500);
+  }, 1200);
 }
