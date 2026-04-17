@@ -11,47 +11,163 @@
 <nav class="navbar">
   <div class="container nav-inner">
     <a href="index.html" class="nav-logo">Selly <span>Bake</span> House<small>Home of everything toothsome</small></a>
-    <div class="nav-actions" id="nav-actions">
+    <div class="nav-actions">
       <a href="cart.html" class="btn-icon">🛒<span class="cart-badge" id="cart-badge" style="display:none">0</span></a>
     </div>
   </div>
 </nav>
 
 <section class="section">
-  <div class="container" style="max-width:600px;text-align:center;padding:5rem 2rem">
+  <div class="container" style="max-width:640px;text-align:center;padding:5rem 2rem">
+
     <div style="font-size:5rem;margin-bottom:1.5rem">🎉</div>
     <h1 class="serif" style="font-size:3rem;color:var(--brown-dark);margin-bottom:.8rem">Order Placed!</h1>
+
     <p style="color:var(--text-muted);font-size:1.05rem;line-height:1.8;margin-bottom:.5rem">
-      Thank you! Your order <strong id="order-id" style="color:var(--brown)"></strong> has been received.
+      Thank you! Your order <strong id="order-id" style="color:var(--brown)"></strong> has been received and confirmed.
     </p>
     <p style="color:var(--text-muted);margin-bottom:2rem;line-height:1.8">
-      Selina will prepare your items and contact you to confirm pickup/delivery timing. Check your email for a confirmation.
+      Selina will prepare your order and contact you to confirm timing. Check your email for a confirmation!
     </p>
-    <div style="background:var(--cream-dark);border-radius:var(--radius-sm);padding:1.2rem 1.5rem;margin-bottom:2rem;text-align:left">
-      <p style="font-size:.9rem;font-weight:700;color:var(--brown-dark);margin-bottom:.5rem">What happens next:</p>
-      <ol style="padding-left:1.2rem;font-size:.88rem;color:var(--text-muted);line-height:2">
-        <li>You'll receive an email confirmation shortly</li>
-        <li>Selina begins baking your order</li>
-        <li>You'll be contacted to confirm pickup/delivery time</li>
-        <li>Enjoy your treats! 🍪</li>
-      </ol>
+
+    <!-- Order Summary Card -->
+    <div id="order-summary-card" style="background:var(--cream-dark);border-radius:var(--radius);padding:1.5rem;margin-bottom:2rem;text-align:left;"></div>
+
+    <!-- Action Buttons -->
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem">
+      <button class="btn btn-primary" onclick="printInvoice()">🖨️ Print Invoice</button>
+      <a href="shop.html" class="btn btn-outline">Shop More</a>
+      <a href="index.html" class="btn btn-ghost">Back to Home</a>
     </div>
-    <div style="display:flex;gap:1rem;justify-content:center">
-      <a href="shop.html" class="btn btn-primary">Shop More</a>
-      <a href="index.html" class="btn btn-outline">Back to Home</a>
+
+    <!-- Google Review Section -->
+    <div id="review-section" style="background:var(--white);border-radius:var(--radius);padding:2rem;box-shadow:var(--shadow-sm);border:1.5px solid rgba(240,192,96,0.2);margin-bottom:2rem">
+      <div style="font-size:2rem;margin-bottom:.5rem">⭐⭐⭐⭐⭐</div>
+      <h3 class="serif" style="font-size:1.6rem;color:var(--brown-dark);margin-bottom:.5rem">Enjoying your order?</h3>
+      <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7;margin-bottom:1.2rem">
+        Your review helps other Maryland families discover Selly Bake House. It only takes 30 seconds and means the world to Selina!
+      </p>
+      <a id="google-review-btn" href="#" target="_blank" rel="noopener"
+        class="btn btn-gold btn-lg"
+        style="background:linear-gradient(135deg,#FBBC04,#F9A825);color:#3E1C07;box-shadow:0 4px 16px rgba(251,188,4,0.3);">
+        ⭐ Leave a Google Review
+      </a>
     </div>
+
+    <!-- Leave a Comment -->
+    <div style="background:var(--white);border-radius:var(--radius);padding:2rem;box-shadow:var(--shadow-sm);border:1.5px solid rgba(240,192,96,0.2)">
+      <h3 class="serif" style="font-size:1.5rem;color:var(--brown-dark);margin-bottom:.5rem">Share Your Experience</h3>
+      <p style="color:var(--text-muted);font-size:.88rem;margin-bottom:1rem">Your feedback helps Selina improve. Would you like to leave a comment?</p>
+      <div class="form-group">
+        <label>How was your experience today?</label>
+        <textarea id="feedback-text" rows="3" placeholder="The cookies were amazing! The delivery was fast..."></textarea>
+      </div>
+      <div style="display:flex;gap:.5rem;margin-bottom:1rem">
+        <label style="font-weight:700;font-size:.85rem;color:var(--brown)">Rating:</label>
+        <div id="star-rating" style="display:flex;gap:4px;">
+          <span onclick="setRating(1)" class="star" style="font-size:1.5rem;cursor:pointer;">⭐</span>
+          <span onclick="setRating(2)" class="star" style="font-size:1.5rem;cursor:pointer;">⭐</span>
+          <span onclick="setRating(3)" class="star" style="font-size:1.5rem;cursor:pointer;">⭐</span>
+          <span onclick="setRating(4)" class="star" style="font-size:1.5rem;cursor:pointer;">⭐</span>
+          <span onclick="setRating(5)" class="star" style="font-size:1.5rem;cursor:pointer;">⭐</span>
+        </div>
+      </div>
+      <button class="btn btn-rose" onclick="submitFeedback()">Submit Feedback</button>
+      <div id="feedback-thanks" style="display:none;color:var(--green);font-weight:700;margin-top:.8rem;font-size:.9rem;">
+        ✅ Thank you for your feedback! It means so much to Selina.
+      </div>
+    </div>
+
   </div>
 </section>
 
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2025 Selly Bake House. All rights reserved.</span>
+      <span>Made with 💕 in Rockville, MD</span>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container" class="toast-container"></div>
 <script src="js/data.js"></script>
+<script src="js/main.js"></script>
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const params = new URLSearchParams(window.location.search);
-    const orderId = params.get("order");
-    const el = document.getElementById("order-id");
-    if (el && orderId) el.textContent = "#" + orderId;
+  var currentRating = 5;
+  var currentOrder  = null;
+
+  document.addEventListener("DOMContentLoaded", function() {
     SBH.updateCartBadge();
+    var params  = new URLSearchParams(window.location.search);
+    var orderId = params.get("order");
+    var orderEl = document.getElementById("order-id");
+    if (orderEl && orderId) orderEl.textContent = "#" + orderId;
+
+    // Load order details
+    if (orderId) {
+      currentOrder = SBH.getOrderById(orderId);
+      if (currentOrder) renderOrderSummary(currentOrder);
+    }
+
+    // Load Google Review link
+    var settings    = SBH.getSettings();
+    var reviewBtn   = document.getElementById("google-review-btn");
+    var reviewSec   = document.getElementById("review-section");
+    if (settings.googleReviewLink && reviewBtn) {
+      reviewBtn.href = settings.googleReviewLink;
+    } else if (reviewSec) {
+      reviewSec.style.display = "none";
+    }
   });
+
+  function renderOrderSummary(order) {
+    var card = document.getElementById("order-summary-card");
+    if (!card) return;
+    card.innerHTML =
+      '<h4 style="font-family:Cormorant Garamond,serif;font-size:1.3rem;color:var(--brown-dark);margin-bottom:.8rem">Order Details</h4>' +
+      '<div style="font-size:.9rem;color:var(--text-muted);display:flex;flex-direction:column;gap:.4rem">' +
+        '<div><strong style="color:var(--brown-dark)">Items:</strong> ' + order.items + '</div>' +
+        '<div><strong style="color:var(--brown-dark)">Method:</strong> ' + (order.method === "delivery" ? "🚗 Delivery" : "🏠 Pickup") + '</div>' +
+        (order.pickupDate ? '<div><strong style="color:var(--brown-dark)">Date:</strong> ' + order.pickupDate + ' at ' + (order.pickupTime || "") + '</div>' : '') +
+        (order.deliveryAddress ? '<div><strong style="color:var(--brown-dark)">Address:</strong> ' + order.deliveryAddress + '</div>' : '') +
+        '<div><strong style="color:var(--brown-dark)">Payment:</strong> ' + (order.paymentMethod || "Square") + '</div>' +
+        '<div><strong style="color:var(--brown-dark)">Total:</strong> $' + parseFloat(order.total || 0).toFixed(2) + '</div>' +
+      '</div>';
+  }
+
+  function printInvoice() {
+    if (!currentOrder) { showToast("Order not found."); return; }
+    var html    = SBH.generateInvoice(currentOrder);
+    var win     = window.open("", "_blank");
+    win.document.write(html);
+    win.document.close();
+  }
+
+  function setRating(n) {
+    currentRating = n;
+    var stars = document.querySelectorAll(".star");
+    stars.forEach(function(s, i) { s.style.opacity = i < n ? "1" : "0.3"; });
+  }
+
+  function submitFeedback() {
+    var text = document.getElementById("feedback-text").value.trim();
+    if (!text) { showToast("Please write something before submitting!"); return; }
+    // Save feedback to localStorage
+    var feedbacks = JSON.parse(localStorage.getItem("sbh_feedbacks") || "[]");
+    feedbacks.unshift({
+      id:       currentOrder ? currentOrder.id : "N/A",
+      customer: currentOrder ? currentOrder.customer : "Guest",
+      email:    currentOrder ? currentOrder.email : "",
+      rating:   currentRating,
+      text:     text,
+      date:     new Date().toLocaleDateString()
+    });
+    localStorage.setItem("sbh_feedbacks", JSON.stringify(feedbacks));
+    document.getElementById("feedback-thanks").style.display = "block";
+    document.getElementById("feedback-text").value = "";
+    showToast("Thank you for your feedback! 💕");
+  }
 </script>
 </body>
 </html>
