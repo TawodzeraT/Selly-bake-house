@@ -1,11 +1,18 @@
+// ================================================================
+// SELLY BAKE HOUSE — MAIN JS
+// Shared utilities + EmailJS + SMS notifications
+// ================================================================
+
 document.addEventListener("DOMContentLoaded", () => {
   initNav();
   initAuthModals();
   SBH.updateCartBadge();
   setActiveNavLink();
   initToastContainer();
+  loadEmailJS();
 });
 
+// ── NAV ─────────────────────────────────────────────────────────
 function setActiveNavLink() {
   const page = window.location.pathname.split("/").pop() || "index.html";
   document.querySelectorAll(".nav-links a, .mobile-menu a").forEach(a => {
@@ -17,17 +24,15 @@ function setActiveNavLink() {
 function initNav() {
   const toggle     = document.getElementById("nav-toggle");
   const mobileMenu = document.getElementById("mobile-menu");
-  if (toggle && mobileMenu) {
-    toggle.addEventListener("click", () => mobileMenu.classList.toggle("open"));
-  }
+  if (toggle && mobileMenu) toggle.addEventListener("click", () => mobileMenu.classList.toggle("open"));
   renderUserNav();
 }
 
 function renderUserNav() {
-  const user        = SBH.getUser();
-  const loginBtn    = document.getElementById("login-btn");
-  const greeting    = document.getElementById("user-greeting");
-  const logoutBtn   = document.getElementById("logout-btn");
+  const user      = SBH.getUser();
+  const loginBtn  = document.getElementById("login-btn");
+  const greeting  = document.getElementById("user-greeting");
+  const logoutBtn = document.getElementById("logout-btn");
   if (user) {
     if (loginBtn)  loginBtn.style.display  = "none";
     if (greeting)  { greeting.style.display = "inline"; greeting.textContent = "Hi " + user.name.split(" ")[0] + " 👋"; }
@@ -39,11 +44,11 @@ function renderUserNav() {
   }
 }
 
+// ── TOAST ────────────────────────────────────────────────────────
 function initToastContainer() {
   if (!document.getElementById("toast-container")) {
     const d = document.createElement("div");
-    d.id = "toast-container";
-    d.className = "toast-container";
+    d.id = "toast-container"; d.className = "toast-container";
     document.body.appendChild(d);
   }
 }
@@ -52,37 +57,32 @@ function showToast(message, duration = 2800) {
   const c = document.getElementById("toast-container");
   if (!c) return;
   const t = document.createElement("div");
-  t.className = "toast";
-  t.textContent = message;
+  t.className = "toast"; t.textContent = message;
   c.appendChild(t);
   setTimeout(() => { t.classList.add("removing"); setTimeout(() => t.remove(), 300); }, duration);
 }
 
+// ── OVERLAY ──────────────────────────────────────────────────────
 function openOverlay(id) {
   const el = document.getElementById(id);
   if (el) { el.style.display = "flex"; document.body.style.overflow = "hidden"; }
 }
-
 function closeOverlay(id) {
   const el = document.getElementById(id);
   if (el) { el.style.display = "none"; document.body.style.overflow = ""; }
 }
-
 document.addEventListener("click", e => {
-  if (e.target.classList.contains("overlay")) {
-    e.target.style.display = "none";
-    document.body.style.overflow = "";
-  }
+  if (e.target.classList.contains("overlay")) { e.target.style.display = "none"; document.body.style.overflow = ""; }
 });
-
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") {
     document.querySelectorAll(".overlay").forEach(o => { o.style.display = "none"; });
     document.body.style.overflow = "";
-    closeAdminLogin();
+    if (typeof closeAdminLogin === "function") closeAdminLogin();
   }
 });
 
+// ── AUTH MODALS ──────────────────────────────────────────────────
 function initAuthModals() {
   const loginForm = document.getElementById("login-form");
   if (loginForm) {
@@ -91,7 +91,7 @@ function initAuthModals() {
       const email = document.getElementById("login-email").value.trim();
       const pass  = document.getElementById("login-password").value;
       if (!email || !pass) { showFormError("login-error", "Please fill in all fields."); return; }
-      SBH.saveUser({ name:"Customer", email, phone:"" });
+      SBH.saveUser({ name: "Customer", email, phone: "" });
       closeOverlay("login-modal");
       renderUserNav();
       showToast("Welcome back! 👋");
@@ -110,23 +110,17 @@ function initAuthModals() {
       SBH.saveUser({ name, email, phone });
       closeOverlay("signup-modal");
       renderUserNav();
-      showToast("Welcome to Selly Bake House " + name.split(" ")[0] + "! 🎉");
+      showToast("Welcome " + name.split(" ")[0] + "! 🎉");
     });
   }
 
   const logoutBtn = document.getElementById("logout-btn");
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      SBH.logout();
-      renderUserNav();
-      showToast("Logged out. See you soon! 👋");
-    });
-  }
+  if (logoutBtn) logoutBtn.addEventListener("click", () => { SBH.logout(); renderUserNav(); showToast("Logged out. See you soon! 👋"); });
 
   const toSignup = document.getElementById("to-signup");
   const toLogin  = document.getElementById("to-login");
-  if (toSignup) toSignup.addEventListener("click", () => { closeOverlay("login-modal");  openOverlay("signup-modal"); });
-  if (toLogin)  toLogin.addEventListener("click",  () => { closeOverlay("signup-modal"); openOverlay("login-modal");  });
+  if (toSignup) toSignup.addEventListener("click", () => { closeOverlay("login-modal"); openOverlay("signup-modal"); });
+  if (toLogin)  toLogin.addEventListener("click",  () => { closeOverlay("signup-modal"); openOverlay("login-modal"); });
 }
 
 function showFormError(id, msg) {
@@ -134,6 +128,7 @@ function showFormError(id, msg) {
   if (el) { el.textContent = msg; el.style.display = "block"; }
 }
 
+// ── GEO CHECK ────────────────────────────────────────────────────
 async function checkMarylandGeo() {
   return new Promise(resolve => {
     fetch("https://ipapi.co/json/")
@@ -142,17 +137,84 @@ async function checkMarylandGeo() {
       .catch(() => {
         if (!navigator.geolocation) { resolve(true); return; }
         navigator.geolocation.getCurrentPosition(
-          pos => {
-            const lat = pos.coords.latitude;
-            const lon = pos.coords.longitude;
-            resolve(lat >= 37.9 && lat <= 39.8 && lon >= -79.5 && lon <= -74.9);
-          },
+          pos => { const {latitude:lat, longitude:lon} = pos.coords; resolve(lat >= 37.9 && lat <= 39.8 && lon >= -79.5 && lon <= -74.9); },
           () => resolve(true)
         );
       });
   });
 }
 
+// ── EMAILJS ──────────────────────────────────────────────────────
+function loadEmailJS() {
+  const settings = SBH.getSettings();
+  if (!settings.emailjsPublicKey) return;
+  if (window.emailjs) { emailjs.init(settings.emailjsPublicKey); return; }
+  const script = document.createElement("script");
+  script.src = "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js";
+  script.onload = () => { if (window.emailjs && settings.emailjsPublicKey) emailjs.init(settings.emailjsPublicKey); };
+  document.head.appendChild(script);
+}
+
+async function sendOrderEmail(order, type) {
+  const settings = SBH.getSettings();
+  if (!settings.emailjsPublicKey || !settings.emailjsServiceId) return;
+
+  const templates = {
+    new:       settings.emailjsTemplateId        || "",
+    update:    settings.emailjsUpdateTemplateId  || settings.emailjsTemplateId || "",
+    cake:      settings.emailjsCakeTemplateId    || settings.emailjsTemplateId || "",
+    autoReply: settings.emailjsAutoReplyId       || settings.emailjsTemplateId || "",
+  };
+
+  const templateId = templates[type] || templates.new;
+  if (!templateId || !window.emailjs) return;
+
+  const params = {
+    to_email:       order.email    || "",
+    to_name:        order.customer || "Customer",
+    order_id:       order.id       || "",
+    order_items:    order.items    || "",
+    order_total:    "$" + parseFloat(order.total || 0).toFixed(2),
+    order_status:   order.status   || "pending",
+    order_method:   order.method   === "delivery" ? "Delivery" : "Pickup",
+    pickup_date:    order.pickupDate || "",
+    pickup_time:    order.pickupTime || "",
+    delivery_addr:  order.deliveryAddress || "",
+    payment_method: order.paymentMethod || "Square",
+    tip_amount:     "$" + parseFloat(order.tip || 0).toFixed(2),
+    reply_to:       "sellybakehouse@gmail.com",
+  };
+
+  try {
+    await emailjs.send(settings.emailjsServiceId, templateId, params);
+    console.log("Email sent: " + type);
+  } catch (err) {
+    console.warn("EmailJS error:", err);
+  }
+}
+
+async function sendSMSNotification(message) {
+  // ──────────────────────────────────────────────────────────────
+  // SMS via Twilio (requires backend)
+  // Set up a simple backend endpoint /api/sms that calls Twilio
+  // or use a service like Twilio Functions.
+  //
+  // POST /api/sms
+  // { to: "+13013561232", message: "New order #SBH001..." }
+  //
+  // For now this is a stub. To activate:
+  // 1. Sign up at twilio.com
+  // 2. Create a Twilio Function or backend route
+  // 3. Replace the URL below with your endpoint
+  // ──────────────────────────────────────────────────────────────
+  const settings = SBH.getSettings();
+  if (!settings.smsNotifyNumber) return;
+  console.log("SMS to " + settings.smsNotifyNumber + ": " + message);
+  // Uncomment when backend is ready:
+  // await fetch("/api/sms", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ to: settings.smsNotifyNumber, message }) });
+}
+
+// ── PRODUCT CARD BUILDER ─────────────────────────────────────────
 function buildProductCard(product, options = {}) {
   const { showQuickAdd = true } = options;
   const soldout    = product.status === "soldout" || product.status === "outoforder";
@@ -163,7 +225,7 @@ function buildProductCard(product, options = {}) {
       <div class="product-body">
         <div class="product-badges">
           ${product.bestSeller ? '<span class="badge badge-bestseller">⭐ Best Seller</span>' : ""}
-          ${product.status === "soldout"    ? '<span class="badge badge-soldout">Sold Out</span>'    : ""}
+          ${product.status === "soldout"    ? '<span class="badge badge-soldout">Sold Out</span>'       : ""}
           ${product.status === "outoforder" ? '<span class="badge badge-outoforder">Unavailable</span>' : ""}
           ${product.isNew ? '<span class="badge badge-new">New</span>' : ""}
         </div>
@@ -171,17 +233,16 @@ function buildProductCard(product, options = {}) {
         <div class="product-desc">${product.desc}</div>
         <div class="product-footer">
           <span class="product-price">$${product.price.toFixed(2)}</span>
-          ${showQuickAdd ? `<button class="btn btn-rose btn-sm" onclick="event.stopPropagation();quickAddToCart(${product.id})" ${soldout ? "disabled" : ""}>${soldout ? statusText : "Add to Cart"}</button>` : ""}
+          ${showQuickAdd ? `<button class="btn btn-rose btn-sm" onclick="event.stopPropagation();quickAddToCart(${product.id})" ${soldout?"disabled":""}>${soldout?statusText:"Add to Cart"}</button>` : ""}
         </div>
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
 function openProductModal(productId) {
   const product = SBH.getProducts().find(p => p.id === productId);
   if (!product) return;
-  const soldout = product.status !== "instock";
+  const soldout  = product.status !== "instock";
   const existing = document.getElementById("product-modal");
   if (existing) existing.remove();
   document.body.insertAdjacentHTML("beforeend", `
@@ -204,13 +265,12 @@ function openProductModal(productId) {
               </div>
               <button class="btn btn-primary btn-block" onclick="modalAddToCart(${product.id})">
                 Add to Cart — $<span id="modal-total">${product.price.toFixed(2)}</span>
-              </button>
-            ` : `<button class="btn btn-outline btn-block" disabled>${product.status === "soldout" ? "Currently Sold Out" : "Temporarily Unavailable"}</button>`}
+              </button>` :
+              `<button class="btn btn-outline btn-block" disabled>${product.status === "soldout" ? "Currently Sold Out" : "Temporarily Unavailable"}</button>`}
           </div>
         </div>
       </div>
-    </div>
-  `);
+    </div>`);
   document.body.style.overflow = "hidden";
   window._modalPrice = product.price;
 }
@@ -243,78 +303,44 @@ function quickAddToCart(productId) {
 }
 
 function formatCurrency(amount) {
-  return new Intl.NumberFormat("en-US", { style:"currency", currency:"USD" }).format(amount);
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(amount);
 }
 
-/* ============================================
-   ADMIN LOGIN
-   Change the password below to your own!
-   ============================================ */
-var ADMIN_PASSWORD = "SellyBakes2025!";
-var adminAttempts  = parseInt(localStorage.getItem("sbh_admin_attempts") || "0");
+// ── ADMIN QUICK LOGIN (for non-admin pages) ──────────────────────
+var ADMIN_PASSWORD  = "SellyBakes2025!";
+var adminAttempts   = parseInt(localStorage.getItem("sbh_admin_attempts") || "0");
 
 function openAdminLogin() {
   var lockout = localStorage.getItem("sbh_lockout_until");
   if (lockout && Date.now() < parseInt(lockout)) {
     var mins = Math.ceil((parseInt(lockout) - Date.now()) / 60000);
-    alert("Too many wrong attempts. Try again in " + mins + " minute(s).");
-    return;
+    alert("Too many wrong attempts. Try again in " + mins + " minute(s)."); return;
   }
-  if (localStorage.getItem("sbh_admin_auth") === ADMIN_PASSWORD) {
-    window.location.href = "/admin/index.html";
-    return;
-  }
+  if (localStorage.getItem("sbh_admin_auth") === ADMIN_PASSWORD) { window.location.href = "/admin/index.html"; return; }
   var modal = document.getElementById("admin-login-modal");
-  if (modal) {
-    modal.style.display = "flex";
-    document.body.style.overflow = "hidden";
-    setTimeout(function() {
-      var inp = document.getElementById("admin-password-input");
-      if (inp) inp.focus();
-    }, 150);
-  }
+  if (modal) { modal.style.display = "flex"; document.body.style.overflow = "hidden"; setTimeout(() => { var inp = document.getElementById("admin-password-input"); if (inp) inp.focus(); }, 150); }
 }
-
 function closeAdminLogin() {
   var modal = document.getElementById("admin-login-modal");
   if (!modal) return;
-  modal.style.display = "none";
-  document.body.style.overflow = "";
-  var inp = document.getElementById("admin-password-input");
-  var err = document.getElementById("admin-login-error");
+  modal.style.display = "none"; document.body.style.overflow = "";
+  var inp = document.getElementById("admin-password-input"); if (inp) inp.value = "";
+  var err = document.getElementById("admin-login-error"); if (err) err.style.display = "none";
   var btn = document.getElementById("admin-login-btn");
-  if (inp) inp.value = "";
-  if (err) err.style.display = "none";
-  if (btn) {
-    btn.textContent = "Enter Admin Panel →";
-    btn.style.background = "linear-gradient(145deg,#3E1C07 0%,#5C2A10 50%,#3E1C07 100%)";
-    btn.style.color = "#F0C060";
-  }
+  if (btn) { btn.textContent = "Enter Admin Panel"; btn.style.background = "linear-gradient(145deg,#3E1C07 0%,#5C2A10 50%,#3E1C07 100%)"; btn.style.color = "#F0C060"; }
 }
-
 function checkAdminPassword() {
-  var inp    = document.getElementById("admin-password-input");
-  var errorEl = document.getElementById("admin-login-error");
-  var btn    = document.getElementById("admin-login-btn");
-  if (!inp) return;
-  var input = inp.value;
+  var inp = document.getElementById("admin-password-input"); var errorEl = document.getElementById("admin-login-error"); var btn = document.getElementById("admin-login-btn");
+  if (!inp) return; var input = inp.value;
   if (input === ADMIN_PASSWORD) {
-    localStorage.setItem("sbh_admin_auth", ADMIN_PASSWORD);
-    localStorage.setItem("sbh_admin_attempts", "0");
-    if (btn) {
-      btn.textContent = "✅ Access Granted! Redirecting...";
-      btn.style.background = "linear-gradient(135deg,#1E6B45,#2D9B65)";
-      btn.style.color = "white";
-    }
-    setTimeout(function() { window.location.href = "/admin/index.html"; }, 900);
+    localStorage.setItem("sbh_admin_auth", ADMIN_PASSWORD); localStorage.setItem("sbh_admin_attempts", "0");
+    if (btn) { btn.textContent = "✅ Access Granted! Redirecting..."; btn.style.background = "linear-gradient(135deg,#1E6B45,#2D9B65)"; btn.style.color = "white"; }
+    setTimeout(() => { window.location.href = "/admin/index.html"; }, 900);
   } else {
-    adminAttempts++;
-    localStorage.setItem("sbh_admin_attempts", adminAttempts.toString());
+    adminAttempts++; localStorage.setItem("sbh_admin_attempts", adminAttempts.toString());
     var remaining = 5 - adminAttempts;
     if (adminAttempts >= 5) {
-      localStorage.setItem("sbh_lockout_until", String(Date.now() + 15*60*1000));
-      localStorage.setItem("sbh_admin_attempts", "0");
-      adminAttempts = 0;
+      localStorage.setItem("sbh_lockout_until", String(Date.now() + 15*60*1000)); localStorage.setItem("sbh_admin_attempts", "0"); adminAttempts = 0;
       if (errorEl) { errorEl.textContent = "🔒 Too many attempts. Locked out for 15 minutes."; errorEl.style.display = "block"; }
       setTimeout(closeAdminLogin, 2500);
     } else {
@@ -323,11 +349,9 @@ function checkAdminPassword() {
     }
   }
 }
-
 function toggleAdminPw() {
-  var inp = document.getElementById("admin-password-input");
-  var btn = document.getElementById("toggle-admin-pw");
+  var inp = document.getElementById("admin-password-input"); var btn = document.getElementById("toggle-admin-pw");
   if (!inp) return;
-  if (inp.type === "password") { inp.type = "text";     if (btn) btn.textContent = "🙈"; }
-  else                         { inp.type = "password"; if (btn) btn.textContent = "👁️"; }
+  if (inp.type === "password") { inp.type = "text"; if (btn) btn.textContent = "🙈"; }
+  else { inp.type = "password"; if (btn) btn.textContent = "👁️"; }
 }
