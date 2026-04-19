@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selly Bake House — Coming Soon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      min-height:100vh;
+      background:linear-gradient(160deg,#3E1C07 0%,#5C2A10 40%,#3E1C07 100%);
+      display:flex; align-items:center; justify-content:center;
+      font-family:'Nunito',sans-serif; padding:2rem;
+    }
+    .card { max-width:600px; width:100%; text-align:center; }
+    .logo { font-family:'Cormorant Garamond',serif; font-size:2.6rem; font-weight:700; color:#F0C060; margin-bottom:.2rem; }
+    .logo span { color:#D4637A; }
+    .sub-top { font-size:.75rem; color:#C9913D; letter-spacing:3px; text-transform:uppercase; margin-bottom:2.5rem; }
+    .icon { font-size:5.5rem; display:block; margin:0 auto 1.2rem; animation:bob 2.4s ease-in-out infinite; }
+    @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+    h1 { font-family:'Cormorant Garamond',serif; font-size:3rem; color:#FFF6EC; line-height:1.2; margin-bottom:1rem; }
+    h1 em { font-style:italic; color:#D4637A; }
+    .desc { color:#EDD9BC; line-height:1.9; font-size:1rem; margin-bottom:2rem; }
+    .desc strong { color:#F0C060; font-weight:800; }
+    .bar-label { display:flex; justify-content:space-between; font-size:.75rem; color:#9B6340; max-width:420px; margin:0 auto .5rem; }
+    .bar-wrap { background:rgba(255,246,236,0.1); border-radius:50px; height:12px; overflow:hidden; max-width:420px; margin:0 auto 2rem; border:1px solid rgba(240,192,96,0.15); }
+    .bar-fill { height:100%; border-radius:50px; background:linear-gradient(90deg,#C9913D,#D4637A,#F0C060); width:73%; }
+    .chips { display:flex; gap:.7rem; justify-content:center; flex-wrap:wrap; margin-bottom:2rem; }
+    .chip { font-size:.8rem; font-weight:700; padding:6px 16px; border-radius:50px; border:1.5px solid; font-family:'Nunito',sans-serif; }
+    .cp { color:#D4637A; border-color:rgba(212,99,122,0.4); background:rgba(212,99,122,0.09); }
+    .cg { color:#F0C060; border-color:rgba(240,192,96,0.4); background:rgba(240,192,96,0.09); }
+    .cc { color:#EDD9BC; border-color:rgba(237,217,188,0.3); background:rgba(237,217,188,0.07); }
+    .divider { width:60px; height:2px; background:rgba(240,192,96,0.3); border-radius:2px; margin:0 auto 1.5rem; }
+    .contact { font-size:.88rem; color:#9B6340; line-height:2.2; }
+    .contact a { color:#D4637A; text-decoration:none; font-weight:800; }
+  </style>
+</head>
+<body>
+
+<script>
+  // ── SECRET PREVIEW KEY ──────────────────────────────────────────
+  // Change "SellyPreview2025" to any secret word only you know
+  var SECRET_KEY = "SellyPreview2025";
+
+  // Check if the secret key is in the URL
+  // e.g. www.sellybakehouse.com?preview=SellyPreview2025
+  var params = new URLSearchParams(window.location.search);
+  if (params.get("preview") === SECRET_KEY) {
+    // Remember this device forever
+    localStorage.setItem("sbh_preview_access", SECRET_KEY);
+  }
+
+  // If this device has access, go straight to the real site
+  if (localStorage.getItem("sbh_preview_access") === SECRET_KEY) {
+    window.location.replace("home.html");
+  }
+</script>
+
+  <!-- Everyone else sees this maintenance page -->
+  <div class="card">
+    <div class="logo">Selly <span>Bake</span> House</div>
+    <div class="sub-top">Rockville, Maryland</div>
+
+    <span class="icon">🍞</span>
+
+    <h1>Something <em>delicious</em><br>is in the oven…</h1>
+
+    <p class="desc">
+      We're mixing, kneading and perfecting every last crumb.<br>
+      <strong>No half-baked ideas here</strong> — just good things taking their time.<br>
+      Come back soon before we roll out something amazing! 🥐
+    </p>
+
+    <div class="bar-label">
+      <span>Baking progress</span>
+      <span>73%</span>
+    </div>
+    <div class="bar-wrap">
+      <div class="bar-fill"></div>
+    </div>
+
+    <div class="chips">
+      <div class="chip cp">🍪 Fresh cookies soon</div>
+      <div class="chip cg">🎂 Custom cakes coming</div>
+      <div class="chip cc">🚗 Maryland delivery</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="contact">
+      In the meantime we are still taking orders — just reach out!<br>
+      <a href="tel:+13013561232">(301) 356-1232</a>
+      &nbsp;&nbsp;|&nbsp;&nbsp;
+      <a href="mailto:sellybakehouse@gmail.com">sellybakehouse@gmail.com</a>
+    </div>
+  </div>
+
+</body>
+</html>
