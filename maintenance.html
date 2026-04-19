@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selly Bake House — Coming Soon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      background: linear-gradient(160deg, #3E1C07 0%, #5C2A10 40%, #3E1C07 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Nunito', sans-serif; padding: 2rem;
+    }
+    .card {
+      max-width: 600px; width: 100%; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 700; color: #F0C060; }
+    .logo span { color: #D4637A; }
+    .sub-top { font-size: 0.75rem; color: #C9913D; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 2rem; margin-top: 0.2rem; }
+    .icon { font-size: 5rem; display: block; margin: 0 auto 1rem; animation: bob 2.4s ease-in-out infinite; }
+    @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+    h1 { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; color: #FFF6EC; line-height: 1.2; margin-bottom: 1rem; }
+    h1 em { font-style: italic; color: #D4637A; }
+    p { color: #EDD9BC; line-height: 1.8; font-size: 1rem; margin-bottom: 1.8rem; }
+    p strong { color: #F0C060; font-weight: 800; }
+    .bar-wrap { background: rgba(255,246,236,0.1); border-radius: 50px; height: 10px; overflow: hidden; max-width: 400px; margin: 0 auto 1.8rem; }
+    .bar-fill { height: 100%; border-radius: 50px; background: linear-gradient(90deg,#C9913D,#D4637A,#F0C060); width: 73%; }
+    .chips { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem; }
+    .chip { font-size: 0.78rem; font-weight: 700; padding: 5px 14px; border-radius: 50px; border: 1.5px solid; }
+    .cp { color: #D4637A; border-color: rgba(212,99,122,0.4); background: rgba(212,99,122,0.08); }
+    .cg { color: #F0C060; border-color: rgba(240,192,96,0.4); background: rgba(240,192,96,0.08); }
+    .cc { color: #EDD9BC; border-color: rgba(237,217,188,0.3); background: rgba(237,217,188,0.06); }
+    .contact { font-size: 0.85rem; color: #9B6340; line-height: 2; }
+    .contact a { color: #D4637A; text-decoration: none; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">Selly <span>Bake</span> House</div>
+    <div class="sub-top">Rockville, Maryland</div>
+    <span class="icon">🍞</span>
+    <h1>Something <em>delicious</em><br>is in the oven…</h1>
+    <p>We're mixing, kneading and perfecting every last crumb.<br>
+    <strong>No half-baked ideas here</strong> — just good things taking their time.<br>
+    Come back soon before we roll out something amazing! 🥐</p>
+    <div class="bar-wrap"><div class="bar-fill"></div></div>
+    <div class="chips">
+      <div class="chip cp">🍪 Fresh cookies soon</div>
+      <div class="chip cg">🎂 Custom cakes coming</div>
+      <div class="chip cc">🚗 Maryland delivery</div>
+    </div>
+    <div class="contact">
+      In the meantime we're still taking orders — just reach out!<br>
+      <a href="tel:+13013561232">(301) 356-1232</a> &nbsp;|&nbsp;
+      <a href="mailto:sellybakehouse@gmail.com">sellybakehouse@gmail.com</a>
+    </div>
+  </div>
+</body>
+</html>
