@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+  if (localStorage.getItem("sbh_preview_access") !== "SellyPreview2025") {
+    window.location.replace("index.html");
+  }
+</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Selly Bake House — Home of everything toothsome. Fresh cookies, cakes, and artisan baked goods in Rockville, Maryland." />
