@@ -1,152 +1,369 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>
-  if (localStorage.getItem("sbh_preview_access") !== "SellyPreview2025") {
-    window.location.replace("index.html");
-  }
-</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Selly Bake House — Home of everything toothsome. Fresh cookies, cakes, and artisan baked goods in Rockville, Maryland." />
-  <title>Selly Bake House — Home of Everything Toothsome</title>
+  <title>Shop — Selly Bake House</title>
   <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* ── SHOP-SPECIFIC STYLES ── */
+    .shop-header {
+      background: linear-gradient(135deg, var(--brown-dark) 0%, var(--brown) 100%);
+      padding: 3rem 0 2.5rem;
+      color: white;
+    }
+    .shop-header h1 { font-family: 'Cormorant Garamond', serif; font-size: 3rem; color: var(--cream); margin-bottom: .4rem; }
+    .shop-header p  { color: rgba(255,246,236,0.7); font-size: .95rem; }
+
+    /* Search bar in header */
+    .shop-search-wrap {
+      position: relative;
+      max-width: 520px;
+      margin-top: 1.4rem;
+    }
+    .shop-search-wrap input {
+      width: 100%;
+      padding: .85rem 1rem .85rem 3rem;
+      border: 1.5px solid rgba(237,217,188,0.3);
+      border-radius: 50px;
+      background: rgba(255,246,236,0.1);
+      color: var(--cream);
+      font-family: 'Nunito', sans-serif;
+      font-size: .95rem;
+      outline: none;
+      transition: all .2s;
+    }
+    .shop-search-wrap input::placeholder { color: rgba(255,246,236,0.45); }
+    .shop-search-wrap input:focus { background: rgba(255,246,236,0.18); border-color: var(--rose-deep); }
+    .shop-search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255,246,236,0.5);
+      pointer-events: none;
+      font-size: 1rem;
+    }
+    .search-clear {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: rgba(255,246,236,0.5);
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: none;
+      padding: 0;
+    }
+
+    /* Filter bar */
+    .filter-bar {
+      background: var(--white);
+      border-bottom: 1px solid var(--cream-dark);
+      padding: 1rem 0;
+      position: sticky;
+      top: 72px;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(62,28,7,0.06);
+    }
+    .filter-inner {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .filter-label {
+      font-size: .78rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    /* Category pills */
+    .cat-pills {
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+    .cat-pill {
+      padding: .4rem 1rem;
+      border-radius: 50px;
+      border: 1.5px solid var(--cream-dark);
+      background: var(--white);
+      font-size: .82rem;
+      font-weight: 700;
+      color: var(--brown);
+      cursor: pointer;
+      transition: all .18s;
+      white-space: nowrap;
+    }
+    .cat-pill:hover { border-color: var(--rose-deep); color: var(--rose-deep); }
+    .cat-pill.active { background: var(--brown-dark); color: var(--cream); border-color: var(--brown-dark); }
+
+    /* Sort and filter controls */
+    .filter-controls {
+      display: flex;
+      gap: .6rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .filter-select {
+      padding: .4rem .8rem;
+      border: 1.5px solid var(--cream-dark);
+      border-radius: 8px;
+      font-family: 'Nunito', sans-serif;
+      font-size: .82rem;
+      font-weight: 700;
+      color: var(--brown);
+      background: var(--white);
+      cursor: pointer;
+      outline: none;
+    }
+    .filter-select:focus { border-color: var(--rose-deep); }
+
+    .filter-chip {
+      padding: .4rem .9rem;
+      border-radius: 50px;
+      border: 1.5px solid var(--cream-dark);
+      background: var(--white);
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--brown);
+      cursor: pointer;
+      transition: all .18s;
+    }
+    .filter-chip.active { background: var(--rose-light); border-color: var(--rose-deep); color: var(--rose-deep); }
+
+    /* Results info */
+    .results-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 0 .8rem;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+    .results-count { font-size: .85rem; color: var(--text-muted); font-weight: 700; }
+    .active-filters { display: flex; gap: .4rem; flex-wrap: wrap; }
+    .active-filter-tag {
+      display: flex;
+      align-items: center;
+      gap: .3rem;
+      padding: .25rem .7rem;
+      background: var(--rose-light);
+      border-radius: 50px;
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--rose-deep);
+    }
+    .active-filter-tag button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--rose-deep);
+      font-size: .9rem;
+      padding: 0;
+      line-height: 1;
+    }
+
+    /* Product grid */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem;
+      padding: 1.5rem 0 3rem;
+    }
+
+    /* Product card — no emojis */
+    .product-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      border: 1.5px solid var(--cream-dark);
+      overflow: hidden;
+      transition: all .22s;
+      cursor: pointer;
+      position: relative;
+    }
+    .product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--rose-deep); }
+
+    .product-img-wrap {
+      position: relative;
+      height: 200px;
+      overflow: hidden;
+      background: var(--cream-dark);
+    }
+    .product-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .3s;
+    }
+    .product-card:hover .product-img-wrap img { transform: scale(1.04); }
+
+    /* Placeholder when no image */
+    .product-img-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: .5rem;
+    }
+    .placeholder-icon {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .placeholder-icon svg { width: 32px; height: 32px; }
+    .placeholder-cat-label {
+      font-size: .75rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      opacity: .6;
+    }
+
+    .product-badges {
+      position: absolute;
+      top: .7rem; left: .7rem;
+      display: flex; flex-direction: column; gap: .3rem;
+    }
+    .badge {
+      padding: .2rem .65rem;
+      border-radius: 50px;
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+    .badge-bestseller { background: var(--brown-dark); color: var(--cream); }
+    .badge-new        { background: var(--rose-deep); color: white; }
+    .badge-soldout    { background: rgba(0,0,0,0.6); color: white; }
+
+    .product-body { padding: 1rem 1.2rem 1.2rem; }
+    .product-cat-badge {
+      display: inline-block;
+      padding: .18rem .65rem;
+      border-radius: 4px;
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      margin-bottom: .45rem;
+      color: white;
+    }
+    .product-name { font-weight: 800; font-size: 1rem; color: var(--brown-dark); margin-bottom: .3rem; line-height: 1.3; }
+    .product-desc { font-size: .83rem; color: var(--text-muted); line-height: 1.6; margin-bottom: .9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .product-footer { display: flex; align-items: center; justify-content: space-between; }
+    .product-price { font-size: 1.2rem; font-weight: 800; color: var(--brown-dark); }
+
+    /* No results */
+    .no-results {
+      text-align: center;
+      padding: 5rem 2rem;
+      grid-column: 1 / -1;
+    }
+    .no-results-icon {
+      width: 80px; height: 80px;
+      background: var(--cream-dark);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1rem;
+    }
+    .no-results h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; color: var(--brown-dark); margin-bottom: .4rem; }
+    .no-results p  { color: var(--text-muted); max-width: 360px; margin: 0 auto 1.2rem; }
+
+    @media (max-width: 640px) {
+      .shop-header h1 { font-size: 2.2rem; }
+      .filter-inner   { flex-direction: column; align-items: flex-start; }
+      .products-grid  { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; }
+      .product-img-wrap { height: 150px; }
+    }
+  </style>
 </head>
 <body>
 
 <!-- NAVBAR -->
 <nav class="navbar">
   <div class="container nav-inner">
-    <a href="index.html" class="nav-logo">
-      Selly <span>Bake</span> House
-      <small>Home of everything toothsome</small>
-    </a>
+    <a href="index.html" class="nav-logo">Selly <span>Bake</span> House<small>Home of everything toothsome</small></a>
     <ul class="nav-links">
-      <li><a href="index.html" class="active">Home</a></li>
-      <li><a href="shop.html">Shop</a></li>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html" class="active">Shop</a></li>
       <li><a href="custom-cake.html">Custom Cake</a></li>
       <li><a href="gallery.html">Gallery</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
-    <div class="nav-actions" id="nav-actions">
-      <span class="user-greeting" id="user-greeting" style="display:none"></span>
-      <button class="btn btn-ghost btn-sm" id="logout-btn" style="display:none">Logout</button>
-      <button class="btn btn-rose btn-sm" id="login-btn" onclick="openOverlay('login-modal')">Login</button>
-      <a href="cart.html" class="btn-icon" title="Cart">
-        🛒
-        <span class="cart-badge" id="cart-badge" style="display:none">0</span>
+    <div class="nav-actions">
+      <span id="user-greeting" class="user-greeting" style="display:none"></span>
+      <button id="logout-btn" class="btn btn-ghost btn-sm" style="display:none">Logout</button>
+      <button id="login-btn" class="btn btn-rose btn-sm" onclick="openOverlay('login-modal')">Login</button>
+      <a href="cart.html" class="btn-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span id="cart-badge" class="cart-badge" style="display:none">0</span>
       </a>
+      <button onclick="openAdminLogin()" class="btn btn-brown btn-sm">Admin</button>
     </div>
-    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
-      <span></span><span></span><span></span>
-    </button>
+    <button class="nav-toggle" id="nav-toggle"><span></span><span></span><span></span></button>
   </div>
 </nav>
-
-<!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobile-menu">
-  <a href="index.html">Home</a>
-  <a href="shop.html">Shop</a>
-  <a href="custom-cake.html">Custom Cake</a>
-  <a href="gallery.html">Gallery</a>
-  <a href="about.html">About</a>
-  <a href="contact.html">Contact</a>
-  <a href="cart.html">🛒 Cart</a>
+  <a href="index.html">Home</a><a href="shop.html">Shop</a><a href="custom-cake.html">Custom Cake</a>
+  <a href="gallery.html">Gallery</a><a href="about.html">About</a><a href="contact.html">Contact</a>
 </div>
 
-<!-- HERO -->
-<section class="hero">
+<!-- SHOP HEADER WITH SEARCH -->
+<div class="shop-header">
   <div class="container">
-    <div class="hero-content">
-      <span class="hero-tag">📍 Rockville, Maryland</span>
-      <h1>Home of Everything<br><em>Toothsome</em></h1>
-      <p>Handcrafted with love by Selina. Fresh cookies, cakes, and artisan baked goods — made to order and delivered to your door across Maryland.</p>
-      <div class="hero-btns">
-        <a href="shop.html" class="btn btn-primary btn-lg">Shop Now</a>
-        <a href="custom-cake.html" class="btn btn-outline btn-lg">Order Custom Cake</a>
+    <h1>Our Baked Goods</h1>
+    <p>Handcrafted with love in Rockville, Maryland</p>
+    <div class="shop-search-wrap">
+      <span class="shop-search-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+      <input type="text" id="search-input" placeholder="Search products..." oninput="handleSearch(this.value)" />
+      <button class="search-clear" id="search-clear" onclick="clearSearch()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <div class="container">
+    <div class="filter-inner">
+      <span class="filter-label">Browse</span>
+      <div class="cat-pills" id="cat-pills">
+        <button class="cat-pill active" data-cat="all" onclick="setCategory('all')">All Items</button>
+      </div>
+      <div class="filter-controls">
+        <select class="filter-select" id="sort-select" onchange="setSort(this.value)">
+          <option value="default">Sort: Default</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="name-az">Name: A to Z</option>
+          <option value="name-za">Name: Z to A</option>
+          <option value="popular">Most Popular</option>
+        </select>
+        <button class="filter-chip" id="filter-instock" onclick="toggleFilter('instock')">In Stock Only</button>
+        <button class="filter-chip" id="filter-bestseller" onclick="toggleFilter('bestseller')">Best Sellers</button>
+        <button class="filter-chip" id="filter-new" onclick="toggleFilter('new')">New</button>
       </div>
     </div>
   </div>
-  <div class="hero-visual">🧁</div>
-</section>
+</div>
 
-<!-- CATEGORIES -->
-<section class="section">
+<!-- MAIN SHOP CONTENT -->
+<section style="background:var(--cream)">
   <div class="container">
-    <div class="section-heading text-center">
-      <span class="tag">What We Bake</span>
-      <h2>Shop by Category</h2>
-      <p>Explore our freshly baked selection — made from scratch, baked with love</p>
+    <div class="results-bar">
+      <span class="results-count" id="results-count"></span>
+      <div class="active-filters" id="active-filters"></div>
     </div>
-    <div class="category-grid">
-      <a href="shop.html?cat=Cookies" class="cat-card">
-        <span class="cat-icon">🍪</span>
-        <h3>Cookies</h3>
-        <p>Over 8 varieties baked fresh daily. Chewy, crispy, and everything in between.</p>
-      </a>
-      <a href="shop.html?cat=Cakes" class="cat-card">
-        <span class="cat-icon">🎂</span>
-        <h3>Cakes</h3>
-        <p>Whole cakes for every celebration. Beautifully layered and deliciously frosted.</p>
-      </a>
-      <a href="shop.html?cat=Bakery" class="cat-card">
-        <span class="cat-icon">🍞</span>
-        <h3>Bakery</h3>
-        <p>Artisan breads, muffins, loaves & morning treats. Start your day right.</p>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- BEST SELLERS -->
-<section class="section bg-cream-dark" style="background:var(--cream-dark)">
-  <div class="container">
-    <div class="section-heading">
-      <span class="tag">Customer Favorites</span>
-      <h2>⭐ Best Sellers</h2>
-      <p>What Maryland is loving most right now</p>
-    </div>
-    <div class="product-grid" id="best-sellers-grid">
-      <!-- Rendered by JS -->
-    </div>
-  </div>
-</section>
-
-<!-- CTA CAKE BANNER -->
-<section class="section">
-  <div class="container">
-    <div class="cta-banner">
-      <h2>Dream Cake? Let's Make It Real.</h2>
-      <p>Have a vision for your perfect birthday, wedding, or celebration cake? Tell Selina and she'll bring it to life — crafted just for you.</p>
-      <a href="custom-cake.html" class="btn btn-rose btn-lg">Design Your Cake →</a>
-    </div>
-  </div>
-</section>
-
-<!-- WHY US -->
-<section class="section">
-  <div class="container">
-    <div class="section-heading text-center">
-      <h2>Why Selly Bake House?</h2>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem">
-      <div style="text-align:center;padding:2rem">
-        <div style="font-size:2.5rem;margin-bottom:.8rem">🌿</div>
-        <h3 style="font-size:1.3rem;color:var(--brown-dark);margin-bottom:.4rem">All Natural</h3>
-        <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7">No artificial flavors or preservatives. Just real butter, fresh eggs, and premium ingredients.</p>
-      </div>
-      <div style="text-align:center;padding:2rem">
-        <div style="font-size:2.5rem;margin-bottom:.8rem">🏠</div>
-        <h3 style="font-size:1.3rem;color:var(--brown-dark);margin-bottom:.4rem">Made to Order</h3>
-        <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7">Every item baked fresh for your order. No sitting on a shelf for days — just pure freshness.</p>
-      </div>
-      <div style="text-align:center;padding:2rem">
-        <div style="font-size:2.5rem;margin-bottom:.8rem">📍</div>
-        <h3 style="font-size:1.3rem;color:var(--brown-dark);margin-bottom:.4rem">Maryland Local</h3>
-        <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7">Proudly serving all of Maryland from our home kitchen in Rockville since day one.</p>
-      </div>
-    </div>
+    <div class="products-grid" id="products-grid"></div>
   </div>
 </section>
 
@@ -160,12 +377,7 @@
       </div>
       <div>
         <h4>Shop</h4>
-        <ul>
-          <li><a href="shop.html?cat=Cookies">Cookies</a></li>
-          <li><a href="shop.html?cat=Cakes">Cakes</a></li>
-          <li><a href="shop.html?cat=Bakery">Bakery Items</a></li>
-          <li><a href="custom-cake.html">Custom Cake</a></li>
-        </ul>
+        <ul id="footer-cat-links"></ul>
       </div>
       <div>
         <h4>Info</h4>
@@ -180,69 +392,64 @@
         <ul>
           <li><a href="tel:+13013561232">(301) 356-1232</a></li>
           <li><a href="mailto:sellybakehouse@gmail.com">sellybakehouse@gmail.com</a></li>
-          <li><a href="#">721 Fallsgrove Dr</a></li>
-          <li><a href="#">Rockville, MD 20850</a></li>
+          <li>721 Fallsgrove Dr, Rockville MD</li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2025 Selly Bake House. All rights reserved.</span>
-      <span>Made with 💕 in Rockville, MD</span>
+      <span>&copy; 2025 Selly Bake House. All rights reserved.</span>
+      <span>Made with love in Rockville, MD</span>
     </div>
   </div>
 </footer>
 
-<!-- LOGIN MODAL -->
-<div class="overlay" id="login-modal" style="display:none">
+<!-- AUTH MODALS -->
+<div class="overlay" id="login-modal" style="display:none;">
   <div class="modal auth-modal">
-    <button class="modal-close" onclick="closeOverlay('login-modal')">✕</button>
-    <h2>Welcome Back 🍪</h2>
-    <p>Log in to your Selly Bake House account</p>
+    <button class="modal-close" onclick="closeOverlay('login-modal')">&#10005;</button>
+    <h2>Welcome Back</h2><p>Log in to your account</p>
     <form id="login-form" novalidate>
-      <div class="form-group">
-        <label for="login-email">Email Address</label>
-        <input type="email" id="login-email" placeholder="you@email.com" required />
-      </div>
-      <div class="form-group">
-        <label for="login-password">Password</label>
-        <input type="password" id="login-password" placeholder="Your password" required />
-      </div>
-      <span class="form-error" id="login-error" style="display:none"></span>
+      <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="you@email.com" /></div>
+      <div class="form-group"><label>Password</label><input type="password" id="login-password" placeholder="Password" /></div>
+      <span class="form-error" id="login-error" style="display:none;"></span>
       <button type="submit" class="btn btn-primary btn-block" style="margin-top:1rem">Log In</button>
     </form>
-    <p class="auth-switch">Don't have an account? <a id="to-signup">Sign Up</a></p>
+    <p class="auth-switch">New here? <a id="to-signup">Sign Up</a></p>
+  </div>
+</div>
+<div class="overlay" id="signup-modal" style="display:none;">
+  <div class="modal auth-modal">
+    <button class="modal-close" onclick="closeOverlay('signup-modal')">&#10005;</button>
+    <h2>Create Account</h2><p>Join to track orders and place custom cake requests</p>
+    <form id="signup-form" novalidate>
+      <div class="form-row">
+        <div class="form-group"><label>Name *</label><input type="text" id="signup-name" placeholder="Full name" /></div>
+        <div class="form-group"><label>Phone</label><input type="tel" id="signup-phone" placeholder="(301) 555-0000" /></div>
+      </div>
+      <div class="form-group"><label>Email *</label><input type="email" id="signup-email" placeholder="you@email.com" /></div>
+      <div class="form-group"><label>Password *</label><input type="password" id="signup-password" placeholder="Create a password" /></div>
+      <span class="form-error" id="signup-error" style="display:none;"></span>
+      <button type="submit" class="btn btn-primary btn-block" style="margin-top:1rem">Sign Up</button>
+    </form>
+    <p class="auth-switch">Have an account? <a id="to-login">Log In</a></p>
   </div>
 </div>
 
-<!-- SIGNUP MODAL -->
-<div class="overlay" id="signup-modal" style="display:none">
-  <div class="modal auth-modal">
-    <button class="modal-close" onclick="closeOverlay('signup-modal')">✕</button>
-    <h2>Join the Family 🎂</h2>
-    <p>Create your account to track orders, save favourites, and place custom cake requests.</p>
-    <form id="signup-form" novalidate>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="signup-name">Full Name *</label>
-          <input type="text" id="signup-name" placeholder="Selina Chimukangara" required />
-        </div>
-        <div class="form-group">
-          <label for="signup-phone">Phone Number</label>
-          <input type="tel" id="signup-phone" placeholder="(301) 555-0000" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="signup-email">Email Address *</label>
-        <input type="email" id="signup-email" placeholder="you@email.com" required />
-      </div>
-      <div class="form-group">
-        <label for="signup-password">Password *</label>
-        <input type="password" id="signup-password" placeholder="Create a strong password" required />
-      </div>
-      <span class="form-error" id="signup-error" style="display:none"></span>
-      <button type="submit" class="btn btn-primary btn-block" style="margin-top:1rem">Create Account 🎉</button>
-    </form>
-    <p class="auth-switch">Already have an account? <a id="to-login">Log In</a></p>
+<!-- PRODUCT DETAIL MODAL -->
+<div class="overlay" id="product-modal" style="display:none;">
+  <div class="modal" style="max-width:580px;" id="product-modal-inner"></div>
+</div>
+
+<!-- ADMIN LOGIN MODAL -->
+<div id="admin-login-modal" style="display:none;position:fixed;inset:0;background:rgba(39,18,4,0.75);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(6px);">
+  <div style="background:linear-gradient(160deg,#FFFDF8 0%,#FFF4E8 100%);border-radius:24px;padding:2.5rem;max-width:380px;width:90%;box-shadow:0 30px 80px rgba(39,18,4,0.45);border:1.5px solid rgba(240,192,96,0.30);position:relative;">
+    <button onclick="closeAdminLogin()" style="position:absolute;top:1rem;right:1rem;width:32px;height:32px;border-radius:50%;border:none;background:#F7E8D4;cursor:pointer;font-size:1rem;color:#9B6340;">&#10005;</button>
+    <div style="text-align:center;margin-bottom:1.8rem;"><div style="font-size:2.8rem;margin-bottom:.4rem;">&#128274;</div><h2 style="font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:#3E1C07;margin-bottom:.2rem;">Admin Login</h2></div>
+    <div class="form-group"><label style="font-weight:800;font-size:.85rem;color:#6B3A1F;">Password</label>
+      <input type="password" id="admin-password-input" placeholder="Enter your password" onkeydown="if(event.key==='Enter') checkAdminPassword()" style="width:100%;padding:.85rem 1rem;border:1.5px solid #EDD9BC;border-radius:12px;font-family:'Nunito',sans-serif;font-size:.95rem;color:#3E1C07;background:white;outline:none;" />
+    </div>
+    <div id="admin-login-error" style="display:none;background:#FFE0E5;color:#9B1C2E;border:1px solid #FFAAB5;border-radius:8px;padding:.55rem .9rem;font-size:.82rem;font-weight:700;margin-bottom:1rem;font-family:'Nunito',sans-serif;"></div>
+    <button id="admin-login-btn" onclick="checkAdminPassword()" style="width:100%;padding:.95rem;background:linear-gradient(145deg,#3E1C07 0%,#5C2A10 50%,#3E1C07 100%);color:#F0C060;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;">Enter Admin Panel</button>
   </div>
 </div>
 
@@ -250,14 +457,6 @@
 
 <script src="js/data.js"></script>
 <script src="js/main.js"></script>
-<script>
-  // Render best sellers on homepage
-  document.addEventListener("DOMContentLoaded", () => {
-    const grid = document.getElementById("best-sellers-grid");
-    if (!grid) return;
-    const bestSellers = SBH.getBestSellers(null, 4);
-    grid.innerHTML = bestSellers.map(p => buildProductCard(p)).join("");
-  });
-</script>
+<script src="js/shop.js"></script>
 </body>
 </html>
