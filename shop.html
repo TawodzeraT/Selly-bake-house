@@ -6,285 +6,70 @@
   <title>Shop — Selly Bake House</title>
   <link rel="stylesheet" href="css/style.css" />
   <style>
-    /* ── SHOP-SPECIFIC STYLES ── */
     .shop-header {
       background: linear-gradient(135deg, var(--brown-dark) 0%, var(--brown) 100%);
       padding: 3rem 0 2.5rem;
       color: white;
     }
-    .shop-header h1 { font-family: 'Cormorant Garamond', serif; font-size: 3rem; color: var(--cream); margin-bottom: .4rem; }
-    .shop-header p  { color: rgba(255,246,236,0.7); font-size: .95rem; }
-
-    /* Search bar in header */
-    .shop-search-wrap {
-      position: relative;
-      max-width: 520px;
-      margin-top: 1.4rem;
-    }
-    .shop-search-wrap input {
-      width: 100%;
-      padding: .85rem 1rem .85rem 3rem;
-      border: 1.5px solid rgba(237,217,188,0.3);
-      border-radius: 50px;
-      background: rgba(255,246,236,0.1);
-      color: var(--cream);
-      font-family: 'Nunito', sans-serif;
-      font-size: .95rem;
-      outline: none;
-      transition: all .2s;
-    }
-    .shop-search-wrap input::placeholder { color: rgba(255,246,236,0.45); }
-    .shop-search-wrap input:focus { background: rgba(255,246,236,0.18); border-color: var(--rose-deep); }
-    .shop-search-icon {
-      position: absolute;
-      left: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: rgba(255,246,236,0.5);
-      pointer-events: none;
-      font-size: 1rem;
-    }
-    .search-clear {
-      position: absolute;
-      right: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: rgba(255,246,236,0.5);
-      cursor: pointer;
-      font-size: 1.1rem;
-      display: none;
-      padding: 0;
-    }
-
-    /* Filter bar */
-    .filter-bar {
-      background: var(--white);
-      border-bottom: 1px solid var(--cream-dark);
-      padding: 1rem 0;
-      position: sticky;
-      top: 72px;
-      z-index: 100;
-      box-shadow: 0 2px 12px rgba(62,28,7,0.06);
-    }
-    .filter-inner {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-    .filter-label {
-      font-size: .78rem;
-      font-weight: 800;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      white-space: nowrap;
-    }
-
-    /* Category pills */
-    .cat-pills {
-      display: flex;
-      gap: .5rem;
-      flex-wrap: wrap;
-      flex: 1;
-    }
-    .cat-pill {
-      padding: .4rem 1rem;
-      border-radius: 50px;
-      border: 1.5px solid var(--cream-dark);
-      background: var(--white);
-      font-size: .82rem;
-      font-weight: 700;
-      color: var(--brown);
-      cursor: pointer;
-      transition: all .18s;
-      white-space: nowrap;
-    }
-    .cat-pill:hover { border-color: var(--rose-deep); color: var(--rose-deep); }
-    .cat-pill.active { background: var(--brown-dark); color: var(--cream); border-color: var(--brown-dark); }
-
-    /* Sort and filter controls */
-    .filter-controls {
-      display: flex;
-      gap: .6rem;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .filter-select {
-      padding: .4rem .8rem;
-      border: 1.5px solid var(--cream-dark);
-      border-radius: 8px;
-      font-family: 'Nunito', sans-serif;
-      font-size: .82rem;
-      font-weight: 700;
-      color: var(--brown);
-      background: var(--white);
-      cursor: pointer;
-      outline: none;
-    }
-    .filter-select:focus { border-color: var(--rose-deep); }
-
-    .filter-chip {
-      padding: .4rem .9rem;
-      border-radius: 50px;
-      border: 1.5px solid var(--cream-dark);
-      background: var(--white);
-      font-size: .8rem;
-      font-weight: 700;
-      color: var(--brown);
-      cursor: pointer;
-      transition: all .18s;
-    }
-    .filter-chip.active { background: var(--rose-light); border-color: var(--rose-deep); color: var(--rose-deep); }
-
-    /* Results info */
-    .results-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.2rem 0 .8rem;
-      flex-wrap: wrap;
-      gap: .5rem;
-    }
-    .results-count { font-size: .85rem; color: var(--text-muted); font-weight: 700; }
-    .active-filters { display: flex; gap: .4rem; flex-wrap: wrap; }
-    .active-filter-tag {
-      display: flex;
-      align-items: center;
-      gap: .3rem;
-      padding: .25rem .7rem;
-      background: var(--rose-light);
-      border-radius: 50px;
-      font-size: .75rem;
-      font-weight: 700;
-      color: var(--rose-deep);
-    }
-    .active-filter-tag button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--rose-deep);
-      font-size: .9rem;
-      padding: 0;
-      line-height: 1;
-    }
-
-    /* Product grid */
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 1.5rem;
-      padding: 1.5rem 0 3rem;
-    }
-
-    /* Product card — no emojis */
-    .product-card {
-      background: var(--white);
-      border-radius: var(--radius);
-      border: 1.5px solid var(--cream-dark);
-      overflow: hidden;
-      transition: all .22s;
-      cursor: pointer;
-      position: relative;
-    }
-    .product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--rose-deep); }
-
-    .product-img-wrap {
-      position: relative;
-      height: 200px;
-      overflow: hidden;
-      background: var(--cream-dark);
-    }
-    .product-img-wrap img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      transition: transform .3s;
-    }
-    .product-card:hover .product-img-wrap img { transform: scale(1.04); }
-
-    /* Placeholder when no image */
-    .product-img-placeholder {
-      width: 100%; height: 100%;
-      display: flex; align-items: center; justify-content: center;
-      flex-direction: column; gap: .5rem;
-    }
-    .placeholder-icon {
-      width: 64px; height: 64px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .placeholder-icon svg { width: 32px; height: 32px; }
-    .placeholder-cat-label {
-      font-size: .75rem;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      opacity: .6;
-    }
-
-    .product-badges {
-      position: absolute;
-      top: .7rem; left: .7rem;
-      display: flex; flex-direction: column; gap: .3rem;
-    }
-    .badge {
-      padding: .2rem .65rem;
-      border-radius: 50px;
-      font-size: .68rem;
-      font-weight: 800;
-      letter-spacing: .5px;
-      text-transform: uppercase;
-    }
-    .badge-bestseller { background: var(--brown-dark); color: var(--cream); }
-    .badge-new        { background: var(--rose-deep); color: white; }
-    .badge-soldout    { background: rgba(0,0,0,0.6); color: white; }
-
-    .product-body { padding: 1rem 1.2rem 1.2rem; }
-    .product-cat-badge {
-      display: inline-block;
-      padding: .18rem .65rem;
-      border-radius: 4px;
-      font-size: .68rem;
-      font-weight: 800;
-      letter-spacing: .5px;
-      text-transform: uppercase;
-      margin-bottom: .45rem;
-      color: white;
-    }
-    .product-name { font-weight: 800; font-size: 1rem; color: var(--brown-dark); margin-bottom: .3rem; line-height: 1.3; }
-    .product-desc { font-size: .83rem; color: var(--text-muted); line-height: 1.6; margin-bottom: .9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .product-footer { display: flex; align-items: center; justify-content: space-between; }
-    .product-price { font-size: 1.2rem; font-weight: 800; color: var(--brown-dark); }
-
-    /* No results */
-    .no-results {
-      text-align: center;
-      padding: 5rem 2rem;
-      grid-column: 1 / -1;
-    }
-    .no-results-icon {
-      width: 80px; height: 80px;
-      background: var(--cream-dark);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 1rem;
-    }
-    .no-results h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; color: var(--brown-dark); margin-bottom: .4rem; }
-    .no-results p  { color: var(--text-muted); max-width: 360px; margin: 0 auto 1.2rem; }
-
-    @media (max-width: 640px) {
-      .shop-header h1 { font-size: 2.2rem; }
-      .filter-inner   { flex-direction: column; align-items: flex-start; }
-      .products-grid  { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; }
-      .product-img-wrap { height: 150px; }
+    .shop-header h1 { font-family:'Cormorant Garamond',serif; font-size:3rem; color:var(--cream); margin-bottom:.4rem; }
+    .shop-header p  { color:rgba(255,246,236,0.7); font-size:.95rem; }
+    .shop-search-wrap { position:relative; max-width:520px; margin-top:1.4rem; }
+    .shop-search-wrap input { width:100%; padding:.85rem 1rem .85rem 3rem; border:1.5px solid rgba(237,217,188,0.3); border-radius:50px; background:rgba(255,246,236,0.1); color:var(--cream); font-family:'Nunito',sans-serif; font-size:.95rem; outline:none; transition:all .2s; box-sizing:border-box; }
+    .shop-search-wrap input::placeholder { color:rgba(255,246,236,0.45); }
+    .shop-search-wrap input:focus { background:rgba(255,246,236,0.18); border-color:var(--rose-deep); }
+    .shop-search-icon { position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:rgba(255,246,236,0.5); pointer-events:none; }
+    .search-clear { position:absolute; right:1rem; top:50%; transform:translateY(-50%); background:none; border:none; color:rgba(255,246,236,0.5); cursor:pointer; font-size:1.1rem; display:none; padding:0; }
+    .filter-bar { background:var(--white); border-bottom:1px solid var(--cream-dark); padding:1rem 0; position:sticky; top:72px; z-index:100; box-shadow:0 2px 12px rgba(62,28,7,0.06); }
+    .filter-inner { display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+    .filter-label { font-size:.78rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; white-space:nowrap; }
+    .cat-pills { display:flex; gap:.5rem; flex-wrap:wrap; flex:1; }
+    .cat-pill { padding:.4rem 1rem; border-radius:50px; border:1.5px solid var(--cream-dark); background:var(--white); font-size:.82rem; font-weight:700; color:var(--brown); cursor:pointer; transition:all .18s; white-space:nowrap; }
+    .cat-pill:hover { border-color:var(--rose-deep); color:var(--rose-deep); }
+    .cat-pill.active { background:var(--brown-dark); color:var(--cream); border-color:var(--brown-dark); }
+    .filter-controls { display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; }
+    .filter-select { padding:.4rem .8rem; border:1.5px solid var(--cream-dark); border-radius:8px; font-family:'Nunito',sans-serif; font-size:.82rem; font-weight:700; color:var(--brown); background:var(--white); cursor:pointer; outline:none; }
+    .filter-select:focus { border-color:var(--rose-deep); }
+    .filter-chip { padding:.4rem .9rem; border-radius:50px; border:1.5px solid var(--cream-dark); background:var(--white); font-size:.8rem; font-weight:700; color:var(--brown); cursor:pointer; transition:all .18s; }
+    .filter-chip.active { background:var(--rose-light); border-color:var(--rose-deep); color:var(--rose-deep); }
+    .results-bar { display:flex; align-items:center; justify-content:space-between; padding:1.2rem 0 .8rem; flex-wrap:wrap; gap:.5rem; }
+    .results-count { font-size:.85rem; color:var(--text-muted); font-weight:700; }
+    .active-filters { display:flex; gap:.4rem; flex-wrap:wrap; }
+    .active-filter-tag { display:flex; align-items:center; gap:.3rem; padding:.25rem .7rem; background:var(--rose-light); border-radius:50px; font-size:.75rem; font-weight:700; color:var(--rose-deep); }
+    .active-filter-tag button { background:none; border:none; cursor:pointer; color:var(--rose-deep); font-size:.9rem; padding:0; line-height:1; }
+    .products-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1.5rem; padding:1.5rem 0 3rem; }
+    .product-card { background:var(--white); border-radius:var(--radius); border:1.5px solid var(--cream-dark); overflow:hidden; transition:all .22s; cursor:pointer; position:relative; }
+    .product-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-md); border-color:var(--rose-deep); }
+    .product-img-wrap { position:relative; height:200px; overflow:hidden; background:var(--cream-dark); }
+    .product-img-wrap img { width:100%; height:100%; object-fit:cover; transition:transform .3s; }
+    .product-card:hover .product-img-wrap img { transform:scale(1.04); }
+    .product-img-placeholder { width:100%; height:100%; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:.5rem; }
+    .placeholder-icon { width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+    .placeholder-cat-label { font-size:.75rem; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; opacity:.6; }
+    .product-badges { position:absolute; top:.7rem; left:.7rem; display:flex; flex-direction:column; gap:.3rem; }
+    .badge { padding:.2rem .65rem; border-radius:50px; font-size:.68rem; font-weight:800; letter-spacing:.5px; text-transform:uppercase; }
+    .badge-bestseller { background:var(--brown-dark); color:var(--cream); }
+    .badge-new        { background:var(--rose-deep); color:white; }
+    .badge-soldout    { background:rgba(0,0,0,0.6); color:white; }
+    .product-body { padding:1rem 1.2rem 1.2rem; }
+    .product-cat-badge { display:inline-block; padding:.18rem .65rem; border-radius:4px; font-size:.68rem; font-weight:800; letter-spacing:.5px; text-transform:uppercase; margin-bottom:.45rem; color:white; }
+    .product-name  { font-weight:800; font-size:1rem; color:var(--brown-dark); margin-bottom:.3rem; line-height:1.3; }
+    .product-desc  { font-size:.83rem; color:var(--text-muted); line-height:1.6; margin-bottom:.9rem; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    .product-footer { display:flex; align-items:center; justify-content:space-between; }
+    .product-price  { font-size:1.2rem; font-weight:800; color:var(--brown-dark); }
+    .no-results { text-align:center; padding:5rem 2rem; grid-column:1/-1; }
+    .no-results-icon { width:80px; height:80px; background:var(--cream-dark); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; }
+    .no-results h3 { font-family:'Cormorant Garamond',serif; font-size:1.8rem; color:var(--brown-dark); margin-bottom:.4rem; }
+    .no-results p  { color:var(--text-muted); max-width:360px; margin:0 auto 1.2rem; }
+    @media (max-width:640px) {
+      .shop-header h1 { font-size:2.2rem; }
+      .filter-inner   { flex-direction:column; align-items:flex-start; }
+      .products-grid  { grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:1rem; }
+      .product-img-wrap { height:150px; }
     }
   </style>
 </head>
 <body>
 
-<!-- NAVBAR -->
 <nav class="navbar">
   <div class="container nav-inner">
     <a href="index.html" class="nav-logo">Selly <span>Bake</span> House<small>Home of everything toothsome</small></a>
@@ -304,14 +89,20 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
         <span id="cart-badge" class="cart-badge" style="display:none">0</span>
       </a>
-      <button onclick="openAdminLogin()" class="btn btn-brown btn-sm">Admin</button>
+      <button onclick="openAdminLogin()" class="btn btn-sm" style="background:#3E1C07;color:#F0C060;border:none;border-radius:50px;font-weight:800;cursor:pointer;padding:.5rem 1.1rem;">Admin</button>
     </div>
     <button class="nav-toggle" id="nav-toggle"><span></span><span></span><span></span></button>
   </div>
 </nav>
+
 <div class="mobile-menu" id="mobile-menu">
-  <a href="index.html">Home</a><a href="shop.html">Shop</a><a href="custom-cake.html">Custom Cake</a>
-  <a href="gallery.html">Gallery</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+  <a href="index.html">Home</a>
+  <a href="shop.html">Shop</a>
+  <a href="custom-cake.html">Custom Cake</a>
+  <a href="gallery.html">Gallery</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <a href="cart.html">Cart</a>
 </div>
 
 <!-- SHOP HEADER WITH SEARCH -->
@@ -348,15 +139,15 @@
           <option value="name-za">Name: Z to A</option>
           <option value="popular">Most Popular</option>
         </select>
-        <button class="filter-chip" id="filter-instock" onclick="toggleFilter('instock')">In Stock Only</button>
+        <button class="filter-chip" id="filter-instock"    onclick="toggleFilter('instock')">In Stock Only</button>
         <button class="filter-chip" id="filter-bestseller" onclick="toggleFilter('bestseller')">Best Sellers</button>
-        <button class="filter-chip" id="filter-new" onclick="toggleFilter('new')">New</button>
+        <button class="filter-chip" id="filter-new"        onclick="toggleFilter('new')">New</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- MAIN SHOP CONTENT -->
+<!-- PRODUCTS -->
 <section style="background:var(--cream)">
   <div class="container">
     <div class="results-bar">
@@ -417,6 +208,7 @@
     <p class="auth-switch">New here? <a id="to-signup">Sign Up</a></p>
   </div>
 </div>
+
 <div class="overlay" id="signup-modal" style="display:none;">
   <div class="modal auth-modal">
     <button class="modal-close" onclick="closeOverlay('signup-modal')">&#10005;</button>
@@ -444,12 +236,21 @@
 <div id="admin-login-modal" style="display:none;position:fixed;inset:0;background:rgba(39,18,4,0.75);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(6px);">
   <div style="background:linear-gradient(160deg,#FFFDF8 0%,#FFF4E8 100%);border-radius:24px;padding:2.5rem;max-width:380px;width:90%;box-shadow:0 30px 80px rgba(39,18,4,0.45);border:1.5px solid rgba(240,192,96,0.30);position:relative;">
     <button onclick="closeAdminLogin()" style="position:absolute;top:1rem;right:1rem;width:32px;height:32px;border-radius:50%;border:none;background:#F7E8D4;cursor:pointer;font-size:1rem;color:#9B6340;">&#10005;</button>
-    <div style="text-align:center;margin-bottom:1.8rem;"><div style="font-size:2.8rem;margin-bottom:.4rem;">&#128274;</div><h2 style="font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:#3E1C07;margin-bottom:.2rem;">Admin Login</h2></div>
-    <div class="form-group"><label style="font-weight:800;font-size:.85rem;color:#6B3A1F;">Password</label>
-      <input type="password" id="admin-password-input" placeholder="Enter your password" onkeydown="if(event.key==='Enter') checkAdminPassword()" style="width:100%;padding:.85rem 1rem;border:1.5px solid #EDD9BC;border-radius:12px;font-family:'Nunito',sans-serif;font-size:.95rem;color:#3E1C07;background:white;outline:none;" />
+    <div style="text-align:center;margin-bottom:1.8rem;">
+      <div style="font-size:2.8rem;margin-bottom:.4rem;">&#128274;</div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:#3E1C07;margin-bottom:.2rem;">Admin Login</h2>
+    </div>
+    <div class="form-group">
+      <label style="font-weight:800;font-size:.85rem;color:#6B3A1F;">Password</label>
+      <input type="password" id="admin-password-input" placeholder="Enter your password"
+        onkeydown="if(event.key==='Enter') checkAdminPassword()"
+        style="width:100%;padding:.85rem 1rem;border:1.5px solid #EDD9BC;border-radius:12px;font-family:'Nunito',sans-serif;font-size:.95rem;color:#3E1C07;background:white;outline:none;" />
     </div>
     <div id="admin-login-error" style="display:none;background:#FFE0E5;color:#9B1C2E;border:1px solid #FFAAB5;border-radius:8px;padding:.55rem .9rem;font-size:.82rem;font-weight:700;margin-bottom:1rem;font-family:'Nunito',sans-serif;"></div>
-    <button id="admin-login-btn" onclick="checkAdminPassword()" style="width:100%;padding:.95rem;background:linear-gradient(145deg,#3E1C07 0%,#5C2A10 50%,#3E1C07 100%);color:#F0C060;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;">Enter Admin Panel</button>
+    <button id="admin-login-btn" onclick="checkAdminPassword()"
+      style="width:100%;padding:.95rem;background:linear-gradient(145deg,#3E1C07 0%,#5C2A10 50%,#3E1C07 100%);color:#F0C060;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;">
+      Enter Admin Panel
+    </button>
   </div>
 </div>
 
