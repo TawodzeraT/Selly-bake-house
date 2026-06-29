@@ -222,56 +222,103 @@ function saveNewProduct() {
 // ── IMAGE MANAGEMENT ──────────────────────────────────────────────
 var _imageModalProductId = null;
 
-function openImageModal(productId) {
+async function openImageModal(productId) {
   _imageModalProductId = productId;
-  var p    = SBH.getProducts().find(function(p){return p.id===productId;});
-  var img  = SBH.getProductImage(productId);
-  var el   = document.getElementById("image-modal-content");
+  var p   = SBH.getProducts().find(function(p) { return p.id === productId; });
+  var el  = document.getElementById("image-modal-content");
   if (!el) return;
 
-  el.innerHTML =
-    '<h3 style="font-family:Cormorant Garamond,serif;font-size:1.5rem;color:var(--brown-dark);margin-bottom:1rem">Manage Image — ' + (p?p.name:"") + '</h3>' +
-    (img
-      ? '<div style="margin-bottom:1rem"><img src="'+img+'" style="max-width:100%;max-height:220px;border-radius:10px;border:1.5px solid var(--cream-dark)" /><div style="margin-top:.5rem;font-size:.82rem;color:var(--green);font-weight:700">Image uploaded</div></div>' +
-        '<div style="display:flex;gap:.6rem">' +
-        '<label style="flex:1;display:flex;align-items:center;justify-content:center;gap:.4rem;padding:.6rem;background:var(--cream);border:1.5px dashed var(--cream-mid);border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:700;color:var(--brown)">' +
-          'Replace Image<input type="file" accept="image/*" style="display:none" onchange="handleImageUpload(this,' + productId + ')" />' +
-        '</label>' +
-        '<button class="btn btn-rose btn-sm" onclick="deleteProductImage('+productId+')">Delete Image</button>' +
-        '</div>'
-      : '<div style="border:2px dashed var(--cream-mid);border-radius:10px;padding:2.5rem;text-align:center;margin-bottom:1rem">' +
-          '<div style="font-size:.9rem;font-weight:700;color:var(--brown);margin-bottom:.3rem">No image uploaded</div>' +
-          '<div style="font-size:.8rem;color:var(--text-muted);margin-bottom:1rem">Upload a photo of this product to display it in your shop.</div>' +
-          '<label style="display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.4rem;background:var(--brown-dark);color:var(--cream);border-radius:50px;cursor:pointer;font-size:.85rem;font-weight:700">' +
-            'Choose Photo<input type="file" accept="image/*" style="display:none" onchange="handleImageUpload(this,' + productId + ')" />' +
-          '</label>' +
-        '</div>'
-    );
-
+  el.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted)">Loading images...</div>';
   openOverlay("image-modal");
+
+  // Load images from Supabase
+  var images = await DB.getProductImages(productId);
+
+  var html =
+    '<h3 style="font-family:Cormorant Garamond,serif;font-size:1.6rem;color:var(--brown-dark);margin-bottom:.3rem">' +
+    'Product Images</h3>' +
+    '<p style="color:var(--text-muted);font-size:.85rem;margin-bottom:1.5rem">' +
+    (p ? p.name : "") + ' — You can upload multiple photos. The primary image shows in the shop.</p>';
+
+  // Show existing images
+  if (images.length > 0) {
+    html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.8rem;margin-bottom:1.5rem">';
+    images.forEach(function(img) {
+      html +=
+        '<div style="position:relative;border-radius:10px;overflow:hidden;border:' +
+        (img.is_primary ? '2.5px solid var(--rose-deep)' : '1.5px solid var(--cream-dark)') + '">' +
+          '<img src="' + img.image_data + '" style="width:100%;height:120px;object-fit:cover;display:block" />' +
+          '<div style="padding:.4rem;background:white">' +
+            (img.is_primary
+              ? '<div style="font-size:.68rem;font-weight:800;color:var(--rose-deep);text-align:center;margin-bottom:.3rem">PRIMARY</div>'
+              : '<button onclick="setPrimaryImage(' + img.id + ',' + productId + ')" style="width:100%;background:var(--cream-dark);border:none;border-radius:6px;padding:.3rem;font-size:.72rem;font-weight:700;cursor:pointer;margin-bottom:.3rem;color:var(--brown)">Set as Primary</button>'
+            ) +
+            '<button onclick="deleteProductImage(' + img.id + ',' + productId + ')" style="width:100%;background:var(--red-bg);border:1px solid #FFAAB5;border-radius:6px;padding:.3rem;font-size:.72rem;font-weight:700;cursor:pointer;color:var(--red)">Delete</button>' +
+          '</div>' +
+        '</div>';
+    });
+    html += '</div>';
+  } else {
+    html += '<div style="background:var(--cream-dark);border-radius:10px;padding:1.5rem;text-align:center;margin-bottom:1.5rem;color:var(--text-muted);font-size:.88rem">No images uploaded yet. Upload your first photo below.</div>';
+  }
+
+  // Upload area
+  html +=
+    '<div style="border:2px dashed var(--cream-mid);border-radius:10px;padding:2rem;text-align:center;margin-bottom:1rem">' +
+      '<div style="font-weight:700;color:var(--brown);margin-bottom:.3rem">Upload New Photo</div>' +
+      '<div style="font-size:.8rem;color:var(--text-muted);margin-bottom:1rem">JPG or PNG under 4MB. First image uploaded becomes the primary image automatically.</div>' +
+      '<label style="display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.4rem;background:var(--brown-dark);color:var(--cream);border-radius:50px;cursor:pointer;font-size:.85rem;font-weight:700">' +
+        'Choose Photo' +
+        '<input type="file" accept="image/*" multiple style="display:none" onchange="handleMultiImageUpload(this,' + productId + ',' + (images.length === 0 ? 'true' : 'false') + ')" />' +
+      '</label>' +
+    '</div>' +
+    '<p style="font-size:.78rem;color:var(--text-muted);text-align:center">You can upload multiple photos at once. The one marked PRIMARY shows on the shop page.</p>';
+
+  el.innerHTML = html;
 }
 
-function handleImageUpload(input, productId) {
-  var file = input.files && input.files[0]; if (!file) return;
-  if (file.size > 4 * 1024 * 1024) { showAdminToast("Image too large. Please use an image under 4MB."); return; }
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    SBH.saveProductImage(productId, e.target.result);
-    closeOverlay("image-modal");
-    renderProducts();
-    showAdminToast("Image saved!");
-  };
-  reader.readAsDataURL(file);
+async function handleMultiImageUpload(input, productId, makeFirstPrimary) {
+  var files = input.files;
+  if (!files || files.length === 0) return;
+
+  var el = document.getElementById("image-modal-content");
+  if (el) {
+    el.innerHTML += '<div id="upload-progress" style="text-align:center;padding:1rem;color:var(--brown);font-weight:700">Uploading ' + files.length + ' photo(s)...</div>';
+  }
+
+  for (var i = 0; i < files.length; i++) {
+    var file = files[i];
+    if (file.size > 4 * 1024 * 1024) {
+      showAdminToast(file.name + " is too large. Max 4MB.");
+      continue;
+    }
+    var isPrimary = makeFirstPrimary && i === 0;
+    await new Promise(function(resolve) {
+      var reader = new FileReader();
+      reader.onload = async function(e) {
+        await DB.addProductImage(productId, e.target.result, isPrimary);
+        resolve();
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  showAdminToast(files.length + " photo(s) uploaded!");
+  openImageModal(productId);
 }
 
-function deleteProductImage(productId) {
-  if (!confirm("Are you sure you want to remove this image?")) return;
-  SBH.deleteProductImage(productId);
-  closeOverlay("image-modal");
-  renderProducts();
-  showAdminToast("Image removed.");
+async function setPrimaryImage(imageId, productId) {
+  await DB.setPrimaryImage(imageId, productId);
+  showAdminToast("Primary image updated!");
+  openImageModal(productId);
 }
 
+async function deleteProductImage(imageId, productId) {
+  if (!confirm("Delete this photo?")) return;
+  await DB.deleteProductImage(imageId);
+  showAdminToast("Photo deleted.");
+  openImageModal(productId);
+}
 // ── CATEGORIES ────────────────────────────────────────────────────
 function renderCategories() {
   var cats  = SBH.getCategories().sort(function(a,b){return a.order-b.order;});
