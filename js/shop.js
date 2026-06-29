@@ -143,12 +143,33 @@ function renderProducts() {
   renderActiveTags();
 }
 
-function buildCard(product, cats) {
+function buildCard(product, cats, imageMap) {
   var cat      = cats.find(function(c) { return c.id === product.category; });
   var catColor = cat ? cat.color : "#9B6340";
   var catName  = cat ? cat.name  : product.category;
   var soldout  = product.status !== "instock";
-  var imgData  = SBH.getProductImage(product.id);
+  // Use Supabase image first, fall back to localStorage
+  var imgData  = (imageMap && imageMap[product.id]) || SBH.getProductImage(product.id);
+  // rest stays the same...
+  // In renderProducts function add this before building cards
+async function renderProducts() {
+  var products = SBH.getProducts();
+  var cats     = SBH.getCategories();
+
+  // Load primary images from Supabase for all products
+  var imageMap = {};
+  try {
+    var allImages = await DB.req("product_images", "GET", null,
+      "is_primary=eq.true");
+    if (allImages && Array.isArray(allImages)) {
+      allImages.forEach(function(img) {
+        imageMap[img.product_id] = img.image_data;
+      });
+    }
+  } catch(e) {}
+
+  // rest of filter and sort code stays the same...
+  // then in buildCard pass imageMap[product.id] as the image
 
   var imgHtml = imgData
     ? '<img src="' + imgData + '" alt="' + product.name + '" loading="lazy" />'
@@ -226,23 +247,53 @@ function resetAll() {
 
 // ── PRODUCT MODAL ────────────────────────────────────────────────
 function openProductModal(productId) {
-  var product  = SBH.getProducts().find(function(p) { return p.id === productId; });
-  var cats     = SBH.getCategories();
+ async function openProductModal(productId) {
+  var product = SBH.getProducts().find(function(p) { return p.id === productId; });
+  var cats    = SBH.getCategories();
   if (!product) return;
+
   var cat      = cats.find(function(c) { return c.id === product.category; });
   var catColor = cat ? cat.color : "#9B6340";
   var catName  = cat ? cat.name  : product.category;
   var soldout  = product.status !== "instock";
-  var imgData  = SBH.getProductImage(product.id);
+
+  // Load all images for this product
+  var images   = [];
+  try { images = await DB.getProductImages(productId); } catch(e) {}
+
+  var primaryImg = images.find(function(i){ return i.is_primary; }) || images[0];
+  var imgData    = primaryImg ? primaryImg.image_data : SBH.getProductImage(productId);
 
   var inner = document.getElementById("product-modal-inner");
   if (!inner) return;
 
+  // Build thumbnail gallery HTML
+  var galleryHtml = "";
+  if (images.length > 1) {
+    galleryHtml =
+      '<div style="display:flex;gap:.4rem;margin-top:.5rem;flex-wrap:wrap">' +
+      images.map(function(img) {
+        return '<img src="' + img.image_data + '" ' +
+          'onclick="document.getElementById(\'modal-main-img\').src=\'' + img.image_data + '\'" ' +
+          'style="width:52px;height:52px;object-fit:cover;border-radius:6px;cursor:pointer;border:' +
+          (img.is_primary ? '2px solid var(--rose-deep)' : '1.5px solid var(--cream-dark)') + ';transition:all .15s" ' +
+          'onmouseover="this.style.borderColor=\'var(--rose-deep)\'" ' +
+          'onmouseout="this.style.borderColor=\'' + (img.is_primary ? 'var(--rose-deep)' : 'var(--cream-dark)') + '\'" />';
+      }).join("") +
+      '</div>';
+  }
+
   inner.innerHTML =
     '<button class="modal-close" onclick="closeOverlay(\'product-modal\')">&#10005;</button>' +
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">' +
-      '<div style="border-radius:var(--radius-sm);overflow:hidden;height:260px;background:' + hexToRgba(catColor,0.08) + '">' +
-        (imgData ? '<img src="' + imgData + '" style="width:100%;height:100%;object-fit:cover" />' : buildPlaceholder(catColor, catName)) +
+      '<div>' +
+        '<div style="border-radius:var(--radius-sm);overflow:hidden;height:260px;background:' + hexToRgba(catColor,0.08) + '">' +
+          (imgData
+            ? '<img id="modal-main-img" src="' + imgData + '" style="width:100%;height:100%;object-fit:cover" />'
+            : buildPlaceholder(catColor, catName)
+          ) +
+        '</div>' +
+        galleryHtml +
       '</div>' +
       '<div style="padding:.5rem 0">' +
         '<span style="background:' + catColor + ';color:white;font-size:.68rem;font-weight:800;padding:.2rem .7rem;border-radius:4px;letter-spacing:.5px;text-transform:uppercase">' + catName + '</span>' +
@@ -250,16 +301,17 @@ function openProductModal(productId) {
         '<div style="font-size:1.7rem;font-weight:800;color:var(--brown);margin-bottom:.8rem">$' + product.price.toFixed(2) + '</div>' +
         '<p style="color:var(--text-muted);font-size:.88rem;line-height:1.7;margin-bottom:.8rem">' + (product.longDesc || product.desc) + '</p>' +
         (product.allergens ? '<p style="font-size:.78rem;color:var(--text-muted);margin-bottom:.8rem">Allergens: ' + product.allergens + '</p>' : '') +
-        (!soldout ? '<div style="display:flex;align-items:center;gap:.8rem;margin-bottom:1rem">' +
-            '<div style="display:flex;align-items:center;border:1.5px solid var(--cream-dark);border-radius:8px;overflow:hidden">' +
-              '<button onclick="modalQty(-1)" style="background:var(--cream);border:none;padding:.5rem .9rem;font-size:1.2rem;cursor:pointer;font-weight:700;color:var(--brown)">&#8722;</button>' +
-              '<span id="modal-qty" style="padding:.5rem 1rem;font-weight:800;color:var(--brown-dark)">1</span>' +
-              '<button onclick="modalQty(1)"  style="background:var(--cream);border:none;padding:.5rem .9rem;font-size:1.2rem;cursor:pointer;font-weight:700;color:var(--brown)">&#43;</button>' +
+        (!soldout
+          ? '<div style="display:flex;align-items:center;gap:.8rem;margin-bottom:1rem">' +
+              '<div style="display:flex;align-items:center;border:1.5px solid var(--cream-dark);border-radius:8px;overflow:hidden">' +
+                '<button onclick="modalQty(-1)" style="background:var(--cream);border:none;padding:.5rem .9rem;font-size:1.2rem;cursor:pointer;font-weight:700;color:var(--brown)">&#8722;</button>' +
+                '<span id="modal-qty" style="padding:.5rem 1rem;font-weight:800;color:var(--brown-dark)">1</span>' +
+                '<button onclick="modalQty(1)" style="background:var(--cream);border:none;padding:.5rem .9rem;font-size:1.2rem;cursor:pointer;font-weight:700;color:var(--brown)">&#43;</button>' +
+              '</div>' +
             '</div>' +
-            '<span style="font-size:.85rem;color:var(--text-muted)">x $' + product.price.toFixed(2) + ' each</span>' +
-          '</div>' +
-          '<button class="btn btn-primary btn-block" onclick="modalAddToCart(' + product.id + ')">Add to Cart — $<span id="modal-total">' + product.price.toFixed(2) + '</span></button>'
-          : '<button class="btn btn-outline btn-block" disabled>Currently Sold Out</button>') +
+            '<button class="btn btn-primary btn-block" onclick="modalAddToCart(' + productId + ')">Add to Cart — $<span id="modal-total">' + product.price.toFixed(2) + '</span></button>'
+          : '<button class="btn btn-outline btn-block" disabled>Currently Sold Out</button>'
+        ) +
       '</div>' +
     '</div>';
 
