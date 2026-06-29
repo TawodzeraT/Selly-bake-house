@@ -253,5 +253,61 @@ var DB = {
       console.log("Saved: " + SBH.defaultCategories[i].name);
     }
     console.log("Done!");
+    // ── PRODUCT IMAGES ────────────────────────────────────────────
+  async getProductImages(productId) {
+    var data = await this.req("product_images", "GET", null,
+      "product_id=eq." + productId + "&order=sort_order.asc");
+    return data || [];
+  },
+
+  async addProductImage(productId, imageData, isPrimary) {
+    // If this is primary, unset all others first
+    if (isPrimary) {
+      await this.req("product_images", "PATCH",
+        { is_primary: false },
+        "product_id=eq." + productId
+      );
+    }
+    return await this.req("product_images", "POST", {
+      product_id:  productId,
+      image_data:  imageData,
+      is_primary:  isPrimary || false,
+      sort_order:  Date.now()
+    });
+  },
+
+  async deleteProductImage(imageId) {
+    return await this.req("product_images", "DELETE", null,
+      "id=eq." + imageId);
+  },
+
+  async setPrimaryImage(imageId, productId) {
+    // Unset all primary for this product
+    await this.req("product_images", "PATCH",
+      { is_primary: false },
+      "product_id=eq." + productId
+    );
+    // Set this one as primary
+    return await this.req("product_images", "PATCH",
+      { is_primary: true },
+      "id=eq." + imageId
+    );
+  },
+
+  async getPrimaryImage(productId) {
+    var data = await this.req("product_images", "GET", null,
+      "product_id=eq." + productId + "&is_primary=eq.true&limit=1");
+    if (data && data[0]) return data[0].image_data;
+    // Fall back to first image
+    var all = await this.getProductImages(productId);
+    return all && all[0] ? all[0].image_data : "";
+  },
+
+  async reorderProductImages(imageId, newOrder) {
+    return await this.req("product_images", "PATCH",
+      { sort_order: newOrder },
+      "id=eq." + imageId
+    );
+  }
   }
 };
