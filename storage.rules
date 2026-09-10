@@ -1,0 +1,95 @@
+rules_version = '2';
+
+service firebase.storage {
+
+  match /b/{bucket}/o {
+
+    /*
+     * ---------------------------------------------------------
+     * Helper functions
+     * ---------------------------------------------------------
+     */
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && request.auth.token.admin == true;
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Custom cake reference images
+     * ---------------------------------------------------------
+     *
+     * Customers can upload reference images into their own
+     * user-specific directory.
+     */
+
+    match /custom-cake/{userId}/{fileName} {
+
+      allow read: if isAdmin()
+        || (
+          signedIn()
+          && request.auth.uid == userId
+        );
+
+      allow write: if signedIn()
+        && request.auth.uid == userId
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+
+      allow delete: if isAdmin()
+        || (
+          signedIn()
+          && request.auth.uid == userId
+        );
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Gallery
+     * ---------------------------------------------------------
+     *
+     * Publicly readable.
+     * Admin-only uploads/deletions.
+     */
+
+    match /gallery/{fileName} {
+
+      allow read: if true;
+
+      allow write, delete: if isAdmin();
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Product images
+     * ---------------------------------------------------------
+     */
+
+    match /products/{fileName} {
+
+      allow read: if true;
+
+      allow write, delete: if isAdmin();
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Default deny
+     * ---------------------------------------------------------
+     */
+
+    match /{allPaths=**} {
+
+      allow read, write: if false;
+    }
+  }
+}
