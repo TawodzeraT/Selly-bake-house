@@ -1,0 +1,165 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /*
+     * ---------------------------------------------------------
+     * Helper functions
+     * ---------------------------------------------------------
+     */
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && request.auth.token.admin == true;
+    }
+
+    function isOwner(userId) {
+      return signedIn()
+        && request.auth.uid == userId;
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Users
+     * ---------------------------------------------------------
+     *
+     * Customers can read/write only their own user document.
+     * Admins can manage all users.
+     */
+
+    match /users/{userId} {
+
+      allow read: if isOwner(userId) || isAdmin();
+
+      allow create: if isOwner(userId);
+
+      allow update: if isOwner(userId) || isAdmin();
+
+      allow delete: if isAdmin();
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Products
+     * ---------------------------------------------------------
+     *
+     * Customers can read products.
+     * Only administrators can create/update/delete products.
+     */
+
+    match /products/{productId} {
+
+      allow read: if true;
+
+      allow create, update, delete: if isAdmin();
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Orders
+     * ---------------------------------------------------------
+     *
+     * Customers can read their own orders.
+     * Admins can read/update all orders.
+     *
+     * Order creation will eventually happen through
+     * a trusted Cloud Function so customers cannot
+     * manipulate prices or payment information.
+     */
+
+    match /orders/{orderId} {
+
+      allow read: if isAdmin()
+        || (
+          signedIn()
+          && resource.data.userId == request.auth.uid
+        );
+
+      allow create: if false;
+
+      allow update, delete: if isAdmin();
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Custom cake inquiries
+     * ---------------------------------------------------------
+     */
+
+    match /customInquiries/{inquiryId} {
+
+      allow read: if isAdmin();
+
+      allow create: if signedIn();
+
+      allow update, delete: if isAdmin();
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Public settings
+     * ---------------------------------------------------------
+     *
+     * We will later separate public settings from
+     * private administrative settings.
+     */
+
+    match /settings/{settingId} {
+
+      allow read: if true;
+
+      allow create, update, delete: if isAdmin();
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Inventory
+     * ---------------------------------------------------------
+     */
+
+    match /inventory/{inventoryId} {
+
+      allow read: if true;
+
+      allow create, update, delete: if isAdmin();
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Gallery
+     * ---------------------------------------------------------
+     */
+
+    match /gallery/{galleryId} {
+
+      allow read: if true;
+
+      allow create, update, delete: if isAdmin();
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Everything else
+     * ---------------------------------------------------------
+     *
+     * Default deny.
+     */
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
