@@ -1,313 +1,399 @@
-// ================================================================
-// SELLY BAKE HOUSE — SUPABASE DATABASE CONNECTION
-// Plain HTML version — no npm, no Next.js, no packages needed
-// Replace the two lines below with your real Supabase details
-// ================================================================
+/*
+ * SELLY BAKE HOUSE — FIREBASE FIRESTORE DATABASE LAYER
+ *
+ * This file keeps the existing window.DB API used by the website while
+ * replacing the old Supabase REST connection with Firebase Firestore.
+ * Firebase is loaded from the official CDN, so the existing plain HTML
+ * pages do not need a bundler.
+ */
 
-var SUPABASE_URL = "https://ucmsmprayzxijfykvnrd.supabase.co";
-var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVjbXNtcHJheXp4aWpmeWt2bnJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5NTk3NzIsImV4cCI6MjA5MjUzNTc3Mn0.AlWVY-rB8ehRCcMiG3875bZXTru_NyakUKL3NgS2LZM";
+(function () {
+  "use strict";
 
-var DB = {
+  var DB = {};
+  var readyPromise = null;
+  var firebaseDb = null;
+  var firebaseAuth = null;
 
-  // ── CORE FETCH HELPER ─────────────────────────────────────────
-  async req(table, method, body, filter, extra) {
-    var url = SUPABASE_URL + "/rest/v1/" + table;
-    if (filter) url += "?" + filter;
-    var opts = {
-      method:  method || "GET",
-      headers: {
-        "Content-Type":  "application/json",
-        "apikey":        SUPABASE_KEY,
-        "Authorization": "Bearer " + SUPABASE_KEY,
-        "Prefer":        method === "POST" ? "return=representation" : "return=minimal"
-      }
-    };
-    if (body) opts.body = JSON.stringify(body);
+  function getFallback(name, value) {
     try {
-      var res  = await fetch(url, opts);
-      var text = await res.text();
-      return text ? JSON.parse(text) : null;
+      return window.SBH && window.SBH[name] ? window.SBH[name] : value;
     } catch (e) {
-      console.warn("DB error on " + table + ":", e);
-      return null;
+      return value;
     }
-  },
+  }
 
-  // ── PRODUCTS ──────────────────────────────────────────────────
-  async getProducts() {
-    var data = await this.req("products", "GET", null, "order=id.asc");
-    if (!data || !Array.isArray(data) || data.length === 0) return SBH.defaultProducts;
-    return data.map(function(p) {
-      return {
-        id:          p.id,
-        name:        p.name,
-        category:    p.category,
-        price:       parseFloat(p.price),
-        desc:        p.description   || "",
-        longDesc:    p.long_desc     || p.description || "",
-        status:      p.status        || "instock",
-        bestSeller:  p.best_seller   || false,
-        isNew:       p.is_new        || false,
-        featured:    p.featured      || false,
-        allergens:   p.allergens     || "",
-        image:       p.image_data    || ""
+  async function init() {
+    if (readyPromise) return readyPromise;
+
+    readyPromise = (async function () {
+      var configModule = await import("../firebase/config.js");
+      var config = configModule.default;
+
+      var appMod = await import("https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js");
+      var firestoreMod = await import("https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js");
+      var authMod = await import("https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js");
+
+      var app = appMod.getApps().length
+        ? appMod.getApps()[0]
+        : appMod.initializeApp(config);
+
+      firebaseDb = firestoreMod.getFirestore(app);
+      firebaseAuth = authMod.getAuth(app);
+
+      window.SellyFirebase = {
+        app: app,
+        db: firebaseDb,
+        auth: firebaseAuth,
+        firestore: firestoreMod,
+        authModule: authMod
       };
-    });
-  },
 
-  async saveProduct(product) {
-    var row = {
-      name:        product.name,
-      category:    product.category,
-      price:       product.price,
-      description: product.desc,
-      long_desc:   product.longDesc,
-      status:      product.status,
-      best_seller: product.bestSeller,
-      is_new:      product.isNew,
-      featured:    product.featured,
-      allergens:   product.allergens || ""
+      console.log("Selly Bake House: Firebase connected.");
+      return window.SellyFirebase;
+    })().catch(function (error) {
+      console.error("Selly Bake House: Firebase initialization failed.", error);
+      throw error;
+    });
+
+    return readyPromise;
+  }
+
+  async function fs() {
+    var fb = await init();
+    return fb.firestore;
+  }
+
+  async function db() {
+    await init();
+    return firebaseDb;
+  }
+
+  async function collectionDocs(name, constraints) {
+    var f = await fs();
+    var database = await db();
+    var ref = f.collection(database, name);
+    var q = ref;
+    if (constraints && constraints.length) q = f.query.apply(null, [ref].concat(constraints));
+    var snap = await f.getDocs(q);
+    return snap.docs.map(function (doc) {
+      return Object.assign({ id: doc.id }, doc.data());
+    });
+  }
+
+  async function getDocById(name, id) {
+    var f = await fs();
+    var database = await db();
+    var snap = await f.getDoc(f.doc(database, name, String(id)));
+    return snap.exists() ? Object.assign({ id: snap.id }, snap.data()) : null;
+  }
+
+  async function setDocData(name, id, data, merge) {
+    var f = await fs();
+    var database = await db();
+    await f.setDoc(f.doc(database, name, String(id)), data, { merge: !!merge });
+    return Object.assign({ id: String(id) }, data);
+  }
+
+  async function addDocData(name, data) {
+    var f = await fs();
+    var database = await db();
+    var ref = await f.addDoc(f.collection(database, name), data);
+    return Object.assign({ id: ref.id }, data);
+  }
+
+  async function deleteDocData(name, id) {
+    var f = await fs();
+    var database = await db();
+    await f.deleteDoc(f.doc(database, name, String(id)));
+    return true;
+  }
+
+  function cleanProduct(p) {
+    return {
+      id: p.id,
+      name: p.name || "",
+      category: p.category || "",
+      price: parseFloat(p.price) || 0,
+      desc: p.desc || p.description || "",
+      longDesc: p.longDesc || p.long_desc || p.description || "",
+      status: p.status || "instock",
+      bestSeller: !!(p.bestSeller !== undefined ? p.bestSeller : p.best_seller),
+      isNew: !!(p.isNew !== undefined ? p.isNew : p.is_new),
+      featured: !!p.featured,
+      allergens: p.allergens || "",
+      image: p.image || p.image_data || ""
     };
-    var existing = await this.req("products", "GET", null, "id=eq." + product.id);
-    if (existing && existing.length > 0) {
-      return await this.req("products", "PATCH", row, "id=eq." + product.id);
-    } else {
-      return await this.req("products", "POST", row);
+  }
+
+  DB.ready = init;
+
+  DB.getProducts = async function () {
+    try {
+      var f = await fs();
+      var products = await collectionDocs("products", [f.orderBy("id", "asc")]);
+      if (!products.length) return getFallback("defaultProducts", []);
+      return products.map(cleanProduct);
+    } catch (error) {
+      console.warn("Could not load products from Firebase:", error);
+      return getFallback("defaultProducts", []);
     }
-  },
+  };
 
-  async updateProductStatus(id, status) {
-    return await this.req("products", "PATCH", { status }, "id=eq." + id);
-  },
+  DB.saveProduct = async function (product) {
+    var row = {
+      name: product.name || "",
+      category: product.category || "",
+      price: Number(product.price) || 0,
+      description: product.desc || product.description || "",
+      long_desc: product.longDesc || product.long_desc || product.desc || "",
+      status: product.status || "instock",
+      best_seller: !!(product.bestSeller !== undefined ? product.bestSeller : product.best_seller),
+      is_new: !!(product.isNew !== undefined ? product.isNew : product.is_new),
+      featured: !!product.featured,
+      allergens: product.allergens || ""
+    };
+    var id = product.id != null ? String(product.id) : null;
+    if (id) return setDocData("products", id, row, true);
+    return addDocData("products", row);
+  };
 
-  async saveProductImage(productId, imageData) {
-    return await this.req("products", "PATCH", { image_data: imageData }, "id=eq." + productId);
-  },
+  DB.updateProductStatus = async function (id, status) {
+    return setDocData("products", id, { status: status }, true);
+  };
 
-  async deleteProductImage(productId) {
-    return await this.req("products", "PATCH", { image_data: "" }, "id=eq." + productId);
-  },
+  DB.saveProductImage = async function (productId, imageData) {
+    return setDocData("products", productId, { image_data: imageData || "" }, true);
+  };
 
-  // ── ORDERS ────────────────────────────────────────────────────
-  async getOrders() {
-    var data = await this.req("orders", "GET", null, "order=created_at.desc");
-    return data || [];
-  },
+  DB.deleteProductImage = async function (productId) {
+    return setDocData("products", productId, { image_data: "" }, true);
+  };
 
-  async saveOrder(order) {
-    return await this.req("orders", "POST", {
-      id:                   order.id,
-      customer:             order.customer,
-      email:                order.email     || "",
-      phone:                order.phone     || "",
-      items:                order.items     || "",
-      subtotal:             order.subtotal  || 0,
-      tax:                  order.tax       || 0,
-      tip:                  order.tip       || 0,
-      total:                order.total     || 0,
-      status:               order.status    || "pending",
-      method:               order.method    || "pickup",
-      payment_method:       order.paymentMethod   || "square",
-      pickup_date:          order.pickupDate      || "",
-      pickup_time:          order.pickupTime      || "",
-      delivery_date:        order.deliveryDate    || "",
-      delivery_time:        order.deliveryTime    || "",
-      delivery_address:     order.deliveryAddress || "",
-      delivery_instructions:order.deliveryInstructions || ""
-    });
-  },
-
-  async updateOrderStatus(id, status) {
-    return await this.req("orders", "PATCH", { status }, "id=eq." + id);
-  },
-
-  async getOrderById(id) {
-    var data = await this.req("orders", "GET", null, "id=eq." + id);
-    return data && data[0] ? data[0] : null;
-  },
-
-  // ── CAKE REQUESTS ─────────────────────────────────────────────
-  async getCakeRequests() {
-    var data = await this.req("cake_requests", "GET", null, "order=submitted_at.desc");
-    return data || [];
-  },
-
-  async saveCakeRequest(req) {
-    return await this.req("cake_requests", "POST", {
-      id:          req.id,
-      name:        req.name,
-      email:       req.email   || "",
-      phone:       req.phone   || "",
-      size:        req.size    || "",
-      flavor:      req.flavor  || "",
-      frosting:    req.frosting|| "",
-      filling:     req.filling || "",
-      addons:      Array.isArray(req.addons) ? req.addons.join(", ") : "",
-      design:      req.design  || "",
-      date_needed: req.date    || "",
-      method:      req.method  || "pickup",
-      notes:       req.notes   || "",
-      status:      "pending"
-    });
-  },
-
-  async updateCakeRequest(id, status) {
-    return await this.req("cake_requests", "PATCH", { status }, "id=eq." + id);
-  },
-
-  // ── BLOCKED DATES ─────────────────────────────────────────────
-  async getBlockedDates() {
-    var data = await this.req("blocked_dates", "GET");
-    if (!data || !Array.isArray(data)) return [];
-    return data.map(function(d) { return d.date_str; });
-  },
-
-  async addBlockedDate(dateStr) {
-    return await this.req("blocked_dates", "POST", { date_str: dateStr });
-  },
-
-  async removeBlockedDate(dateStr) {
-    return await this.req("blocked_dates", "DELETE", null, "date_str=eq." + dateStr);
-  },
-
-  // ── CATEGORIES ────────────────────────────────────────────────
-  async getCategories() {
-    var data = await this.req("categories", "GET", null, "order=display_order.asc");
-    if (!data || !Array.isArray(data) || data.length === 0) return SBH.defaultCategories;
-    return data.map(function(c) {
-      return { id: c.id, name: c.name, color: c.color, order: c.display_order, active: c.active };
-    });
-  },
-
-  async saveCategory(cat) {
-    var existing = await this.req("categories", "GET", null, "id=eq." + cat.id);
-    var row = { id: cat.id, name: cat.name, color: cat.color, display_order: cat.order, active: cat.active };
-    if (existing && existing.length > 0) {
-      return await this.req("categories", "PATCH", row, "id=eq." + cat.id);
-    } else {
-      return await this.req("categories", "POST", row);
+  DB.getOrders = async function () {
+    try {
+      var f = await fs();
+      return await collectionDocs("orders", [f.orderBy("created_at", "desc")]);
+    } catch (error) {
+      try { return await collectionDocs("orders"); } catch (e) { return []; }
     }
-  },
+  };
 
-  async deleteCategory(id) {
-    return await this.req("categories", "DELETE", null, "id=eq." + id);
-  },
+  DB.saveOrder = async function (order) {
+    /*
+     * Direct client-side order creation is intentionally blocked by the
+     * Firestore rules. Checkout should eventually call a Cloud Function so
+     * totals and payment information are validated server-side.
+     */
+    throw new Error("Orders must be submitted through the secure checkout function.");
+  };
 
-  // ── SETTINGS ──────────────────────────────────────────────────
-  async getSettings() {
-    var data = await this.req("settings", "GET");
-    if (!data || !Array.isArray(data)) return {};
-    var result = {};
-    data.forEach(function(s) {
-      try { result[s.key] = JSON.parse(s.value); }
-      catch { result[s.key] = s.value; }
-    });
-    return result;
-  },
+  DB.updateOrderStatus = async function (id, status) {
+    return setDocData("orders", id, { status: status }, true);
+  };
 
-  async saveSetting(key, value) {
-    var existing = await this.req("settings", "GET", null, "key=eq." + key);
-    var val      = JSON.stringify(value);
-    if (existing && existing.length > 0) {
-      return await this.req("settings", "PATCH", { value: val }, "key=eq." + key);
-    } else {
-      return await this.req("settings", "POST", { key, value: val });
+  DB.getOrderById = async function (id) {
+    return getDocById("orders", id);
+  };
+
+  DB.getCakeRequests = async function () {
+    try {
+      var f = await fs();
+      return await collectionDocs("customInquiries", [f.orderBy("submitted_at", "desc")]);
+    } catch (error) {
+      try { return await collectionDocs("customInquiries"); } catch (e) { return []; }
     }
-  },
+  };
 
-  // ── FEEDBACK ──────────────────────────────────────────────────
-  async saveFeedback(feedback) {
-    return await this.req("feedback", "POST", {
-      order_id: feedback.id       || "",
+  DB.saveCakeRequest = async function (req) {
+    var row = {
+      name: req.name || "",
+      email: req.email || "",
+      phone: req.phone || "",
+      size: req.size || "",
+      flavor: req.flavor || "",
+      frosting: req.frosting || "",
+      filling: req.filling || "",
+      addons: Array.isArray(req.addons) ? req.addons : [],
+      design: req.design || "",
+      date_needed: req.date || "",
+      method: req.method || "pickup",
+      notes: req.notes || "",
+      status: "pending",
+      submitted_at: new Date().toISOString()
+    };
+    return addDocData("customInquiries", row);
+  };
+
+  DB.updateCakeRequest = async function (id, status) {
+    return setDocData("customInquiries", id, { status: status }, true);
+  };
+
+  DB.getBlockedDates = async function () {
+    try {
+      var rows = await collectionDocs("blockedDates");
+      return rows.map(function (d) { return d.date_str || d.date || d.id; });
+    } catch (error) {
+      return [];
+    }
+  };
+
+  DB.addBlockedDate = async function (dateStr) {
+    return setDocData("blockedDates", dateStr, { date_str: dateStr }, true);
+  };
+
+  DB.removeBlockedDate = async function (dateStr) {
+    return deleteDocData("blockedDates", dateStr);
+  };
+
+  DB.getCategories = async function () {
+    try {
+      var f = await fs();
+      var rows = await collectionDocs("categories", [f.orderBy("display_order", "asc")]);
+      if (!rows.length) return getFallback("defaultCategories", []);
+      return rows.map(function (c) {
+        return {
+          id: c.id,
+          name: c.name || "",
+          color: c.color || "",
+          order: c.order !== undefined ? c.order : (c.display_order || 0),
+          active: c.active !== false
+        };
+      });
+    } catch (error) {
+      return getFallback("defaultCategories", []);
+    }
+  };
+
+  DB.saveCategory = async function (cat) {
+    var id = cat.id != null ? String(cat.id) : null;
+    var row = {
+      name: cat.name || "",
+      color: cat.color || "",
+      display_order: Number(cat.order) || 0,
+      active: cat.active !== false
+    };
+    return id ? setDocData("categories", id, row, true) : addDocData("categories", row);
+  };
+
+  DB.deleteCategory = async function (id) {
+    return deleteDocData("categories", id);
+  };
+
+  DB.getSettings = async function () {
+    try {
+      var store = await getDocById("settings", "store");
+      if (store && store.settings) return store.settings;
+      if (store) {
+        var copy = Object.assign({}, store);
+        delete copy.id;
+        return copy;
+      }
+      return {};
+    } catch (error) {
+      return {};
+    }
+  };
+
+  DB.saveSetting = async function (key, value) {
+    var current = await DB.getSettings();
+    current[key] = value;
+    return setDocData("settings", "store", { settings: current }, true);
+  };
+
+  DB.saveFeedback = async function (feedback) {
+    return addDocData("feedback", {
+      order_id: feedback.id || "",
       customer: feedback.customer || "",
-      email:    feedback.email    || "",
-      rating:   feedback.rating   || 5,
-      message:  feedback.text     || ""
+      email: feedback.email || "",
+      rating: Number(feedback.rating) || 5,
+      message: feedback.text || "",
+      created_at: new Date().toISOString()
     });
-  },
+  };
 
-  async getFeedback() {
-    var data = await this.req("feedback", "GET", null, "order=created_at.desc");
-    return data || [];
-  },
-
-  // ── SEED DEFAULT PRODUCTS ─────────────────────────────────────
-  // Run this once from the browser console to copy your products to Supabase:
-  // DB.seedProducts()
-  async seedProducts() {
-    console.log("Seeding products to Supabase...");
-    for (var i = 0; i < SBH.defaultProducts.length; i++) {
-      var p   = SBH.defaultProducts[i];
-      var res = await this.saveProduct(p);
-      console.log("Saved: " + p.name);
+  DB.getFeedback = async function () {
+    try {
+      var f = await fs();
+      return await collectionDocs("feedback", [f.orderBy("created_at", "desc")]);
+    } catch (error) {
+      try { return await collectionDocs("feedback"); } catch (e) { return []; }
     }
-    console.log("Done! All products are now in Supabase.");
-  },
+  };
 
-  // ── SEED DEFAULT CATEGORIES ───────────────────────────────────
-  // Run this once: DB.seedCategories()
-  async seedCategories() {
-    console.log("Seeding categories...");
-    for (var i = 0; i < SBH.defaultCategories.length; i++) {
-      await this.saveCategory(SBH.defaultCategories[i]);
-      console.log("Saved: " + SBH.defaultCategories[i].name);
+  DB.seedProducts = async function () {
+    var products = getFallback("defaultProducts", []);
+    for (var i = 0; i < products.length; i++) {
+      await DB.saveProduct(products[i]);
+      console.log("Saved product: " + products[i].name);
     }
-    console.log("Done!");
-    // ── PRODUCT IMAGES ────────────────────────────────────────────
-  async getProductImages(productId) {
-    var data = await this.req("product_images", "GET", null,
-      "product_id=eq." + productId + "&order=sort_order.asc");
-    return data || [];
-  },
+    console.log("Firebase product seed complete.");
+    return true;
+  };
 
-  async addProductImage(productId, imageData, isPrimary) {
-    // If this is primary, unset all others first
+  DB.seedCategories = async function () {
+    var categories = getFallback("defaultCategories", []);
+    for (var i = 0; i < categories.length; i++) {
+      await DB.saveCategory(categories[i]);
+      console.log("Saved category: " + categories[i].name);
+    }
+    console.log("Firebase category seed complete.");
+    return true;
+  };
+
+  DB.getProductImages = async function (productId) {
+    try {
+      var f = await fs();
+      return await collectionDocs("productImages", [
+        f.where("product_id", "==", String(productId)),
+        f.orderBy("sort_order", "asc")
+      ]);
+    } catch (error) {
+      return [];
+    }
+  };
+
+  DB.addProductImage = async function (productId, imageData, isPrimary) {
     if (isPrimary) {
-      await this.req("product_images", "PATCH",
-        { is_primary: false },
-        "product_id=eq." + productId
-      );
+      var existing = await DB.getProductImages(productId);
+      for (var i = 0; i < existing.length; i++) {
+        await setDocData("productImages", existing[i].id, { is_primary: false }, true);
+      }
     }
-    return await this.req("product_images", "POST", {
-      product_id:  productId,
-      image_data:  imageData,
-      is_primary:  isPrimary || false,
-      sort_order:  Date.now()
+    return addDocData("productImages", {
+      product_id: String(productId),
+      image_data: imageData || "",
+      is_primary: !!isPrimary,
+      sort_order: Date.now()
     });
-  },
+  };
 
-  async deleteProductImage(imageId) {
-    return await this.req("product_images", "DELETE", null,
-      "id=eq." + imageId);
-  },
+  DB.deleteProductImageById = async function (imageId) {
+    return deleteDocData("productImages", imageId);
+  };
 
-  async setPrimaryImage(imageId, productId) {
-    // Unset all primary for this product
-    await this.req("product_images", "PATCH",
-      { is_primary: false },
-      "product_id=eq." + productId
-    );
-    // Set this one as primary
-    return await this.req("product_images", "PATCH",
-      { is_primary: true },
-      "id=eq." + imageId
-    );
-  },
+  DB.setPrimaryImage = async function (imageId, productId) {
+    var existing = await DB.getProductImages(productId);
+    for (var i = 0; i < existing.length; i++) {
+      await setDocData("productImages", existing[i].id, { is_primary: existing[i].id === String(imageId) }, true);
+    }
+    return true;
+  };
 
-  async getPrimaryImage(productId) {
-    var data = await this.req("product_images", "GET", null,
-      "product_id=eq." + productId + "&is_primary=eq.true&limit=1");
-    if (data && data[0]) return data[0].image_data;
-    // Fall back to first image
-    var all = await this.getProductImages(productId);
-    return all && all[0] ? all[0].image_data : "";
-  },
+  DB.getPrimaryImage = async function (productId) {
+    var images = await DB.getProductImages(productId);
+    if (!images.length) return "";
+    var primary = images.find(function (x) { return x.is_primary; });
+    return (primary || images[0]).image_data || "";
+  };
 
-  async reorderProductImages(imageId, newOrder) {
-    return await this.req("product_images", "PATCH",
-      { sort_order: newOrder },
-      "id=eq." + imageId
-    );
-  }
-  }
-};
+  DB.reorderProductImages = async function (imageId, newOrder) {
+    return setDocData("productImages", imageId, { sort_order: Number(newOrder) || 0 }, true);
+  };
+
+  window.DB = DB;
+  window.SellyDB = DB;
+
+  // Start loading Firebase immediately without blocking page parsing.
+  init().catch(function () {});
+})();
