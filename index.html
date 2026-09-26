@@ -426,6 +426,24 @@
       color: var(--brown-600);
       box-shadow: var(--shadow-sm);
     }
+    /* Prevent Home slideshow slides from visually overlapping */
+.hero-slide:not(.active) {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.hero-slide.active {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+.hero-slide.leaving {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
 /* Public preview ribbon on Home */
 .home-strip {
   overflow: hidden;
@@ -3387,16 +3405,16 @@ body.preview-mode .product-card-action .button:disabled {
   box-shadow: none;
 }
 body.preview-mode .promo-bar {
-  background: #315c3b;
-  color: #ffffff;
+  background: #315c3b !important;
+  color: #ffffff !important;
 }
 
 body.preview-mode .promo-bar a {
-  color: #ffffff;
+  color: #ffffff !important;
 }
 
 body.preview-mode .promo-dot {
-  background: #b9d9bf;
+  background: #b9d9bf !important;
 }
 </style>
 </head>
