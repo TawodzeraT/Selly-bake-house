@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 900" role="img" aria-labelledby="title desc">
+  <title id="title">Bakery owner photo placeholder</title>
+  <desc id="desc">Pastel pink placeholder ready to be replaced with the bakery owner's portrait.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fdecef"/>
+      <stop offset="1" stop-color="#efcfd4"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="900" rx="42" fill="url(#bg)"/>
+  <circle cx="400" cy="320" r="120" fill="#c89784" opacity=".35"/>
+  <path d="M175 790c24-176 113-265 225-265s201 89 225 265" fill="#c89784" opacity=".35"/>
+  <circle cx="400" cy="450" r="290" fill="none" stroke="#a86f62" stroke-width="4" stroke-dasharray="14 14" opacity=".55"/>
+  <text x="400" y="815" text-anchor="middle" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#7b4f45">OWNER PHOTO</text>
+</svg>
