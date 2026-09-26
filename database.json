@@ -1,0 +1,32 @@
+{
+  "settings": {
+    "announcement": "Freshly baked in Rockville, Maryland",
+    "email": "sellybakehouse@gmail.com",
+    "phone": "(301) 356-1232",
+    "acceptingOrders": true,
+    "deliveryFee": 8.99,
+    "deliveryIncludedMiles": 3,
+    "deliveryPerMile": 1.5,
+    "deliveryMaxMiles": 35,
+    "leadTimeHours": 24,
+    "weekdayStart": "09:00",
+    "weekdayEnd": "18:00",
+    "weekendStart": "09:00",
+    "weekendEnd": "19:00",
+    "heroIntervalSeconds": 5,
+    "googleMapsApiKey": ""
+  },
+  "users": [
+    {
+      "id": "26c70150-1cbc-4d2e-ae78-8393cf3292b7",
+      "name": "Selly Bake House Admin",
+      "email": "sellybakehouse@gmail.com",
+      "passwordHash": "b42c6ca2d994e38981418170fc2c0d8c:a3028874dbe9a712e1a5ea0ab863ae99fd3748588f9444ec8b7cf516b4125ddfc32b8f282164049922350f5126cb4f4054912601924754e53355d3b3933103de",
+      "role": "admin",
+      "createdAt": "2026-08-16T21:54:28.514Z"
+    }
+  ],
+  "sessions": [],
+  "orders": [],
+  "customInquiries": []
+}

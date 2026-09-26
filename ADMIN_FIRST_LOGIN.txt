@@ -1,0 +1,7 @@
+Selly Bake House first admin login
+
+Email: sellybakehouse@gmail.com
+Password: eKTm2ihmYmU!A7
+
+Change this password by deleting data/database.json and restarting with ADMIN_PASSWORD set, or add a password-change workflow before production.
+Do not publish this file.
