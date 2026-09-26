@@ -3295,7 +3295,27 @@
         overscroll-behavior-y: auto;
       }
     }
+/* =========================================================
+   PUBLIC PREVIEW MODE
+   ========================================================= */
 
+body.preview-mode .quick-add,
+body.preview-mode [data-cart-open],
+body.preview-mode [data-go-checkout],
+body.preview-mode [data-route="checkout"],
+body.preview-mode [data-route="account"],
+body.preview-mode [data-route="admin"] {
+  display: none !important;
+}
+
+body.preview-mode .product-preview-add:disabled,
+body.preview-mode .product-card-action .button:disabled {
+  opacity: 1;
+  background: #7a4a2e;
+  color: #ffffff;
+  cursor: default;
+  box-shadow: none;
+}
 </style>
 </head>
 <body>
@@ -3525,7 +3545,11 @@
               </div>
             </div>
             <div class="spam-trap" aria-hidden="true"><label for="customWebsite">Leave this field blank</label><input id="customWebsite" name="website" type="text" tabindex="-1" autocomplete="off"></div>
-            <div class="field full"><button class="button full" type="submit">SUBMIT CUSTOM CAKE REQUEST <span>→</span></button></div>
+            <div class="field full">
+              <button class="button full" type="submit" disabled aria-disabled="true">
+                CUSTOM CAKE INQUIRIES COMING SOON
+            </button>
+            </div>
           </div>
         <div class="form-status" id="customRequestStatus" aria-live="polite"></div></form>
       </div>
