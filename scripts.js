@@ -4,8 +4,8 @@
   const STORE_CONFIG = {
     email: 'sellybakehouse@gmail.com',
     phone: '(301) 356-1232',
-    announcement: 'Freshly baked in Rockville, Maryland',
-    acceptingOrders: true,
+    announcement: 'Website Preview — Online ordering is coming soon',
+    acceptingOrders: false,
     deliveryFee: 8.99,
     deliveryIncludedMiles: 3,
     deliveryPerMile: 1.50,
@@ -336,6 +336,7 @@ const products = [
 
   function applyPublicSettings() {
     document.getElementById('promoAnnouncement').textContent = STORE_CONFIG.announcement || 'Freshly baked in Rockville, Maryland';
+    document.body.classList.toggle('preview-mode', !STORE_CONFIG.acceptingOrders);
     const note = document.getElementById('leadTimeNote');
     if (note) {
       const leadHours = Math.max(24, Number(STORE_CONFIG.leadTimeHours || 24));
@@ -449,6 +450,9 @@ const products = [
     return Number(state.cart.find(item => item.productId === productId && item.variantKey === variantKey)?.quantity || 0);
   }
   function productActionMarkup(product, variantKey) {
+    if (!STORE_CONFIG.acceptingOrders) {
+      return `<button class="button small" type="button" disabled aria-disabled="true">Ordering Coming Soon</button>`;
+    }
     if (product.category === 'Cakes' && product.variants.length > 1 && !variantKey) {
       return `<button class="button small" type="button" disabled aria-disabled="true">Choose size</button>`;
     }
@@ -573,6 +577,9 @@ const products = [
     </div>`;
   }
   function productPreviewActionMarkup(product) {
+    if (!STORE_CONFIG.acceptingOrders) {
+      return `<button class="button product-preview-add" type="button" disabled aria-disabled="true">Online Ordering Coming Soon</button>`;
+    }
     const needsCakeSelection = product.category === 'Cakes' && product.variants.length > 1;
     const variantKey = needsCakeSelection ? state.previewVariantKey : product.variants[0].key;
     const variant = variantKey ? getVariant(product, variantKey) : null;
