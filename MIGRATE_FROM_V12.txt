@@ -1,0 +1,12 @@
+MIGRATE FROM v12.21 TO v12.22
+===========================
+
+Use v12.22 as the new Selly Bake House source baseline.
+
+1. Keep your existing complete website assets/ directory in place.
+2. Replace the v12.21 source files with the v12.22 source files in this package.
+3. Keep your private .env file private; do not include it in a handoff package.
+4. Do not copy generated data/ or administrator credentials into a release package.
+5. Start the server with: node server.js
+6. Review the compact Shop notice and the slightly larger typography on desktop, tablet, and phone widths.
+7. Reconfirm cart, checkout, delivery, account, and payment behavior before deployment.

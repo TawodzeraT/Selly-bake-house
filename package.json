@@ -1,0 +1,13 @@
+{
+  "name": "selly-bake-house-webapp",
+  "version": "12.26.0",
+  "private": true,
+  "description": "Selly Bake House storefront v12.26 with fully scrollable Shop product previews after zoom across desktop, tablet/iPad, and mobile.",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check scripts.js && node --check server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

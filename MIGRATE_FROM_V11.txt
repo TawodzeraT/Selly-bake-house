@@ -1,0 +1,9 @@
+MIGRATING FROM V11 TO V12
+
+1. Stop the v11 server with Control + C.
+2. Unzip Selly-Bake-House-WebApp-v12.zip.
+3. Copy only your private `.env` file from v11 into the v12 folder.
+4. Do not overwrite the v12 index.html, scripts.js, server.js, package.json, or assets folder.
+5. Do not copy the old data folder during the first visual review unless you specifically need the old local test accounts and orders.
+6. In Terminal, enter the v12 folder and run: node server.js
+7. Open http://localhost:3000 and complete the checklist in START_HERE.txt.
