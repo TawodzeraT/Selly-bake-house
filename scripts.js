@@ -353,7 +353,27 @@ const products = [
   }
 
   function safeRoute(value) {
-    return ['home','shop','custom','gallery','about','account','admin','checkout','confirmation','custom-confirmation'].includes(value) ? value : 'home';
+  const route = [
+    'home',
+    'shop',
+    'custom',
+    'gallery',
+    'about',
+    'account',
+    'admin',
+    'checkout',
+    'confirmation',
+    'custom-confirmation'
+  ].includes(value) ? value : 'home';
+
+  if (
+    !STORE_CONFIG.acceptingOrders &&
+    ['checkout', 'confirmation', 'custom-confirmation'].includes(route)
+  ) {
+    return 'shop';
+  }
+
+  return route;
   }
   function navigate(route, { replace = false } = {}) {
     const next = safeRoute(route); const hash = `#${next}`;
@@ -1468,6 +1488,18 @@ const products = [
   }
   async function handleCustomCakeSubmit(event) {
     event.preventDefault();
+    
+      if (!STORE_CONFIG.acceptingOrders) {
+    const status = document.getElementById('customRequestStatus');
+
+    if (status) {
+      status.textContent =
+        'Custom cake inquiries are not currently being accepted online. Online ordering is coming soon.';
+      status.className = 'form-status';
+    }
+
+    return;
+  }
     const form = event.currentTarget;
     const status = document.getElementById('customRequestStatus');
     setCustomDateMinimum();
