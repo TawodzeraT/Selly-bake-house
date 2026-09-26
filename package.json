@@ -1,0 +1,13 @@
+{
+  "name": "selly-bake-house-webapp",
+  "version": "12.27.0-preview.1",
+  "private": true,
+  "description": "Selly Bake House public preview build: browse-only storefront with ordering, checkout, accounts, admin, and custom inquiry submission disabled.",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check scripts.js && node --check server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
