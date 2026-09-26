@@ -4,7 +4,7 @@
   const STORE_CONFIG = {
     email: 'sellybakehouse@gmail.com',
     phone: '(301) 356-1232',
-    announcement: 'Website Preview — Online ordering is coming soon',
+    announcement: 'WEBSITE PREVIEW — Online ordering is coming soon',
     acceptingOrders: false,
     deliveryFee: 8.99,
     deliveryIncludedMiles: 3,
