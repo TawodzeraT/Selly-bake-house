@@ -426,11 +426,81 @@
       color: var(--brown-600);
       box-shadow: var(--shadow-sm);
     }
+/* Public preview ribbon on Home */
+.home-strip {
+  overflow: hidden;
+  background: #eaf6ec;
+  border-top: 2px solid #7fa889;
+  border-bottom: 2px solid #7fa889;
+}
 
-    .home-strip { background: var(--pink-100); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); overflow: hidden; }
-    .marquee { display: flex; width: max-content; animation: marquee 28s linear infinite; }
-    .marquee-group { display: flex; align-items: center; gap: 50px; padding: 16px 25px; white-space: nowrap; color: var(--brown-600); font-size: .79rem; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }
-    .marquee-group span::after { content: "✦"; margin-left: 50px; color: var(--rose); }
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 24s linear infinite;
+}
+
+.marquee-group {
+  display: flex;
+  align-items: center;
+  gap: 42px;
+  padding: 14px 24px;
+  white-space: nowrap;
+  color: #315c3b;
+  font-size: .84rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.marquee-group span {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.marquee-group span::after {
+  content: "•";
+  margin-left: 42px;
+  color: #7fa889;
+}
+
+.preview-pulse {
+  width: 9px;
+  height: 9px;
+  display: inline-block;
+  border-radius: 50%;
+  background: #4f8a5b;
+  box-shadow: 0 0 0 0 rgba(79, 138, 91, .45);
+  animation: previewPulse 1.8s ease-out infinite;
+}
+
+@keyframes previewPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(79, 138, 91, .45);
+  }
+
+  70% {
+    box-shadow: 0 0 0 8px rgba(79, 138, 91, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(79, 138, 91, 0);
+  }
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee,
+  .preview-pulse {
+    animation: none;
+  }
+}x; color: var(--rose); }
     @keyframes marquee { to { transform: translateX(-50%); } }
 
     .page-hero {
@@ -3399,12 +3469,23 @@ body.preview-mode .product-card-action .button:disabled {
             <button class="hero-pause" type="button" data-slide-toggle aria-label="Pause home slideshow" aria-pressed="false">❚❚</button>
           </div>
         </div>
-      </div>
-      <div class="home-strip" aria-hidden="true">
-        <div class="marquee">
-          <div class="marquee-group"><span>Handcrafted cookies</span><span>Celebration cakes</span><span>Fresh cupcake boxes</span><span>Custom designs</span><span>Rockville, Maryland</span></div>
-          <div class="marquee-group"><span>Handcrafted cookies</span><span>Celebration cakes</span><span>Fresh cupcake boxes</span><span>Custom designs</span><span>Rockville, Maryland</span></div>
-        </div>
+      <div class="home-strip" aria-label="Website preview notice">
+  <div class="marquee">
+    <div class="marquee-group">
+      <span><i class="preview-pulse" aria-hidden="true"></i> Public Preview</span>
+      <span>ONLINE ORDERING IS COMING SOON</span>
+      <span>BROWSE OUR MENU AND PRICING</span>
+      <span>CUSTOM CAKE INQUIRIES COMING SOON</span>
+    </div>
+
+    <div class="marquee-group" aria-hidden="true">
+      <span><i class="preview-pulse"></i> Public Preview</span>
+      <span>ONLINE ORDERING IS COMING SOON</span>
+      <span>BROWSE OUR MENU AND PRICING</span>
+      <span>CUSTOM CAKE INQUIRIES COMING SOON</span>
+    </div>
+  </div>
+</div>
       </div>
 
       <div class="home-content">
