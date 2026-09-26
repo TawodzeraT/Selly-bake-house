@@ -1,0 +1,194 @@
+Selly Bake House WebApp v12.2 – QA Report
+
+Scope of this patch
+- Replaced the 12 Shop product images with the newly supplied customer-approved images.
+- Normalized all 12 product-image backgrounds to the exact Selly light pink #F3E0E5.
+- Reconfirmed the canonical asset assets/images/background/products-background.png is the exact solid #F3E0E5 backdrop.
+- Reworked the final Gallery CSS override into a Safari-safe static CSS grid so Gallery images paint reliably in Safari as well as Chrome.
+
+Product corner verification (exact #F3E0E5 = (243, 224, 229))
+- birthday-cookie.png: TL (243, 224, 229), TR (243, 224, 229), BL (243, 224, 229), BR (243, 224, 229)
+- biscoff-cookie.png: TL (243, 224, 229), TR (243, 224, 229), BL (243, 224, 229), BR (243, 224, 229)
+- chocolate-cake-v6.png: TL (243, 224, 229), TR (243, 224, 229), BL (243, 224, 229), BR (243, 224, 229)
+- chocolate-cupcake.png: TL (243, 224, 229), TR (243, 224, 229), BL (243, 224, 229), BR (243, 224, 229)
+- classic-chocolate-chip-cookie.png: TL (243, 224, 229), TR (243, 224, 229), BL (243, 224, 229), BR (243, 224, 229)
+- nutella-bueno-cookie.png: TL (243, 224, 229), TR (243, 224, 229), BL (243, 224, 229), BR (243, 224, 229)
+- red-velvet-cake.png: TL (243, 224, 229), TR (243, 224, 229), BL (243, 224, 229), BR (243, 224, 229)
+- red-velvet-cookie.png: TL (243, 224, 229), TR (243, 224, 229), BL (243, 224, 229), BR (243, 224, 229)
+- red-velvet-cupcake.png: TL (243, 224, 229), TR (243, 224, 229), BL (243, 224, 229), BR (243, 224, 229)
+- triple-chocolate-cookie.png: TL (243, 224, 229), TR (243, 224, 229), BL (243, 224, 229), BR (243, 224, 229)
+- vanilla-cake-v6.png: TL (243, 224, 229), TR (243, 224, 229), BL (243, 224, 229), BR (243, 224, 229)
+- vanilla-cupcake.png: TL (243, 224, 229), TR (243, 224, 229), BL (243, 224, 229), BR (243, 224, 229)
+
+Result
+- All 12 product images now have exact #F3E0E5 at all four corners.
+- The Shop product cards still point to the canonical products-background asset.
+- Gallery layout uses a static cross-browser grid with no motion/paint tricks that were known to cause Safari rendering issues.
+
+
+V12.3 GALLERY QA ADDENDUM
+- Gallery layout enlarged without reverting to the Safari-problematic CSS-column implementation.
+- Desktop: 2-column large-image grid with periodic full-width feature images.
+- Tablet: 2-column large-image grid.
+- Mobile: 1-column full-width images.
+- Images render at natural aspect ratio (height:auto) to avoid cropping/hiding image content.
+- Product imagery and exact #F3E0E5 product-background validation from v12.2 remain unchanged.
+
+v12.8 targeted QA — 2026-08-16
+--------------------------------
+- PASS: browser JavaScript syntax (`node --check scripts.js`).
+- PASS: server JavaScript syntax (`node --check server.js`).
+- PASS: all six cookie products are $24.99 in the browser catalog.
+- PASS: all six cookie products are $24.99 in the server canonical price map used for checkout/payment validation.
+- PASS: cake product names are Vanilla Cake, Red Velvet Cake, and Chocolate Cake in both browser and server product maps.
+- PASS: no old exact product names “Vanilla/Red Velvet/Chocolate Celebration Cake” remain.
+- PASS: animated star-confetti routes are now limited to Gallery and About; Shop and Custom Cakes no longer instantiate the floating-star canvas.
+
+V12.9 QA ADDENDUM
+- PASS: JavaScript syntax check (scripts.js).
+- PASS: Server syntax check (server.js).
+- PASS: All cake size tabs render unselected/white initially.
+- PASS: Cake size selection changes the chosen tab to the active deep-brown state.
+- PASS: Cake display price starts at "From $46.99" and updates to the exact selected variant price.
+- PASS: Cake Add action requires an explicit size selection before adding to cart.
+- PASS: Product preview modal is present with enlarged product image, description, allergens, and pricing.
+- PASS: Product preview includes X close control, outside-click close, and Escape-key close.
+- PASS: Quick-add and other native controls are guarded so they do not accidentally open the product preview.
+- PASS: Existing 6/8/10-inch cake variant prices remain $46.99 / $72.99 / $97.99.
+
+V12.10 QA ADDENDUM
+- PASS: JavaScript syntax check (scripts.js).
+- PASS: Server syntax check (server.js).
+- PASS: About owner-photo badge now identifies the photo as being from a Selly Bake House cake tasting day in Rockville, Maryland.
+- PASS: Previous ambiguous “Handcrafted with care in Rockville, Maryland.” badge copy removed.
+- PASS: Gallery category pills retain all five categories.
+- PASS: Gallery category pills now use the same white-pill resting treatment and deep-brown selected treatment as the Gallery music control.
+- PASS: Existing Gallery music control remains intact.
+
+v12.13 phone QA additions
+- Verified scripts.js syntax with node --check.
+- Verified server.js syntax with node --check.
+- Added phone-only persistent main navigation for Home, Shop, Custom Cakes, Gallery, and About at <=640px.
+- Product preview panel now has its own vertical touch scrolling at <=640px with -webkit-overflow-scrolling: touch and dynamic viewport-height sizing.
+- Mobile cake popup size choices remain compact in three columns and Add to Cart stays within the scrollable panel.
+- Product preview scroll position resets to the top each time a product is opened.
+- No runtime data directory or .env file is included in the release package.
+
+V12.15 mobile zoom QA:
+- Direct image/button zoom listeners added for mobile Safari reliability.
+- Zoomed media permits horizontal and vertical touch scrolling.
+- Parent preview panel remains vertically scrollable.
+- Zoom/reset state updates button label, icon, help text, and ARIA state.
+
+
+V12.16 mobile navigation + checkout QA:
+- PASS: phone swipe route sequence is Home → Shop → Custom Cakes → Gallery → About.
+- PASS: right-to-left touch swipe advances; left-to-right touch swipe reverses.
+- PASS: swipe navigation is limited to <=640px and is disabled when the gesture starts on interactive/modal controls.
+- PASS: checkout phone appears before email; email is labeled optional and has no required attribute.
+- PASS: server order validation accepts blank checkout email and validates a non-empty email normally.
+- PASS: Square payment note falls back to phone/name when checkout email is blank.
+- PASS: confirmation/receipt omit blank email output.
+- PASS: preferred date/time use a compact aligned schedule row, with a shorter date input on phone widths.
+
+V12.17 FINAL mobile QA addendum
+- PASS: scripts.js and server.js syntax checks.
+- PASS: phone swipe sequence remains Home → Shop → Custom Cakes → Gallery → About.
+- PASS: swipe viewport detection now uses phone width directly; it no longer depends on pointer/hover media-query reporting.
+- PASS: normal buttons, links, product cards, and images no longer block a swipe from starting.
+- PASS: form controls and open overlays still block route swipes so typing/zoom/cart/lightbox interactions are protected.
+- PASS: swipe threshold/timing and Safari edge-gesture protection are present, with accidental post-swipe click suppression.
+- PASS: checkout phone still precedes optional email; email remains non-required.
+- PASS: mobile preferred date and preferred time are explicitly stacked in one column at <=640px.
+- PASS: date and time controls have bounded responsive widths and cannot overflow their field containers.
+- PASS: mobile checkout cards use consistent spacing, numbered visual hierarchy, and no two-column schedule layout that could crowd date/time.
+- PASS: release package excludes runtime data and .env secrets.
+
+
+v12.19 ORDER-NOTICE QA ADDENDUM — 2026-08-16
+------------------------------------------------
+- PASS: Shop page includes the requested full same-day/24-hour notice directly below the Shop heading area and before product browsing controls/cards.
+- PASS: Checkout includes the exact short reminder “24-hour notice required for all orders.” immediately above preferred date/time selection.
+- PASS: Both notices use the existing Selly pink/brown visual system and have dedicated <=640px responsive rules.
+- PASS: Existing browser-side 24-hour date/time filtering and validation remain intact.
+- PASS: Existing server-side minimum lead-time validation remains intact.
+- PASS: No Square/payment, delivery, product, pricing, account, or custom-cake logic was changed for this patch.
+
+V12.20 NOTICE + CART LAYOUT QA ADDENDUM — 2026-08-16
+-----------------------------------------------------
+- PASS: Shop notice uses distinct very-light-green #EEF8F0 background.
+- PASS: “Planning your order?” is on its own centered line above the remaining order notice.
+- PASS: Checkout 24-hour reminder uses matching very-light-green treatment and centered text.
+- PASS: Mobile notice rules preserve readable padding, wrapping, and full-width checkout reminder.
+- PASS: Cookie and cupcake cart items receive cart-item-pack and force the quantity control below the Pack of 6 / price line.
+- PASS: Cake cart-item class/layout remains unchanged.
+- PASS: Existing client-side and server-side minimum lead-time enforcement remains present.
+- PASS: Existing Square COMPLETED-payment requirement remains present.
+
+
+v12.21 HOME HERO + ALL-CART-ITEM LAYOUT QA ADDENDUM — 2026-08-16
+-------------------------------------------------------------------
+- PASS: scripts.js syntax check.
+- PASS: server.js syntax check.
+- PASS: Every cart item now renders the variant / price line as a block line.
+- PASS: Every cart item, including Cakes, forces the − / quantity / + control into its own block/grid line beneath the variant / price line.
+- PASS: Obsolete cookie/cupcake-only cart-item-pack handling was removed.
+- PASS: Home hero slides now share CSS grid row 1 and participate in hero-stage height calculation rather than being absolutely positioned.
+- PASS: Home slideshow controls occupy a dedicated CSS grid row 2 and are no longer absolutely overlaid on hero content.
+- PASS: Home marquee remains after the hero stage in normal document flow.
+- PASS: Shop order notice contains three distinct centered lines: heading, same-day sentence, and 24-hour sentence.
+- PASS: Checkout 24-hour reminder remains centered and immediately above preferred date/time controls.
+- PASS: Existing browser-side and server-side minimum lead-time enforcement remains present.
+- PASS: Existing Square COMPLETED-payment requirement remains present.
+- PASS: Release package excludes runtime data/ and private .env files.
+
+
+v12.22 COMPACT NOTICE + TYPOGRAPHY QA ADDENDUM — 2026-08-16
+------------------------------------------------------------
+- PASS: Shop notice contains exactly two visual content rows in markup: heading plus a single combined policy sentence span.
+- PASS: Combined policy copy keeps both sentences on one line at standard desktop widths and is permitted to wrap below 1100px for responsive safety.
+- PASS: Shop notice padding, gap, border-top thickness, and margins were reduced to make the green tab shorter.
+- PASS: Desktop/tablet root typography increased slightly to 16.75px from the browser-default 16px.
+- PASS: Phone typography at <=640px uses 16.5px to preserve responsive layout while remaining larger than the prior baseline.
+- PASS: 24-hour browser and server scheduling enforcement remains unchanged.
+- PASS: Square COMPLETED-payment safeguard remains unchanged.
+
+
+
+v12.23 QA ADDENDUM
+- PASS: Home hero/stage no longer use viewport-forced minimum height.
+- PASS: #heroSlides is a single-cell grid and all hero slides occupy the same grid cell, preventing hidden-slide vertical stacking.
+- PASS: Slideshow controls remain in a separate flow row below the visible slide.
+- PASS: Custom Cakes page includes the light-green one-week lead-time notice directly under the intro copy.
+- PASS: Mobile CSS is present for the Custom Cakes notice and tightened Home hero spacing.
+- PASS: Existing one-week custom inquiry validation and 24-hour order validation remain present.
+
+
+v12.24 DESKTOP NAV + CUSTOM CAKES WORDING QA ADDENDUM — 2026-08-16
+- PASS target: desktop/laptop nav uses a dedicated >=821px rule with broader, even spacing across the five primary destinations.
+- PASS target: phone/tablet navigation rules at <=820px are not changed by the desktop spacing rule.
+- PASS target: Custom Cakes green notice uses “1 week” and explicitly states “for pickup or delivery.”
+- PASS target: Event date helper uses “1 week.”
+- PASS target: client-side invalid-date feedback also uses “1 week.”
+- PASS target: existing seven-day custom-cake minimum logic remains unchanged.
+
+
+v12.25 HOME HEIGHT + DATE DISPLAY QA ADDENDUM — 2026-08-16
+-----------------------------------------------------------
+- PASS: desktop/laptop Home hero uses a 420px visual target with reduced copy/control/marquee vertical padding.
+- PASS: Home slideshow retains the single-grid-cell slide structure and dedicated control row, preventing overlaps.
+- PASS: Custom Cakes Event date visible field has no preset value and displays selected dates as MM/DD/YYYY.
+- PASS: Checkout Preferred date visible field has no preset value and displays selected dates as MM/DD/YYYY.
+- PASS: native date inputs remain the submitted fields and preserve ISO YYYY-MM-DD values for validation/API compatibility.
+- PASS: existing 7-day custom-cake minimum and 24-hour standard-order minimum remain unchanged.
+- PASS: existing Square COMPLETED-payment safeguard remains unchanged.
+
+
+v12.26 PRODUCT PREVIEW SCROLL QA
+- PASS: product preview panel has vertical overflow scrolling globally.
+- PASS: desktop zoom media is viewport-bounded and internally pannable.
+- PASS: tablet/iPad zoom media is viewport-bounded and internally pannable.
+- PASS: existing phone preview panel remains vertically scrollable.
+- PASS: product details and Add to Cart remain after the zoom media in document flow.
+- PASS: scripts.js syntax check.
+- PASS: server.js syntax check.

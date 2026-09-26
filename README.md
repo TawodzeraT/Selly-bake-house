@@ -1,100 +1,45 @@
-# 🧁 Selly Bake House
+# Selly Bake House Web App v12.26
 
-**Home of everything toothsome** — A full e-commerce website for Selly Bake House, a home bakery based in Rockville, Maryland.
 
-## 📁 Project Structure
-selly-bake-house/
-├── index.html           # Homepage
-├── shop.html            # Product shop with filters
-├── cart.html            # Cart & checkout with geo-restriction
-├── custom-cake.html     # Multi-step custom cake order form
-├── about.html           # About page
-├── gallery.html         # Sweet treats gallery
-├── contact.html         # Contact form
-├── order-success.html   # Order confirmation page
-├── admin/
-│   └── index.html       # Admin CMS panel
-├── css/
-│   ├── style.css        # Main storefront styles
-│   └── admin.css        # Admin panel styles
-└── js/
-├── data.js          # Product data, cart logic, localStorage
-├── main.js          # Shared: nav, toasts, auth modals, geo
-├── shop.js          # Shop filtering & search
-├── cart.js          # Cart rendering & geo-restricted checkout
-├── cake.js          # Custom cake multi-step form
-└── admin.js         # Full CMS: products, orders, settings
-## 🚀 Getting Started
+## Version 12.25 highlights
 
-**Just open `index.html` in a browser** — no build step required. All state is stored in `localStorage`.
+- Home slideshow height is reduced on desktop/laptop so the “Start with a favorite” section appears sooner on standard 14-inch screens.
+- Custom Cakes Event date starts blank, opens the native calendar, and displays the selected date as **MM/DD/YYYY**.
+- Checkout Preferred date starts blank, opens the native calendar, and displays the selected date as **MM/DD/YYYY**.
+- Internal date values remain ISO (`YYYY-MM-DD`) so existing browser/server lead-time validation is preserved.
 
-For best results, serve from a local web server:
+A focused source update for the Selly Bake House storefront. v12.24 adds wider desktop navigation spacing and updates Custom Cakes lead-time wording while preserving the Home slideshow cleanup and ordering behavior from v12.23.
 
-```bash
-# Python 3
-python -m http.server 8080
+## v12.23 changes
 
-# Node.js (npx)
-npx serve .
-```
+- **Home slideshow spacing:** hidden slideshow panels now occupy the same CSS grid cell instead of stacking vertically and reserving blank space.
+- **Home hero height:** removed viewport-forced minimum hero/stage heights so the top of the Home page uses only the space required by the slideshow content and controls.
+- **Home controls:** slideshow controls remain in their own row beneath the visible slide, preventing overlap with text, images, buttons, or the scrolling phrase strip.
+- **Custom Cakes notice:** added a centered light-green notice directly below the Custom Cakes introduction: “Custom cake requests require at least 1 week of lead time for pickup or delivery.”
+- **Responsive behavior:** the new Custom Cakes notice and tightened Home hero spacing include phone/tablet rules.
+- Existing one-week custom-cake date enforcement, 24-hour standard-order enforcement, Square COMPLETED-payment protection, pricing, cart, delivery, and customer account logic remain unchanged.
 
-Then open `http://localhost:8080`
+## Important package note
 
-## 🔗 Integrations to Wire Up
+The files supplied for these recent revisions did **not** include the website `assets/` directory. This ZIP is therefore intended as a **drop-in v12.26 source update** for the existing complete website folder. Keep your current `assets/` directory in place.
 
-### 1. Square Payments
-Replace the demo checkout in `js/cart.js → initiateSquareCheckout()`:
-1. Sign up at [squareup.com/developers](https://squareup.com/developers)
-2. Add: `<script src="https://web.squarecdn.com/v1/square.js"></script>`
-3. Follow the [Web Payments SDK docs](https://developer.squareup.com/docs/web-payments/overview)
+To apply the update, replace at minimum:
 
-### 2. Email Marketing (SendGrid / Mailgun)
-In the Admin Panel → Settings → Weekly Email, connect to your email provider:
-- [SendGrid API](https://sendgrid.com/docs)
-- [Mailgun API](https://documentation.mailgun.com)
-- Weekly email logic is ready — just add a POST `/api/send-email` backend route
+- `index.html`
+- `scripts.js`
+- `package.json`
 
-### 3. IP Geolocation (Production)
-The geo check in `js/main.js → checkMarylandGeo()` uses [ipapi.co](https://ipapi.co) (free tier, 1000 req/day).
-For production, upgrade to [ipinfo.io](https://ipinfo.io) or [MaxMind GeoIP2](https://www.maxmind.com).
+`server.js` is included for source continuity and retains the existing server-side lead-time and payment validation.
 
-### 4. Backend / Database
-For production, replace `localStorage` with real API calls:
-- **Supabase** (Postgres + Auth + Storage) — free tier, very easy
-- **Firebase** (Firestore) — Google's real-time database
-- **Node.js + Express + MongoDB** — custom backend
+## Run locally
 
-## 🔐 Admin Panel
+1. Apply these v12.26 source files to the complete website folder that already contains `assets/`.
+2. Keep real credentials only in your private `.env`.
+3. Run `node server.js`.
+4. Open `http://localhost:3000`.
 
-Access the admin panel at: `/admin/index.html`
+Do not open `index.html` directly when testing login, admin, address configuration, delivery quotes, or Square checkout.
 
-**Features:**
-- 📊 Dashboard with revenue stats and recent orders
-- 🧁 Full product management (add, edit, toggle status)
-- 📦 Order management with status updates
-- 🎂 Custom cake request review (approve / reject)
-- 📈 Analytics with weekly revenue chart
-- ⚙️ Settings: toggle cake orders, email marketing, delivery zones
-- 📧 Weekly email preview
+## Privacy
 
-> **Production note:** Add authentication to the `/admin` route. Currently open — protect it with a password or session check.
-
-## 📍 Business Info
-
-- **Owner:** Selina Chimukangara
-- **Address:** 721 Fallsgrove Dr, Rockville, MD 20850
-- **Phone:** (301) 356-1232
-- **Email:** sellybakehouse@gmail.com
-- **Service Area:** Maryland only (geo-enforced at checkout)
-
-## 🛠 Tech Stack
-
-- **Frontend:** Vanilla HTML, CSS, JavaScript (no frameworks)
-- **Fonts:** Cormorant Garamond + Nunito (Google Fonts)
-- **State:** localStorage (swap for real DB in production)
-- **Payments:** Square Web Payments SDK (stub ready)
-- **Geo:** ipapi.co + Browser Geolocation fallback
-
-## 📝 License
-
-© 2025 Selly Bake House. All rights reserved.
+Do not publish or share `.env`, `data/`, Square access tokens, Google server keys, administrator credentials, or customer records.

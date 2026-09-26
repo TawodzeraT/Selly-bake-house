@@ -1,0 +1,13 @@
+THIRD-PARTY / USER-SUPPLIED ASSET NOTE
+======================================
+
+The file below was supplied by the user for this website revision:
+
+assets/images/decor/star-confetti.png
+
+The website uses it as the visible animated background on Shop, Custom Cakes, Gallery,
+and About. Before commercial launch, the site owner and developer should confirm that
+the source image license permits public and commercial use and provide attribution
+when required.
+
+All older sprinkle, cone, and cartoon-cake decoration assets were removed from v0.10.

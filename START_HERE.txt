@@ -1,0 +1,54 @@
+SELLY BAKE HOUSE WEB APP v12.26 - START HERE
+
+IMPORTANT PACKAGE NOTE
+- The supplied source set does not include assets/.
+- Apply this v12.26 source update to your existing complete website folder and keep that folder's assets/ directory.
+- Do not delete or replace your existing assets/ directory when applying this update.
+
+LOCAL STARTUP
+1. Unzip the package.
+2. Copy your private .env file into the Selly-Bake-House-WebApp-v12.26 folder, if needed for local integrations.
+3. Open Terminal.
+4. Type cd followed by a space, drag the Selly-Bake-House-WebApp-v12.26 folder into Terminal, and press Return.
+5. Run: node server.js
+6. Open Chrome or Safari at: http://localhost:3000
+
+DESKTOP / LAPTOP CHECKS FOR THIS REVISION
+- Home: hidden slideshow panels must not create blank vertical gaps; only the visible slideshow area and its controls should occupy space.
+- Home: hero text, images, action buttons, slideshow controls, and the pink scrolling phrase strip remain separated and must not overlap.
+- Custom Cakes: the light-green 1-week lead-time notice appears directly beneath the page introduction.
+- Cart: Cookie, Cupcake, and Cake quantity controls appear below their variant / price line.
+- Shop: the green order notice is compact, with “Planning your order?” on the first row and both policy sentences together on the second row at standard desktop widths.
+
+V12.22 VISUAL / READABILITY UPDATE
+- Shop order notice is more compact: “Planning your order?” is the first line and both policy sentences share the second line on standard desktop widths.
+- Site typography is slightly larger overall for easier reading; narrow-phone scaling is intentionally a little more conservative to preserve layout.
+
+PHONE / MOBILE CHECKS FOR THIS REVISION
+- Home: no hidden-slide whitespace appears above or between visible hero content.
+- Home: slideshow controls remain below the hero slide content rather than covering text or action buttons.
+- Custom Cakes: the 1-week light-green notice remains centered and readable within normal phone margins.
+- Shop: the compact order notice remains centered and the combined policy row wraps naturally within normal mobile margins when needed.
+- Checkout: the centered very-light-green “24-hour notice required for all orders.” reminder remains immediately above preferred date/time selection.
+- Cart: quantity controls remain below the variant / price line for every product type.
+- Gallery thumbnails remain compact in two columns on normal phone widths before being opened.
+- Product popup remains vertically scrollable so Add to Cart stays reachable.
+
+SECURITY
+- Do not share .env, data/, Square access tokens, Google keys, or customer records.
+- Production email, authentication, database, hosting, payment hardening, and API-key configuration remain developer tasks.
+
+
+v12.26 CHECKS
+- Desktop: Home, Shop, Custom Cakes, Gallery, and About are visibly more separated across the navigation bar.
+- Custom Cakes green notice: “Custom cake requests require at least 1 week of lead time for pickup or delivery.”
+- Event date helper: “Custom cake requests require at least 1 week of lead time.”
+- Mobile primary navigation remains unchanged.
+
+V12.26 QUICK CHECKS
+- On a standard laptop-height desktop window, confirm “Start with a favorite” is reached noticeably sooner below the Home slideshow.
+- Custom Cakes Event date: blank initially; choose from calendar; visible value must read MM/DD/YYYY.
+- Checkout Preferred date: blank initially; choose from calendar; visible value must read MM/DD/YYYY.
+
+V12.26 SHOP ZOOM CHECK
+- Open any Shop product, choose Zoom image, pan the enlarged image, then scroll the preview panel to confirm pricing/options/Add to Cart remain reachable on desktop, tablet/iPad, and phone.
